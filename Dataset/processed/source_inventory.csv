@@ -1,0 +1,8 @@
+source_key,filename,bytes,included_in_pipeline
+insect_plant_study,The Little Things that Run the City v1 rhapsodyingreen.csv,1074410,True
+addresses,street-addresses.csv,16065401,True
+canopies,tree-canopies-2019.csv,304047336,True
+trees,trees-with-species-and-dimensions-urban-forest.csv,18518155,True
+boundaries,small-areas-for-census-of-land-use-and-employment-clue.csv,69134,True
+garden_beds,renewals-for-nature-city-of-melbourne-garden-bed-inventory-2024.csv,4909999,True
+bird_traits,species-list-6a0a60879edbb26fbb3cac18.csv,2604893,True

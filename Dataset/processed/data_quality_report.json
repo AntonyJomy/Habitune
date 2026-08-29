@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.0.0",
+  "local_sources": {
+    "canopies": {
+      "rows": 114784,
+      "accepted": 114713,
+      "rejected_outside_supported_areas": 71
+    },
+    "trees": {
+      "rows": 82064,
+      "accepted": 81895,
+      "rejected_outside_supported_areas": 169
+    },
+    "garden_beds": {
+      "rows": 17721,
+      "accepted": 13039,
+      "rejected_missing_species": 4084,
+      "rejected_unknown_or_missing_area": 598
+    },
+    "addresses": {
+      "rows": 63721,
+      "accepted": 62996,
+      "rejected_outside_supported_areas": 724,
+      "rejected_missing_street": 1
+    },
+    "insect_plant_study": {
+      "rows": 3579,
+      "invalid_pollinator_flag": 0,
+      "candidate_family_count": 34,
+      "pollinator_linked_plant_species_count": 127
+    },
+    "bird_traits": {
+      "rows": 9993,
+      "accepted_name_alias_rows": 844,
+      "fuzzy_match_rows": 9,
+      "accepted_manual_fuzzy_alias_rows": 7,
+      "accepted_manual_fuzzy_aliases": [
+        {
+          "supplied_name": "Calyptorhynchus funereus",
+          "source_suggestion": "Zanda funerea funerea",
+          "accepted_species_name": "Zanda funerea"
+        },
+        {
+          "supplied_name": "Catharacta antarctica",
+          "source_suggestion": "Stercorarius antarcticus",
+          "accepted_species_name": "Stercorarius antarcticus"
+        },
+        {
+          "supplied_name": "Phalacrocorax melanoleucos",
+          "source_suggestion": "Microcarbo melanoleucos melanoleucos",
+          "accepted_species_name": "Microcarbo melanoleucos"
+        },
+        {
+          "supplied_name": "Threskiornis molucca",
+          "source_suggestion": "Threskiornis moluccus",
+          "accepted_species_name": "Threskiornis moluccus"
+        },
+        {
+          "supplied_name": "Thalassarche melanophrys",
+          "source_suggestion": "Thalassarche melanophris",
+          "accepted_species_name": "Thalassarche melanophris"
+        },
+        {
+          "supplied_name": "Chthonicola sagittatus",
+          "source_suggestion": "Pyrrholaemus sagittatus",
+          "accepted_species_name": "Pyrrholaemus sagittatus"
+        },
+        {
+          "supplied_name": "Arses telescophthalmus",
+          "source_suggestion": "Arses telescopthalmus",
+          "accepted_species_name": "Arses telescopthalmus"
+        }
+      ],
+      "rejected_unverified_fuzzy_alias_rows": 2,
+      "rejected_unverified_fuzzy_aliases": [
+        {
+          "supplied_name": "Cisticola ruficeps",
+          "suggested_name": "Cisticola (Cisticola) exilis exilis"
+        },
+        {
+          "supplied_name": "Zosterops chloronothus",
+          "suggested_name": "Zosterops lateralis chloronotus"
+        }
+      ]
+    },
+    "street_level": {
+      "street_count": 997,
+      "maximum_assignment_distance_m": 250.0,
+      "trees": {
+        "rows": 82064,
+        "accepted": 77965,
+        "rejected_outside_supported_areas": 169,
+        "rejected_no_address_within_250m": 3930
+      },
+      "canopies": {
+        "rows": 114784,
+        "accepted": 111154,
+        "rejected_no_address_within_250m": 3559,
+        "rejected_outside_supported_areas": 71
+      },
+      "garden_beds": {
+        "rows": 17721,
+        "accepted": 13253,
+        "rejected_missing_species_or_coordinates": 4155,
+        "rejected_no_address_within_250m": 304,
+        "rejected_outside_supported_areas": 9
+      }
+    }
+  },
+  "ala_birds": {
+    "query": "taxa:\"Birds\"",
+    "query_basis": "explicit Birds taxon query replacing the equivalent supplied qid",
+    "api_total_occurrence_records": 427596,
+    "api_species_count": 212,
+    "trait_matched_relevant_species_count": 66,
+    "trait_matched_excluded_species_count": 133,
+    "unmatched_species_count": 13,
+    "unmatched_species": [
+      "Anas superciliosa X platyrhynchos",
+      "Ceyx azureus",
+      "Chalcites basalis",
+      "Chalcites lucidus",
+      "Eolophus roseicapilla",
+      "Ninox leucopsis",
+      "Petrochelidon ariel",
+      "Petrochelidon nigricans",
+      "Petroica boodang",
+      "Poodytes gramineus",
+      "Rhipidura albiscapa",
+      "Sternula nereis",
+      "Synoicus ypsilophora"
+    ],
+    "area_query_count": 11
+  },
+  "ala_pollinator_insects": {
+    "api_total_occurrence_records": 1531,
+    "downloaded_records": 1531,
+    "accepted": 1442,
+    "rejected_non_species_taxon": 89,
+    "accepted_species_count": 105
+  },
+  "known_limitations": [
+    "ALA records are sightings/occurrences and must not be labelled as habitat polygons.",
+    "The supplied qc=-*nest_parent*:* query context returned HTTP 400 on 2026-08-28; stable identifier deduplication is used instead.",
+    "Canopy polygons are allocated by their supplied representative point; a polygon crossing a suburb boundary is not clipped.",
+    "Suburb-level garden rows without a supported Neighbourhood label are excluded; street-level garden coordinates are interpreted as MGA/UTM zone 55 south and assigned to the nearest address.",
+    "CLUE boundaries cover 11 merged Map View 1 areas; address labels are normalised spatially against those polygons.",
+    "The source data has no street polygons, so tree, garden and canopy assets are assigned to the nearest address within 250 m and canopy is reported as nearby area rather than street coverage percentage.",
+    "Nearby animals require live ALA access or a matching cached query; an unavailable query is returned with status and does not change the local street assets.",
+    "Pollinator insect classification is family-level evidence; it identifies candidates, not proof that every included species pollinates.",
+    "Only manually verified fuzzy bird aliases are accepted; rejected suggestions are listed in this report.",
+    "Bird relevance for Iteration 1 requires nectar or fruit in the trait table; invertebrate diet is retained only as supporting detail."
+  ]
+}

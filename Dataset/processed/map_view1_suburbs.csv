@@ -1,0 +1,12 @@
+suburb,suburb_area_km2,canopy_area_km2,canopy_coverage_pct,plant_species_count,pollinator_flowering_plant_species_count,pollinator_insect_species_count,relevant_bird_species_count,tree_record_count,garden_plant_row_count,canopy_polygon_count,pollinator_insect_occurrence_count,relevant_bird_occurrence_count,address_count
+Carlton,2.7235,0.4459,16.37,531,49,27,35,6772,1149,10219,93,3478,7940
+Docklands,2.8544,0.0944,3.31,420,37,7,25,5870,1790,5548,15,2676,3791
+East Melbourne,1.908,0.4631,24.27,678,46,14,35,4677,1550,9530,30,3841,3628
+Kensington,3.8066,0.4273,11.22,600,50,15,32,8050,1584,17090,45,2200,8064
+Melbourne,5.1511,0.9611,18.66,505,39,51,50,8672,356,14858,359,55754,14320
+North Melbourne,2.407,0.3325,13.81,340,37,9,28,4860,601,9753,11,2118,8736
+Parkville,4.0487,0.8212,20.28,557,40,74,59,28612,3094,19892,766,94541,3325
+Port Melbourne,5.4668,0.1839,3.36,146,20,16,42,2641,9,8860,68,11689,2030
+South Yarra,1.0572,0.2693,25.48,554,42,7,32,2587,1693,5482,10,6839,2833
+Southbank,1.5951,0.1427,8.94,295,29,13,26,2325,528,5423,26,1321,2995
+West Melbourne,6.7742,0.2063,3.05,440,48,10,25,6829,685,8058,19,1425,5334
