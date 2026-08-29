@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Parameterized AWS SAM backend for Habitune
+
+Parameters:
+  Stage:
+    Type: String
+  DBHost:
+    Type: String
+  DBPort:
+    Type: String
+  DBName:
+    Type: String
+  DBUser:
+    Type: String
+  DBPassword:
+    Type: String
+    NoEcho: true
+  ProjectName:
+    Type: String
+    Default: habitune-backend
+
+Globals:
+  Function:
+    Runtime: python3.12
+    CodeUri: .
+    MemorySize: 128
+    Timeout: 10
+    Role: !GetAtt LambdaExecutionRole.Arn
+    Environment:
+      Variables:
+        DB_HOST: !Ref DBHost
+        DB_PORT: !Ref DBPort
+        DB_NAME: !Ref DBName
+        DB_USER: !Ref DBUser
+        DB_PASSWORD: !Ref DBPassword
+
+Resources:
+  HabituneApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub "${ProjectName}-api-${Stage}"
+      StageName: !Ref Stage
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-lambda-role-${Stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub "${ProjectName}-lambda-logs-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-*-${Stage}:*"
+
+  GetTreesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-get-trees-${Stage}"
+      Handler: functions.get_trees.handler.lambda_handler
+      Events:
+        GetTrees:
+          Type: Api
+          Properties: {RestApiId: !Ref HabituneApi, Path: /trees, Method: GET}
+
+  GetCanopyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-get-canopy-${Stage}"
+      Handler: functions.get_canopy.handler.lambda_handler
+      Events:
+        GetCanopy:
+          Type: Api
+          Properties: {RestApiId: !Ref HabituneApi, Path: /canopy, Method: GET}
+
+  GetSpeciesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-get-species-${Stage}"
+      Handler: functions.get_species.handler.lambda_handler
+      Events:
+        GetSpecies:
+          Type: Api
+          Properties: {RestApiId: !Ref HabituneApi, Path: /species, Method: GET}
+
+  HealthCheckFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-health-check-${Stage}"
+      Handler: functions.health_check.handler.lambda_handler
+      Events:
+        GetHealth:
+          Type: Api
+          Properties: {RestApiId: !Ref HabituneApi, Path: /health, Method: GET}
+
+  GetTreesLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-get-trees-${Stage}"
+      RetentionInDays: 14
+  GetCanopyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-get-canopy-${Stage}"
+      RetentionInDays: 14
+  GetSpeciesLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-get-species-${Stage}"
+      RetentionInDays: 14
+  HealthCheckLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-health-check-${Stage}"
+      RetentionInDays: 14
+
+Outputs:
+  ApiUrl:
+    Value: !Sub "https://${HabituneApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${Stage}"
