@@ -1,0 +1,13 @@
+version = 0.1
+
+[dev.deploy.parameters]
+parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune-backend\" VpcCidr=\"10.20.0.0/16\" AppSubnetOneCidr=\"10.20.1.0/24\" AppSubnetTwoCidr=\"10.20.2.0/24\" DatabaseSubnetOneCidr=\"10.20.11.0/24\" DatabaseSubnetTwoCidr=\"10.20.12.0/24\" DBPort=\"5432\" DBName=\"habitune_db\" DBUser=\"habitune_master\" DBInstanceClass=\"db.t3.micro\" DBAllocatedStorage=\"20\" DBStorageType=\"gp3\" DBBackupRetentionDays=\"0\" DBMultiAZ=\"false\" DBDeletionProtection=\"true\" DBAutoMinorVersionUpgrade=\"true\""
+stack_name = "habitune-infrastructure-dev"
+resolve_s3 = true
+s3_prefix = "habitune-infrastructure-dev"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
+
+[prod.deploy.parameters]
+parameter_overrides = "Stage=\"prod\" ProjectName=\"habitune-backend\" VpcCidr=\"REPLACE_ME_VPC_CIDR\" AppSubnetOneCidr=\"REPLACE_ME_APP_SUBNET_ONE_CIDR\" AppSubnetTwoCidr=\"REPLACE_ME_APP_SUBNET_TWO_CIDR\" DatabaseSubnetOneCidr=\"REPLACE_ME_DATABASE_SUBNET_ONE_CIDR\" DatabaseSubnetTwoCidr=\"REPLACE_ME_DATABASE_SUBNET_TWO_CIDR\" DBPort=\"REPLACE_ME_DB_PORT\" DBName=\"REPLACE_ME_DB_NAME\" DBUser=\"REPLACE_ME_DB_USER\" DBInstanceClass=\"REPLACE_ME_DB_INSTANCE_CLASS\" DBAllocatedStorage=\"REPLACE_ME_DB_ALLOCATED_STORAGE\" DBStorageType=\"REPLACE_ME_DB_STORAGE_TYPE\" DBBackupRetentionDays=\"REPLACE_ME_DB_BACKUP_RETENTION_DAYS\" DBMultiAZ=\"false\" DBDeletionProtection=\"REPLACE_ME_DB_DELETION_PROTECTION\" DBAutoMinorVersionUpgrade=\"REPLACE_ME_DB_AUTO_MINOR_VERSION_UPGRADE\""
