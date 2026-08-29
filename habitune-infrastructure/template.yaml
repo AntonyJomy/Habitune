@@ -1,0 +1,316 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Parameterized network and PostgreSQL infrastructure for Habitune
+
+Parameters:
+  Stage:
+    Type: String
+    AllowedPattern: "^[a-z0-9-]+$"
+  ProjectName:
+    Type: String
+    Default: habitune-backend
+    AllowedPattern: "^[a-z][a-z0-9-]+$"
+  VpcCidr:
+    Type: String
+  AppSubnetOneCidr:
+    Type: String
+  AppSubnetTwoCidr:
+    Type: String
+  DatabaseSubnetOneCidr:
+    Type: String
+  DatabaseSubnetTwoCidr:
+    Type: String
+  DBPort:
+    Type: Number
+    MinValue: 1150
+    MaxValue: 65535
+  DBName:
+    Type: String
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  DBUser:
+    Type: String
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  DBInstanceClass:
+    Type: String
+  DBAllocatedStorage:
+    Type: Number
+    MinValue: 20
+  DBStorageType:
+    Type: String
+  DBBackupRetentionDays:
+    Type: Number
+    MinValue: 0
+    MaxValue: 35
+  DBMultiAZ:
+    Type: String
+    AllowedValues: ["true", "false"]
+  DBDeletionProtection:
+    Type: String
+    AllowedValues: ["true", "false"]
+  DBAutoMinorVersionUpgrade:
+    Type: String
+    AllowedValues: ["true", "false"]
+
+Conditions:
+  UseMultiAZ: !Equals [!Ref DBMultiAZ, "true"]
+  UseDeletionProtection: !Equals [!Ref DBDeletionProtection, "true"]
+  UseAutoMinorVersionUpgrade: !Equals [!Ref DBAutoMinorVersionUpgrade, "true"]
+
+Resources:
+  HabituneVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-vpc-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  AppSubnetOne:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref AppSubnetOneCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app-one-${Stage}"
+
+  AppSubnetTwo:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref AppSubnetTwoCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app-two-${Stage}"
+
+  DatabaseSubnetOne:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref DatabaseSubnetOneCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-one-${Stage}"
+
+  DatabaseSubnetTwo:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref DatabaseSubnetTwoCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-two-${Stage}"
+
+  AppRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref HabituneVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app-routes-${Stage}"
+
+  DatabaseRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref HabituneVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-routes-${Stage}"
+
+  AppSubnetOneRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref AppRouteTable
+      SubnetId: !Ref AppSubnetOne
+
+  AppSubnetTwoRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref AppRouteTable
+      SubnetId: !Ref AppSubnetTwo
+
+  DatabaseSubnetOneRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseRouteTable
+      SubnetId: !Ref DatabaseSubnetOne
+
+  DatabaseSubnetTwoRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseRouteTable
+      SubnetId: !Ref DatabaseSubnetTwo
+
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-lambda-${Stage}"
+      GroupDescription: !Sub "Security group for ${ProjectName} database Lambdas in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-lambda-${Stage}"
+
+  DatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-database-${Stage}"
+      GroupDescription: !Sub "Security group for ${ProjectName} PostgreSQL in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-${Stage}"
+
+  SecretsEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
+      GroupDescription: !Sub "Security group for ${ProjectName} Secrets Manager endpoint in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
+
+  LambdaToDatabaseEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref LambdaSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      DestinationSecurityGroupId: !Ref DatabaseSecurityGroup
+
+  DatabaseFromLambdaIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DatabaseSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      SourceSecurityGroupId: !Ref LambdaSecurityGroup
+
+  LambdaToSecretsEndpointEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref LambdaSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      DestinationSecurityGroupId: !Ref SecretsEndpointSecurityGroup
+
+  SecretsEndpointFromLambdaIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref SecretsEndpointSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      SourceSecurityGroupId: !Ref LambdaSecurityGroup
+
+  SecretsManagerEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcEndpointType: Interface
+      VpcId: !Ref HabituneVpc
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.secretsmanager"
+      PrivateDnsEnabled: true
+      SubnetIds:
+        - !Ref AppSubnetOne
+      SecurityGroupIds:
+        - !Ref SecretsEndpointSecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
+
+  DatabaseSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub "${ProjectName}-database-${Stage}"
+      DBSubnetGroupDescription: !Sub "Private subnet group for ${ProjectName} PostgreSQL in ${Stage}"
+      SubnetIds:
+        - !Ref DatabaseSubnetOne
+        - !Ref DatabaseSubnetTwo
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-${Stage}"
+
+  PostgreSQLDatabase:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBInstanceIdentifier: !Sub "${ProjectName}-postgres-${Stage}"
+      Engine: postgres
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      StorageType: !Ref DBStorageType
+      StorageEncrypted: true
+      DBName: !Ref DBName
+      MasterUsername: !Ref DBUser
+      ManageMasterUserPassword: true
+      Port: !Ref DBPort
+      DBSubnetGroupName: !Ref DatabaseSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DatabaseSecurityGroup
+      PubliclyAccessible: false
+      BackupRetentionPeriod: !Ref DBBackupRetentionDays
+      MultiAZ: !If [UseMultiAZ, true, false]
+      DeletionProtection: !If [UseDeletionProtection, true, false]
+      AutoMinorVersionUpgrade: !If [UseAutoMinorVersionUpgrade, true, false]
+      CopyTagsToSnapshot: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-postgres-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+Outputs:
+  VpcId:
+    Value: !Ref HabituneVpc
+  AppSubnetOneId:
+    Value: !Ref AppSubnetOne
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-app-subnet-one-id"
+  AppSubnetTwoId:
+    Value: !Ref AppSubnetTwo
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-app-subnet-two-id"
+  LambdaSecurityGroupId:
+    Value: !Ref LambdaSecurityGroup
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-lambda-security-group-id"
+  DatabaseEndpoint:
+    Value: !GetAtt PostgreSQLDatabase.Endpoint.Address
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-endpoint"
+  DatabasePort:
+    Value: !GetAtt PostgreSQLDatabase.Endpoint.Port
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-port"
+  DatabaseName:
+    Value: !Ref DBName
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-name"
+  DatabaseSecretArn:
+    Value: !GetAtt PostgreSQLDatabase.MasterUserSecret.SecretArn
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-secret-arn"

@@ -1,24 +1,17 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: Parameterized AWS SAM backend for Habitune
+Description: Parameterized AWS SAM application for Habitune
 
 Parameters:
   Stage:
     Type: String
-  DBHost:
-    Type: String
-  DBPort:
-    Type: String
-  DBName:
-    Type: String
-  DBUser:
-    Type: String
-  DBPassword:
-    Type: String
-    NoEcho: true
+    AllowedPattern: "^[a-z0-9-]+$"
   ProjectName:
     Type: String
     Default: habitune-backend
+    AllowedPattern: "^[a-z][a-z0-9-]+$"
+  LogRetentionDays:
+    Type: Number
 
 Globals:
   Function:
@@ -26,14 +19,6 @@ Globals:
     CodeUri: .
     MemorySize: 128
     Timeout: 10
-    Role: !GetAtt LambdaExecutionRole.Arn
-    Environment:
-      Variables:
-        DB_HOST: !Ref DBHost
-        DB_PORT: !Ref DBPort
-        DB_NAME: !Ref DBName
-        DB_USER: !Ref DBUser
-        DB_PASSWORD: !Ref DBPassword
 
 Resources:
   HabituneApi:
@@ -42,10 +27,10 @@ Resources:
       Name: !Sub "${ProjectName}-api-${Stage}"
       StageName: !Ref Stage
 
-  LambdaExecutionRole:
+  HealthCheckExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub "${ProjectName}-lambda-role-${Stage}"
+      RoleName: !Sub "${ProjectName}-health-role-${Stage}"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -54,7 +39,29 @@ Resources:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub "${ProjectName}-lambda-logs-${Stage}"
+        - PolicyName: !Sub "${ProjectName}-health-logs-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-health-check-${Stage}:*"
+
+  DatabaseFunctionExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-database-role-${Stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub "${ProjectName}-database-logs-${Stage}"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -63,67 +70,174 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-*-${Stage}:*"
+        - PolicyName: !Sub "${ProjectName}-database-vpc-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DescribeSubnets
+                  - ec2:DeleteNetworkInterface
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:UnassignPrivateIpAddresses
+                Resource: "*"
+        - PolicyName: !Sub "${ProjectName}-database-secret-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource:
+                  Fn::ImportValue:
+                    Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
 
   GetTreesFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-get-trees-${Stage}"
       Handler: functions.get_trees.handler.lambda_handler
+      Role: !GetAtt DatabaseFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
       Events:
         GetTrees:
           Type: Api
-          Properties: {RestApiId: !Ref HabituneApi, Path: /trees, Method: GET}
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /trees
+            Method: GET
 
   GetCanopyFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-get-canopy-${Stage}"
       Handler: functions.get_canopy.handler.lambda_handler
+      Role: !GetAtt DatabaseFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
       Events:
         GetCanopy:
           Type: Api
-          Properties: {RestApiId: !Ref HabituneApi, Path: /canopy, Method: GET}
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /canopy
+            Method: GET
 
   GetSpeciesFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-get-species-${Stage}"
       Handler: functions.get_species.handler.lambda_handler
+      Role: !GetAtt DatabaseFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
       Events:
         GetSpecies:
           Type: Api
-          Properties: {RestApiId: !Ref HabituneApi, Path: /species, Method: GET}
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /species
+            Method: GET
 
   HealthCheckFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-health-check-${Stage}"
       Handler: functions.health_check.handler.lambda_handler
+      Role: !GetAtt HealthCheckExecutionRole.Arn
       Events:
         GetHealth:
           Type: Api
-          Properties: {RestApiId: !Ref HabituneApi, Path: /health, Method: GET}
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /health
+            Method: GET
 
   GetTreesLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-get-trees-${Stage}"
-      RetentionInDays: 14
+      RetentionInDays: !Ref LogRetentionDays
   GetCanopyLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-get-canopy-${Stage}"
-      RetentionInDays: 14
+      RetentionInDays: !Ref LogRetentionDays
   GetSpeciesLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-get-species-${Stage}"
-      RetentionInDays: 14
+      RetentionInDays: !Ref LogRetentionDays
   HealthCheckLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-health-check-${Stage}"
-      RetentionInDays: 14
+      RetentionInDays: !Ref LogRetentionDays
 
 Outputs:
   ApiUrl:

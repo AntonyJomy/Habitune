@@ -1,7 +1,7 @@
 version = 0.1
 
 [dev.deploy.parameters]
-parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune-backend\" DBHost=\"REPLACE_ME_DB_HOST\" DBPort=\"REPLACE_ME_DB_PORT\" DBName=\"REPLACE_ME_DB_NAME\" DBUser=\"REPLACE_ME_DB_USER\" DBPassword=\"REPLACE_ME_DB_PASSWORD\""
+parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune-backend\" LogRetentionDays=\"7\""
 
 [prod.deploy.parameters]
-parameter_overrides = "Stage=\"prod\" ProjectName=\"habitune-backend\" DBHost=\"REPLACE_ME_DB_HOST\" DBPort=\"REPLACE_ME_DB_PORT\" DBName=\"REPLACE_ME_DB_NAME\" DBUser=\"REPLACE_ME_DB_USER\" DBPassword=\"REPLACE_ME_DB_PASSWORD\""
+parameter_overrides = "Stage=\"prod\" ProjectName=\"habitune-backend\" LogRetentionDays=\"REPLACE_ME_LOG_RETENTION_DAYS\""
