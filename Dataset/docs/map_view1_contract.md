@@ -48,19 +48,3 @@ The frontend heading for this block is the stable response value
 
 The Python references are `habitune_data.lookup.map_view` and
 `habitune_data.lookup.enrich_location_animals`.
-
-## Verified address example
-
-For `2 Marmion Place Docklands`, the current build resolves `Marmion Place`
-and returns:
-
-| Metric | Value |
-|---|---:|
-| Planted trees | 13 |
-| Plant species | 5 |
-| Pollinator-linked flowering plants | 1 |
-| Nearby canopy area | 227.30 m2 |
-Animal values are intentionally not fixed in this table. They are live or
-cached ALA results for the chosen radius and can change when ALA observations
-are updated. A zero means no matching occurrence was returned under the current
-filters; it is not evidence that the animal is absent.
