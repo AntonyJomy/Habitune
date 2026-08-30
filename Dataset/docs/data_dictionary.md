@@ -4,11 +4,22 @@
 
 | Field | Meaning |
 |---|---|
-| `suburb` | One of 11 merged CLUE map areas |
-| `suburb_area_km2` | Calculated boundary area |
+| `precinct_id` | Stable key for frontend/backend joins |
+| `suburb` | Display name for one of the 10 Map View 1 precincts |
+| `boundary_source` | Official source used to prepare that polygon |
+| `suburb_area_km2` | Polygon-derived area in square kilometres |
+| `precinct_area_ha` | The same polygon-derived area in hectares |
 | `canopy_area_km2` | Sum of allocated 2019 canopy polygons |
-| `canopy_coverage_pct` | Canopy area divided by suburb area |
+| `canopy_coverage_pct` | Canopy area divided by precinct area |
 | `plant_species_count` | Distinct tree + garden scientific names |
+| `animal_species_count` | Pollinator-candidate insect species + nectar/fruit bird species |
+| `plant_density_per_ha` | Plant species count divided by precinct hectares |
+| `animal_density_per_ha` | Animal species count divided by precinct hectares |
+| `species_density_per_ha` | Plant plus animal species count divided by precinct hectares |
+| `*_score_0_100` | One input min-max scaled across the current 10 precincts |
+| `biodiversity_score_0_100` | Mean of canopy, plant-density and animal-density scores |
+| `biodiversity_score_version` | Method version; currently the provisional Iteration 1 formula |
+| `pollination_corridor_count` | `null` until the Iteration 2 reviewed corridors are available |
 | `pollinator_flowering_plant_species_count` | Inventory species linked to local `pol=1` records |
 | `pollinator_insect_species_count` | Distinct species-rank ALA candidates |
 | `relevant_bird_species_count` | Distinct ALA birds passing the diet-role filter |
@@ -64,3 +75,5 @@ radius. They are attached to the runtime response under
 - No output field is named or represented as confirmed habitat area.
 - `nearby_canopy_area_m2` is an address-assigned street context metric, not a
   percentage of a street polygon.
+- `biodiversity_score_0_100` is a relative richness/density indicator, not a
+  Shannon or Simpson index and not a direct measure of population abundance.

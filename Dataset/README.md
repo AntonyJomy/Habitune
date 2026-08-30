@@ -1,15 +1,19 @@
 ## Delivered View 1 metrics
 
-The current verified build covers 11 merged CLUE areas and reports:
+The current verified build covers 10 Map View 1 precincts and reports:
 
-- City canopy coverage estimate: **11.50%**
-- Plant species: **1,757**
+- City canopy coverage estimate: **12.67%**
+- Plant species: **1,748**
 - Pollinator-linked flowering plants present in council assets: **64**
-- Evidence-filtered, species-rank pollinator insect candidates: **105**
+- Evidence-filtered, species-rank pollinator insect candidates: **100**
 - Nectar/fruit diet-filtered bird species: **66**
 
 These are occurrence/inventory-derived indicators. In particular, ALA records
 are sightings, not habitat polygons or population estimates.
+
+Each precinct also has a provisional 0-100 biodiversity score. It is the mean
+of separately min-max scaled canopy coverage, plant species density per hectare
+and animal species density per hectare across the same 10 precincts.
 
 ## Run in VS Code
 
@@ -27,11 +31,18 @@ After that, a deterministic no-network rebuild is available:
 PYTHONPATH=src python3 -m habitune_data --root . build --offline
 ```
 
-No third-party Python package is required. Python 3.11 or later is expected.
+No third-party Python package is required for the normal build. Python 3.11 or
+later is expected. Refreshing the reviewed boundary snapshot is a separate,
+infrequent task and requires the optional `boundary` dependencies:
+
+```bash
+python3 -m pip install -e '.[boundary]'
+python3 scripts/prepare_boundaries.py
+```
 
 ## Map View 1 location behavior
 
-No input returns the city summary and every suburb:
+No input returns the city summary and all 10 precincts:
 
 ```bash
 PYTHONPATH=src python3 -m habitune_data --root . lookup
@@ -40,7 +51,7 @@ PYTHONPATH=src python3 -m habitune_data --root . lookup
 An address or coordinate resolves to a street. The response contains street-level
 trees, plant species, pollinator-linked flowering plants and nearby canopy area. Birds
 and pollinator-insect candidates are queried from ALA around the resolved location
-using the same radius. The parent suburb is retained only as context:
+using the same radius. The parent precinct is retained as context:
 
 ```bash
 PYTHONPATH=src python3 -m habitune_data --root . lookup "2 Marmion Place Docklands"

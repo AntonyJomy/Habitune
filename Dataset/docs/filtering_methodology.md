@@ -2,7 +2,8 @@
 
 ## Source coverage
 
-All seven supplied CSVs are used:
+Seven pipeline inputs are used: six supplied CSV exports plus one reviewed
+GeoJSON boundary snapshot.
 
 | Source | Pipeline use |
 |---|---|
@@ -10,7 +11,7 @@ All seven supplied CSVs are used:
 | Street addresses | Clean address lookup and input-to-suburb routing |
 | Tree canopies 2019 | Canopy polygon area and coverage estimate |
 | Urban forest trees | Plant diversity and asset presence |
-| CLUE small areas | Map polygons and point-in-polygon allocation |
+| Vicmap Admin + Fishermans Bend planning polygons | Ten Map View 1 precinct polygons and point-in-polygon allocation |
 | Garden bed inventory 2024 | Plant diversity and asset presence |
 | Bird species traits | Diet guild, diet proportions and ecological roles |
 
@@ -24,7 +25,7 @@ observations and 594 named species before ecological filtering.
 - Display names keep their source spelling; joins use case-insensitive,
   whitespace-normalised keys.
 - Longitude/latitude must be numeric and inside WGS84 bounds.
-- Spatial records must fall inside one of the 11 supported merged CLUE areas.
+- Spatial records must fall inside one of the 10 supported precinct polygons.
 - Sets, not row counts, produce every field labelled `*_species_count`.
 - ALA insect records are deduplicated by UUID, then occurrence ID, with a
   deterministic field tuple as a last fallback.
@@ -40,10 +41,25 @@ small Melbourne geometries. Coverage is:
 This is an estimate because a canopy polygon crossing a suburb boundary is
 allocated to the side containing its representative point rather than clipped.
 
+## Precinct boundaries and area
+
+The checked-in boundary snapshot is prepared from Vicmap Admin localities
+clipped to the City of Melbourne LGA. North Melbourne and West Melbourne are
+merged, Melbourne is displayed as Central City, and the current Melbourne
+DDO67/DDO74 planning polygons define Fishermans Bend. Their small overlap is
+removed from Docklands. The preparation script rejects missing, empty,
+non-polygonal or overlapping outputs.
+
+Precinct area is calculated directly from each prepared polygon and converted
+to hectares with `area_m2 / 10,000`. It is not taken from an unrelated tabular
+area field.
+
 ## Plant species and flowering-plant filter
 
 General plant diversity is the distinct union of urban-forest scientific names
-and garden-bed botanical names for each suburb.
+and garden-bed botanical names for each precinct. Garden coordinates occur on
+the asset row, so botanical rows inherit coordinates from the same `Asset ID`
+before point-in-polygon assignment.
 
 A plant enters `pollinator_flowering_plants.csv` only when:
 
@@ -64,7 +80,7 @@ It does not mean the row recorded a pollination event.
 4. Reject non-species ranks, invalid coordinates, duplicates and points outside
    supported areas.
 
-The result is 1,442 accepted occurrence rows across 105 species. Family-level
+The current result is 1,333 accepted occurrence rows across 100 species. Family-level
 evidence makes each taxon a **pollinator candidate**; it is not proof that every
 included species pollinates. Each row states whether its evidence is an exact
 local species label or a family-level candidate.
@@ -95,7 +111,7 @@ are included in the quality report.
 The source package contains address points and street IDs, but no street
 polygons. Street-level assets are therefore built as follows:
 
-1. Clean addresses are spatially checked against the 11 CLUE Map View 1 areas.
+1. Clean addresses are spatially checked against the 10 Map View 1 precincts.
 2. Tree, canopy and garden-bed points are assigned to the nearest address point
    within 250 m in the same resolved suburb.
 3. Assigned records are grouped by suburb plus source `street_id`.
@@ -116,6 +132,28 @@ tree, garden or canopy aggregates.
 
 This is an input-detail extension of Map View 1 only. It does not implement
 microclimate recommendations, planting eligibility or later map interactions.
+
+## Provisional biodiversity score
+
+For each precinct, the pipeline calculates:
+
+- `plant_density_per_ha = distinct plant species / precinct area ha`
+- `animal_density_per_ha = (pollinator-candidate insects + nectar/fruit birds) / precinct area ha`
+- canopy input = `canopy_coverage_pct`
+
+Each input is min-max scaled separately across the same 10 precincts:
+
+`score = 100 * (x - min) / (max - min)`
+
+If every precinct has the same input value, the neutral component score is 50.
+The final provisional score is:
+
+`(canopy_score + plant_density_score + animal_density_score) / 3`
+
+This is a relative MVP score based on richness and density. It cannot be called
+a Shannon or Simpson index because the available data does not provide a
+consistent abundance/evenness sample. Corridor count remains null until the
+Iteration 2 manual corridor review.
 
 ## ALA query deviation
 
