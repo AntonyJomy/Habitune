@@ -7,6 +7,8 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
+from .geometry import geometry_area_m2
+
 
 REQUIRED_OUTPUTS = (
     "map_view1.json",
@@ -24,6 +26,19 @@ REQUIRED_OUTPUTS = (
     "street_level.json",
 )
 
+EXPECTED_PRECINCTS = {
+    "Carlton",
+    "Central City",
+    "Docklands",
+    "East Melbourne",
+    "Fishermans Bend",
+    "Kensington",
+    "North and West Melbourne",
+    "Parkville",
+    "Southbank",
+    "South Yarra",
+}
+
 
 def validate_outputs(processed_dir: Path) -> list[str]:
     """Return validation errors found in the processed Map View 1 files."""
@@ -40,12 +55,12 @@ def validate_outputs(processed_dir: Path) -> list[str]:
     contract = json.loads((processed_dir / "map_view1.json").read_text(encoding="utf-8"))
     rows = contract.get("suburbs", [])
     names = [row.get("suburb") for row in rows]
-    if len(rows) != 11:
-        errors.append(f"expected 11 supported suburbs, found {len(rows)}")
+    if len(rows) != 10:
+        errors.append(f"expected 10 supported precincts, found {len(rows)}")
     if len(names) != len(set(names)):
         errors.append("suburb names are not unique")
-    if "Carlton" not in names:
-        errors.append("Carlton is missing")
+    if set(names) != EXPECTED_PRECINCTS:
+        errors.append("precinct names do not match the reviewed 10-precinct set")
     if contract.get("city_summary", {}).get("suburb_count") != len(rows):
         errors.append("city summary suburb count does not match suburb rows")
 
@@ -82,6 +97,7 @@ def validate_outputs(processed_dir: Path) -> list[str]:
 
     numeric_counts = (
         "plant_species_count",
+        "animal_species_count",
         "pollinator_flowering_plant_species_count",
         "pollinator_insect_species_count",
         "relevant_bird_species_count",
@@ -94,6 +110,54 @@ def validate_outputs(processed_dir: Path) -> list[str]:
             value = row.get(field)
             if not isinstance(value, int) or value < 0:
                 errors.append(f"invalid {field} for {row.get('suburb')}: {value}")
+        area = row.get("precinct_area_ha")
+        if not isinstance(area, (int, float)) or area <= 0:
+            errors.append(f"invalid precinct area for {row.get('suburb')}: {area}")
+        expected_animals = row.get("pollinator_insect_species_count", 0) + row.get(
+            "relevant_bird_species_count", 0
+        )
+        if row.get("animal_species_count") != expected_animals:
+            errors.append(f"animal species total is inconsistent for {row.get('suburb')}")
+        for field in (
+            "canopy_score_0_100",
+            "plant_density_score_0_100",
+            "animal_density_score_0_100",
+            "biodiversity_score_0_100",
+        ):
+            value = row.get(field)
+            if not isinstance(value, (int, float)) or not 0 <= value <= 100:
+                errors.append(f"invalid {field} for {row.get('suburb')}: {value}")
+        component_mean = round(
+            (
+                row.get("canopy_score_0_100", 0)
+                + row.get("plant_density_score_0_100", 0)
+                + row.get("animal_density_score_0_100", 0)
+            )
+            / 3,
+            2,
+        )
+        if row.get("biodiversity_score_0_100") != component_mean:
+            errors.append(f"biodiversity score formula mismatch for {row.get('suburb')}")
+        if row.get("pollination_corridor_count") is not None:
+            errors.append(f"corridor count should remain null for {row.get('suburb')}")
+
+    # Recalculate all three min-max components from the published inputs.
+    score_inputs = {
+        "canopy_score_0_100": "canopy_coverage_pct",
+        "plant_density_score_0_100": "plant_density_per_ha",
+        "animal_density_score_0_100": "animal_density_per_ha",
+    }
+    for score_field, input_field in score_inputs.items():
+        values = [float(row[input_field]) for row in rows]
+        low, high = min(values), max(values)
+        for row in rows:
+            expected = (
+                50.0
+                if high == low
+                else round((float(row[input_field]) - low) / (high - low) * 100, 2)
+            )
+            if row.get(score_field) != expected:
+                errors.append(f"{score_field} min-max mismatch for {row.get('suburb')}")
 
     # GeoJSON feature count must match the JSON suburb rows.
     geojson = json.loads(
@@ -103,10 +167,16 @@ def validate_outputs(processed_dir: Path) -> list[str]:
         errors.append("map_view1_suburbs.geojson is not a FeatureCollection")
     if len(geojson.get("features", [])) != len(rows):
         errors.append("GeoJSON feature count does not match JSON suburb count")
+    rows_by_name = {row["suburb"]: row for row in rows}
+    for feature in geojson.get("features", []):
+        name = feature.get("properties", {}).get("suburb")
+        expected_area = round(geometry_area_m2(feature["geometry"]) / 10_000, 4)
+        if rows_by_name.get(name, {}).get("precinct_area_ha") != expected_area:
+            errors.append(f"polygon area mismatch for {name}")
 
     with (processed_dir / "source_inventory.csv").open(encoding="utf-8", newline="") as stream:
         if sum(1 for _ in csv.DictReader(stream)) != 7:
-            errors.append("source inventory must contain all seven supplied CSV files")
+            errors.append("source inventory must contain all seven pipeline inputs")
 
     # Street keys must be unique so backend lookup returns one result.
     street_payload = json.loads(

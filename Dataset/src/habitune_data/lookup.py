@@ -143,7 +143,7 @@ def map_view(query: str | None, processed_dir: Path) -> dict:
             "mode": "not_found",
             "query": query,
             "message": (
-                "Location is outside the 11 supported areas, did not match an address, "
+                "Location is outside the 10 supported precincts, did not match an address, "
                 "or has no street address within 250 metres."
             ),
             "address_candidates": candidates,

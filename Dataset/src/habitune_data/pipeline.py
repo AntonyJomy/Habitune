@@ -31,6 +31,7 @@ from .config import (
     INSECT_FILTERS,
     INSECT_QUERY,
     SOURCE_FILES,
+    SOURCE_METADATA,
     project_paths,
 )
 from .geometry import (
@@ -39,9 +40,8 @@ from .geometry import (
     geometry_area_m2,
     geometry_to_wkt,
     load_areas,
-    normalize_area_name,
 )
-from .street import build_street_outputs, street_key
+from .street import build_street_outputs, street_key, utm55s_to_wgs84
 
 
 # A few canopy polygons contain GeoJSON cells larger than Python's conservative
@@ -72,7 +72,9 @@ def _initial_area_state(features: list[dict]) -> dict[str, dict]:
     for feature in features:
         name = feature["properties"]["suburb"]
         state[name] = {
+            "precinct_id": feature["properties"].get("precinct_id", name_key(name)),
             "suburb": name,
+            "boundary_source": feature["properties"].get("boundary_source", ""),
             "suburb_area_m2": geometry_area_m2(feature["geometry"]),
             "canopy_area_m2": 0.0,
             "canopy_polygon_count": 0,
@@ -170,38 +172,58 @@ def _process_trees(
 
 def _process_gardens(
     path: Path,
+    features: list[dict],
     state: dict[str, dict],
     pollinator_plant_keys: set[str],
     matched_plants: dict[str, dict],
 ) -> dict:
     """Clean garden rows and add valid plant species to suburb totals."""
 
-    # Garden rows already contain a neighbourhood label for suburb totals.
+    # Use the supplied MGA coordinates so garden rows follow the same reviewed
+    # precinct polygons as every other spatial source.
     report = Counter(rows=0)
+    garden_rows = []
+    asset_coordinates: dict[str, tuple[float, float]] = {}
     with path.open(encoding="utf-8-sig", newline="") as stream:
         for row in csv.DictReader(stream):
-            report["rows"] += 1
-            species = clean_text(row.get("Botanical name"))
-            suburb = normalize_area_name(row.get("Neighbourhood"))
-            if not species or species.upper() == "NA":
-                report["rejected_missing_species"] += 1
-                continue
-            if suburb not in state:
-                report["rejected_unknown_or_missing_area"] += 1
-                continue
-            state[suburb]["garden_plant_row_count"] += 1
-            state[suburb]["garden_species"].add(species)
-            key = name_key(species)
-            if key in pollinator_plant_keys:
-                state[suburb]["pollinator_flowering_plants"].add(species)
-                entry = matched_plants.setdefault(
-                    key,
-                    {"scientific_name": species, "sources": set(), "suburbs": set(), "asset_rows": 0},
-                )
-                entry["sources"].add("garden_bed_inventory")
-                entry["suburbs"].add(suburb)
-                entry["asset_rows"] += 1
-            report["accepted"] += 1
+            garden_rows.append(row)
+            asset_id = clean_text(row.get("Asset ID"))
+            easting = number(row.get("X_Coord"))
+            northing = number(row.get("Y_Coord"))
+            if asset_id and easting is not None and northing is not None:
+                asset_coordinates[asset_id] = utm55s_to_wgs84(easting, northing)
+
+    for row in garden_rows:
+        report["rows"] += 1
+        species = clean_text(row.get("Botanical name"))
+        if not species or species.upper() == "NA":
+            report["rejected_missing_species"] += 1
+            continue
+        coordinates = asset_coordinates.get(clean_text(row.get("Asset ID")))
+        if not coordinates:
+            report["rejected_missing_asset_coordinates"] += 1
+            continue
+        lon, lat = coordinates
+        if not valid_lon_lat(lon, lat):
+            report["rejected_invalid_coordinates"] += 1
+            continue
+        suburb = find_area(lon, lat, features)
+        if not suburb:
+            report["rejected_outside_supported_areas"] += 1
+            continue
+        state[suburb]["garden_plant_row_count"] += 1
+        state[suburb]["garden_species"].add(species)
+        key = name_key(species)
+        if key in pollinator_plant_keys:
+            state[suburb]["pollinator_flowering_plants"].add(species)
+            entry = matched_plants.setdefault(
+                key,
+                {"scientific_name": species, "sources": set(), "suburbs": set(), "asset_rows": 0},
+            )
+            entry["sources"].add("garden_bed_inventory")
+            entry["suburbs"].add(suburb)
+            entry["asset_rows"] += 1
+        report["accepted"] += 1
     return dict(report)
 
 
@@ -228,8 +250,8 @@ def _process_addresses(
             if not valid_lon_lat(lon, lat):
                 report["rejected_invalid_coordinates"] += 1
                 continue
-            # Source labels such as South Wharf do not align exactly with the
-            # CLUE areas. Geometry is the canonical Map View 1 assignment.
+            # Source labels do not always align with the reviewed precincts.
+            # Geometry is the canonical Map View 1 assignment.
             suburb = find_area(lon, lat, features)
             if not suburb:
                 report["rejected_outside_supported_areas"] += 1
@@ -483,21 +505,47 @@ def _query_insects(
     return rows, dict(report)
 
 
+def _minmax_scores(rows: list[dict], field: str) -> dict[str, float]:
+    """Scale one precinct metric to 0-100 for the current comparison set."""
+
+    values = [float(row[field]) for row in rows]
+    low, high = min(values), max(values)
+    if high == low:
+        return {row["suburb"]: 50.0 for row in rows}
+    return {
+        row["suburb"]: round((float(row[field]) - low) / (high - low) * 100, 2)
+        for row in rows
+    }
+
+
 def _metrics_rows(state: dict[str, dict]) -> list[dict]:
-    """Convert mutable suburb aggregation state into serialisable metric rows."""
+    """Calculate precinct metrics, density inputs and the provisional score."""
 
     rows = []
     for suburb in sorted(state):
         value = state[suburb]
         plant_species = value["tree_species"] | value["garden_species"]
+        animal_species_count = len(value["pollinator_insect_species"]) + len(
+            value["relevant_bird_species"]
+        )
+        area_ha = value["suburb_area_m2"] / 10_000
         coverage = 100 * value["canopy_area_m2"] / value["suburb_area_m2"]
         rows.append(
             {
+                "precinct_id": value["precinct_id"],
                 "suburb": suburb,
+                "boundary_source": value["boundary_source"],
                 "suburb_area_km2": round(value["suburb_area_m2"] / 1_000_000, 4),
+                "precinct_area_ha": round(area_ha, 4),
                 "canopy_area_km2": round(value["canopy_area_m2"] / 1_000_000, 4),
                 "canopy_coverage_pct": round(coverage, 2),
                 "plant_species_count": len(plant_species),
+                "animal_species_count": animal_species_count,
+                "plant_density_per_ha": round(len(plant_species) / area_ha, 6),
+                "animal_density_per_ha": round(animal_species_count / area_ha, 6),
+                "species_density_per_ha": round(
+                    (len(plant_species) + animal_species_count) / area_ha, 6
+                ),
                 "pollinator_flowering_plant_species_count": len(
                     value["pollinator_flowering_plants"]
                 ),
@@ -511,8 +559,29 @@ def _metrics_rows(state: dict[str, dict]) -> list[dict]:
                 ],
                 "relevant_bird_occurrence_count": value["relevant_bird_occurrence_count"],
                 "address_count": value["address_count"],
+                "pollination_corridor_count": None,
+                "pollination_corridor_status": "not_available_until_iteration_2_review",
             }
         )
+
+    canopy_scores = _minmax_scores(rows, "canopy_coverage_pct")
+    plant_scores = _minmax_scores(rows, "plant_density_per_ha")
+    animal_scores = _minmax_scores(rows, "animal_density_per_ha")
+    for row in rows:
+        suburb = row["suburb"]
+        row["canopy_score_0_100"] = canopy_scores[suburb]
+        row["plant_density_score_0_100"] = plant_scores[suburb]
+        row["animal_density_score_0_100"] = animal_scores[suburb]
+        row["biodiversity_score_0_100"] = round(
+            (
+                canopy_scores[suburb]
+                + plant_scores[suburb]
+                + animal_scores[suburb]
+            )
+            / 3,
+            2,
+        )
+        row["biodiversity_score_version"] = "v1_provisional_canopy_plant_animal"
     return rows
 
 
@@ -544,7 +613,7 @@ def build(
         paths["trees"], features, state, pollinator_plant_keys
     )
     local_report["garden_beds"] = _process_gardens(
-        paths["garden_beds"], state, pollinator_plant_keys, matched_plants
+        paths["garden_beds"], features, state, pollinator_plant_keys, matched_plants
     )
     local_report["addresses"] = _process_addresses(
         paths["addresses"],
@@ -675,6 +744,7 @@ def build(
 
     city_summary = {
         "suburb_count": len(metric_rows),
+        "precinct_count": len(metric_rows),
         "canopy_coverage_pct": round(
             100
             * sum(value["canopy_area_m2"] for value in state.values())
@@ -689,9 +759,12 @@ def build(
         "pollinator_flowering_plant_species_count": len(plant_rows),
         "pollinator_insect_species_count": len(insect_rows),
         "relevant_bird_species_count": len(bird_rows),
+        "biodiversity_score_method": (
+            "mean of precinct min-max canopy, plant-density and animal-density scores"
+        ),
     }
     contract = {
-        "schema_version": "2.0.0",
+        "schema_version": "2.1.0",
         "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "view": "Map Interaction 1 - suburb overview with street-level location detail",
         "location_behavior": {
@@ -706,6 +779,17 @@ def build(
             "pollinator_insect_filter": "species in pollinator_insect_taxa.csv derived from local pol=1 family evidence",
         },
         "street_level_output": "street_level.json",
+        "biodiversity_score": {
+            "status": "provisional_iteration_1",
+            "formula": "(CanopyScore + PlantDensityScore + AnimalDensityScore) / 3",
+            "normalisation": "separate min-max scaling across the 10 precincts",
+            "canopy_input": "canopy_coverage_pct",
+            "plant_input": "distinct plant species / precinct area ha",
+            "animal_input": (
+                "distinct pollinator-candidate insect species plus distinct "
+                "nectar/fruit bird species / precinct area ha"
+            ),
+        },
         "evidence_note": (
             "ALA values are quality-filtered occurrence observations from the 2020 decade, "
             "not confirmed habitat area or population size. Nearby birds and insect candidates "
@@ -721,22 +805,32 @@ def build(
     source_inventory = []
     for key, filename in SOURCE_FILES.items():
         path = paths[key]
+        metadata = SOURCE_METADATA.get(key, {})
         source_inventory.append(
             {
                 "source_key": key,
                 "filename": filename,
                 "bytes": path.stat().st_size,
                 "included_in_pipeline": True,
+                "source_url": metadata.get("source_url", ""),
+                "notes": metadata.get("notes", ""),
             }
         )
     _write_csv(
         paths["processed"] / "source_inventory.csv",
         source_inventory,
-        ["source_key", "filename", "bytes", "included_in_pipeline"],
+        [
+            "source_key",
+            "filename",
+            "bytes",
+            "included_in_pipeline",
+            "source_url",
+            "notes",
+        ],
     )
 
     quality_report = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "local_sources": local_report,
         "ala_birds": bird_api_report,
         "ala_pollinator_insects": insect_api_report,
@@ -744,8 +838,11 @@ def build(
             "ALA records are sightings/occurrences and must not be labelled as habitat polygons.",
             "The supplied qc=-*nest_parent*:* query context returned HTTP 400 on 2026-08-28; stable identifier deduplication is used instead.",
             "Canopy polygons are allocated by their supplied representative point; a polygon crossing a suburb boundary is not clipped.",
-            "Suburb-level garden rows without a supported Neighbourhood label are excluded; street-level garden coordinates are interpreted as MGA/UTM zone 55 south and assigned to the nearest address.",
-            "CLUE boundaries cover 11 merged Map View 1 areas; address labels are normalised spatially against those polygons.",
+            "Garden coordinates are interpreted as MGA/UTM zone 55 south and spatially assigned to the reviewed precinct polygons.",
+            "Vicmap Admin localities are clipped to the Melbourne LGA; North and West Melbourne are merged, and current DDO67/DDO74 planning polygons provide the Fishermans Bend boundary.",
+            "The biodiversity score is a provisional relative comparison across the current 10 precincts; changing a boundary, input dataset or comparison set changes its min-max values.",
+            "The score uses species richness per hectare, not abundance or evenness, so it is not a Shannon or Simpson diversity index.",
+            "Pollination corridor count remains null until the Iteration 2 manual corridor review.",
             "The source data has no street polygons, so tree, garden and canopy assets are assigned to the nearest address within 250 m and canopy is reported as nearby area rather than street coverage percentage.",
             "Nearby animals require live ALA access or a matching cached query; an unavailable query is returned with status and does not change the local street assets.",
             "Pollinator insect classification is family-level evidence; it identifies candidates, not proof that every included species pollinates.",

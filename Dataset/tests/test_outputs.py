@@ -29,7 +29,24 @@ class OutputIntegrationTests(unittest.TestCase):
 
         result = map_view("", PROCESSED)
         self.assertEqual(result["mode"], "suburb_overview")
-        self.assertEqual(len(result["suburbs"]), 11)
+        self.assertEqual(len(result["suburbs"]), 10)
+
+    def test_precinct_scores_use_the_documented_formula(self):
+        """Every score should be the mean of the three min-max components."""
+
+        result = map_view("", PROCESSED)
+        for row in result["suburbs"]:
+            expected = round(
+                (
+                    row["canopy_score_0_100"]
+                    + row["plant_density_score_0_100"]
+                    + row["animal_density_score_0_100"]
+                )
+                / 3,
+                2,
+            )
+            self.assertEqual(row["biodiversity_score_0_100"], expected)
+            self.assertIsNone(row["pollination_corridor_count"])
 
     def test_coordinate_resolves_carlton(self):
         """A known coordinate should return Carlton street data."""
@@ -50,6 +67,20 @@ class OutputIntegrationTests(unittest.TestCase):
         self.assertEqual(animals["birds"]["status"], "live_ala_query_required")
         self.assertEqual(
             animals["pollinator_insects"]["status"], "live_ala_query_required"
+        )
+
+    def test_address_resolves_fishermans_bend_with_precinct_score(self):
+        """A Fishermans Bend address should keep street detail and score context."""
+
+        result = map_view("1 Central Boulevard Port Melbourne", PROCESSED)
+        self.assertEqual(result["mode"], "street_level")
+        self.assertEqual(result["resolved_suburb"], "Fishermans Bend")
+        self.assertEqual(result["resolved_street"]["street_name"], "Central Boulevard")
+        self.assertGreaterEqual(
+            result["suburb_context"]["biodiversity_score_0_100"], 0
+        )
+        self.assertLessEqual(
+            result["suburb_context"]["biodiversity_score_0_100"], 100
         )
 
     def test_border_coordinate_keeps_street_in_resolved_suburb(self):
