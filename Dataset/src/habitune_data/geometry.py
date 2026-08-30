@@ -8,25 +8,24 @@ at roughly five-metre tolerance, to stay within practical URL limits.
 
 from __future__ import annotations
 
-import csv
 import json
 import math
-from collections import defaultdict
 from pathlib import Path
 from typing import Iterable, Sequence
 
 
 EARTH_RADIUS_M = 6_371_008.8
 
-# Merge source-specific labels into the 11 map areas used by View 1.
+# Keep compatibility with source labels that may appear in supporting tables.
 AREA_NAME_MAP = {
-    "Melbourne (CBD)": "Melbourne",
-    "Melbourne (Remainder)": "Melbourne",
-    "CBD Hoddle Grid": "Melbourne",
-    "Central City": "Melbourne",
-    "Fishermans Bend": "Port Melbourne",
-    "West Melbourne (Industrial)": "West Melbourne",
-    "West Melbourne (Residential)": "West Melbourne",
+    "Melbourne": "Central City",
+    "Melbourne (CBD)": "Central City",
+    "Melbourne (Remainder)": "Central City",
+    "CBD Hoddle Grid": "Central City",
+    "North Melbourne": "North and West Melbourne",
+    "West Melbourne": "North and West Melbourne",
+    "West Melbourne (Industrial)": "North and West Melbourne",
+    "West Melbourne (Residential)": "North and West Melbourne",
 }
 
 
@@ -48,27 +47,20 @@ def _as_multipolygon(geometry: dict) -> list:
 
 
 def load_areas(path: Path) -> list[dict]:
-    """Load and merge CLUE small areas into stable suburb-level features."""
+    """Load the reviewed ten-precinct GeoJSON boundary snapshot."""
 
-    # Several CLUE features share one final display name and must be merged.
-    grouped: dict[str, list] = defaultdict(list)
-    with path.open(encoding="utf-8-sig", newline="") as stream:
-        for row in csv.DictReader(stream):
-            name = normalize_area_name(row["featurenam"])
-            geometry = json.loads(row["Geo Shape"])
-            grouped[name].extend(_as_multipolygon(geometry))
-
-    features = []
-    for name in sorted(grouped):
-        geometry = {"type": "MultiPolygon", "coordinates": grouped[name]}
-        features.append(
-            {
-                "type": "Feature",
-                "properties": {"suburb": name},
-                "geometry": geometry,
-            }
-        )
-    return features
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("type") != "FeatureCollection":
+        raise ValueError("Boundary input must be a GeoJSON FeatureCollection")
+    features = data.get("features", [])
+    names = [feature.get("properties", {}).get("suburb") for feature in features]
+    if len(features) != 10 or any(not name for name in names):
+        raise ValueError("Boundary input must contain 10 named precinct features")
+    if len(set(names)) != len(names):
+        raise ValueError("Boundary input contains duplicate precinct names")
+    for feature in features:
+        _as_multipolygon(feature.get("geometry", {}))
+    return sorted(features, key=lambda feature: feature["properties"]["suburb"])
 
 
 def _point_on_segment(

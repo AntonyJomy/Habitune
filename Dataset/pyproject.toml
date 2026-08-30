@@ -9,6 +9,11 @@ description = "Reproducible data preparation for Habitune Map Interaction 1 - Vi
 requires-python = ">=3.11"
 dependencies = []
 
+[project.optional-dependencies]
+# Only the boundary refresh script needs Shapely. The normal build remains
+# dependency-free because it reads the prepared GeoJSON snapshot.
+boundary = ["shapely>=2.0,<3"]
+
 [project.scripts]
 habitune-data = "habitune_data.cli:main"
 

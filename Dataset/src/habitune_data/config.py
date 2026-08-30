@@ -39,9 +39,23 @@ SOURCE_FILES = {
     "addresses": "street-addresses.csv",
     "canopies": "tree-canopies-2019.csv",
     "trees": "trees-with-species-and-dimensions-urban-forest.csv",
-    "boundaries": "small-areas-for-census-of-land-use-and-employment-clue.csv",
+    "boundaries": "urban-forest-precinct-boundaries.geojson",
     "garden_beds": "renewals-for-nature-city-of-melbourne-garden-bed-inventory-2024.csv",
     "bird_traits": "species-list-6a0a60879edbb26fbb3cac18.csv",
+}
+
+
+SOURCE_METADATA = {
+    "boundaries": {
+        "source_url": (
+            "https://spatial.planning.vic.gov.au/gis/rest/services/"
+            "boundary/MapServer"
+        ),
+        "notes": (
+            "Prepared from Vicmap Admin locality/LGA polygons and the current "
+            "Melbourne Fishermans Bend DDO74/DDO67 planning polygons."
+        ),
+    }
 }
 
 
