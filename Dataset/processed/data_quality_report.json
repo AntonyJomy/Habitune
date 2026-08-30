@@ -1,26 +1,27 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "local_sources": {
     "canopies": {
       "rows": 114784,
-      "accepted": 114713,
-      "rejected_outside_supported_areas": 71
+      "accepted": 103452,
+      "rejected_outside_supported_areas": 11332
     },
     "trees": {
       "rows": 82064,
-      "accepted": 81895,
-      "rejected_outside_supported_areas": 169
+      "accepted": 77913,
+      "rejected_outside_supported_areas": 4151
     },
     "garden_beds": {
       "rows": 17721,
-      "accepted": 13039,
+      "accepted": 13403,
       "rejected_missing_species": 4084,
-      "rejected_unknown_or_missing_area": 598
+      "rejected_outside_supported_areas": 163,
+      "rejected_missing_asset_coordinates": 71
     },
     "addresses": {
       "rows": 63721,
-      "accepted": 62996,
-      "rejected_outside_supported_areas": 724,
+      "accepted": 61413,
+      "rejected_outside_supported_areas": 2307,
       "rejected_missing_street": 1
     },
     "insect_plant_study": {
@@ -84,26 +85,26 @@
       ]
     },
     "street_level": {
-      "street_count": 997,
+      "street_count": 973,
       "maximum_assignment_distance_m": 250.0,
       "trees": {
         "rows": 82064,
-        "accepted": 77965,
-        "rejected_outside_supported_areas": 169,
-        "rejected_no_address_within_250m": 3930
+        "accepted": 74330,
+        "rejected_no_address_within_250m": 3583,
+        "rejected_outside_supported_areas": 4151
       },
       "canopies": {
         "rows": 114784,
-        "accepted": 111154,
-        "rejected_no_address_within_250m": 3559,
-        "rejected_outside_supported_areas": 71
+        "accepted": 101831,
+        "rejected_no_address_within_250m": 1621,
+        "rejected_outside_supported_areas": 11332
       },
       "garden_beds": {
         "rows": 17721,
-        "accepted": 13253,
+        "accepted": 13099,
         "rejected_missing_species_or_coordinates": 4155,
-        "rejected_no_address_within_250m": 304,
-        "rejected_outside_supported_areas": 9
+        "rejected_outside_supported_areas": 163,
+        "rejected_no_address_within_250m": 304
       }
     }
   },
@@ -130,21 +131,25 @@
       "Sternula nereis",
       "Synoicus ypsilophora"
     ],
-    "area_query_count": 11
+    "area_query_count": 10
   },
   "ala_pollinator_insects": {
     "api_total_occurrence_records": 1531,
     "downloaded_records": 1531,
-    "accepted": 1442,
+    "accepted": 1333,
+    "rejected_outside_supported_areas": 109,
     "rejected_non_species_taxon": 89,
-    "accepted_species_count": 105
+    "accepted_species_count": 100
   },
   "known_limitations": [
     "ALA records are sightings/occurrences and must not be labelled as habitat polygons.",
     "The supplied qc=-*nest_parent*:* query context returned HTTP 400 on 2026-08-28; stable identifier deduplication is used instead.",
     "Canopy polygons are allocated by their supplied representative point; a polygon crossing a suburb boundary is not clipped.",
-    "Suburb-level garden rows without a supported Neighbourhood label are excluded; street-level garden coordinates are interpreted as MGA/UTM zone 55 south and assigned to the nearest address.",
-    "CLUE boundaries cover 11 merged Map View 1 areas; address labels are normalised spatially against those polygons.",
+    "Garden coordinates are interpreted as MGA/UTM zone 55 south and spatially assigned to the reviewed precinct polygons.",
+    "Vicmap Admin localities are clipped to the Melbourne LGA; North and West Melbourne are merged, and current DDO67/DDO74 planning polygons provide the Fishermans Bend boundary.",
+    "The biodiversity score is a provisional relative comparison across the current 10 precincts; changing a boundary, input dataset or comparison set changes its min-max values.",
+    "The score uses species richness per hectare, not abundance or evenness, so it is not a Shannon or Simpson diversity index.",
+    "Pollination corridor count remains null until the Iteration 2 manual corridor review.",
     "The source data has no street polygons, so tree, garden and canopy assets are assigned to the nearest address within 250 m and canopy is reported as nearby area rather than street coverage percentage.",
     "Nearby animals require live ALA access or a matching cached query; an unavailable query is returned with status and does not change the local street assets.",
     "Pollinator insect classification is family-level evidence; it identifies candidates, not proof that every included species pollinates.",
