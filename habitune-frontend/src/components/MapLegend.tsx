@@ -1,0 +1,4 @@
+// @ts-nocheck
+import BiodiversityIcon from './BiodiversityIcon'
+
+export default function MapLegend() { return <details className="map-legend"><summary>Map key</summary><div className="legend-grid"><span><BiodiversityIcon type="tree" size={15} variant="legend" />Urban tree</span><span><i className="legend-area activity"></i>Activity / potential area</span><span><i className="legend-line high"></i>High-quality corridor</span><span><i className="legend-line medium"></i>Medium-quality corridor</span><span><i className="legend-line potential"></i>Potential corridor</span><span><BiodiversityIcon type="pollinator" size={15} variant="legend" />Pollinator groups</span><span><i className="legend-area canopy"></i>Tree canopy</span><span><i className="legend-area habitat"></i>Habitat / green space</span></div></details> }
