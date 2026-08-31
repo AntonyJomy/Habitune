@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatedEcosystemHero } from '../components/AnimatedEcosystemHero'
+import HabituneBrand from '../components/HabituneBrand'
 import flowerPlaceholderIcon from '../assets/home/flower-placeholder.svg'
 import videoPlaceholderIcon from '../assets/home/video-placeholder.svg'
 import '../landing.css'
@@ -40,8 +41,7 @@ function Header({ onExploreArea }: LandingPageProps) {
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Habitune home">
-        <span className="brand-dot" aria-hidden="true" />
-        <span>Habitune</span>
+        <HabituneBrand />
       </a>
 
       <div className="header-actions">
