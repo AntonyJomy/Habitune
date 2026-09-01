@@ -1,7 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import 'leaflet/dist/leaflet.css'
+import './habitune.css'
 import App from './App'
-import './style.css'
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
