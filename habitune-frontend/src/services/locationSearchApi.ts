@@ -1,14 +1,12 @@
 // @ts-nocheck
 import { locations } from '../data/mockEcosystemData'
-import { datasetSuburbPolygons } from '../data/suburbBiodiversityData'
 
-const suburbEntries = [
-  ['Carlton', 'Carlton VIC 3053', ['3053']], ['Parkville', 'Parkville VIC 3052', ['3052']],
-  ['Kensington', 'Kensington VIC 3031', ['3031']], ['North and West Melbourne', 'North and West Melbourne VIC', ['3003', '3051']],
-  ['Docklands', 'Docklands VIC 3008', ['3008']], ['Central City', 'Melbourne VIC 3000', ['3000']],
-  ['East Melbourne', 'East Melbourne VIC 3002', ['3002']], ['Southbank', 'Southbank VIC 3006', ['3006']],
-  ['South Yarra', 'South Yarra VIC 3141', ['3141']], ['Fishermans Bend', 'Fishermans Bend VIC 3207', ['3207']],
-].map(([name, secondary, postcodes]) => ({ primary: name, secondary, type: 'Suburb', suburb: name, postcodes, searchedLocation: null }))
+const postcodesByPrecinct = {
+  Carlton: ['3053'], Parkville: ['3052'], Kensington: ['3031'],
+  'North and West Melbourne': ['3003', '3051'], Docklands: ['3008'],
+  'Central City': ['3000'], 'East Melbourne': ['3002'], Southbank: ['3006'],
+  'South Yarra': ['3141'], 'Fishermans Bend': ['3207'],
+}
 
 const knownPlaces = [
   { primary: 'Lygon Street', secondary: 'Carlton VIC', type: 'Street', suburb: 'Carlton', lat: -37.8001, lng: 144.9672 },
@@ -18,13 +16,28 @@ const knownPlaces = [
   { primary: 'Carlton Gardens', secondary: 'Carlton VIC 3053', type: 'Landmark', suburb: 'Carlton', lat: -37.8053, lng: 144.9715 },
 ].map((place) => ({ ...place, searchedLocation: { label: `${place.primary}, ${place.secondary}`, lat: place.lat, lng: place.lng } }))
 
-const catalog = [...suburbEntries, ...knownPlaces]
 const geocodeCache = new Map()
 const normalize = (value) => value.trim().toLowerCase()
 
-export function getLocationSuggestions(query) {
+const buildCatalog = (precincts) => [
+  ...precincts.map((precinct) => {
+    const postcodes = postcodesByPrecinct[precinct.name] || []
+    return {
+      primary: precinct.name,
+      secondary: `${precinct.name} VIC${postcodes[0] ? ` ${postcodes[0]}` : ''}`,
+      type: 'Suburb',
+      suburb: precinct.name,
+      postcodes,
+      searchedLocation: null,
+    }
+  }),
+  ...knownPlaces,
+]
+
+export function getLocationSuggestions(query, precincts = []) {
   const term = normalize(query)
   if (!term) return []
+  const catalog = buildCatalog(precincts)
   return catalog.filter((entry) => entry.primary.toLowerCase().includes(term) || entry.secondary.toLowerCase().includes(term) || entry.postcodes?.some((postcode) => postcode.startsWith(term))).slice(0, 6)
 }
 
@@ -48,15 +61,16 @@ function pointInPrecinct(point, positions) {
   return isPolygon ? pointInPolygonWithHoles(point, positions) : positions.some((polygon) => pointInPolygonWithHoles(point, polygon))
 }
 
-function findSupportedSuburb(lat, lng, displayName = '') {
-  const byPolygon = datasetSuburbPolygons.find((suburb) => pointInPrecinct([lat, lng], suburb.positions))
+function findSupportedSuburb(lat, lng, displayName = '', precincts = []) {
+  const byPolygon = precincts.find((suburb) => pointInPrecinct([lat, lng], suburb.positions))
   if (byPolygon) return byPolygon.name
   const normalizedName = displayName.toLowerCase()
   return Object.keys(locations).find((name) => normalizedName.includes(name.toLowerCase())) || null
 }
 
-export async function resolveLocation(query) {
+export async function resolveLocation(query, precincts = []) {
   const term = normalize(query)
+  const catalog = buildCatalog(precincts)
   const exact = catalog.find((entry) => entry.primary.toLowerCase() === term || entry.postcodes?.includes(term))
   if (exact) return { status: 'supported', suburb: exact.suburb, searchedLocation: exact.searchedLocation }
   if (geocodeCache.has(term)) return geocodeCache.get(term)
@@ -70,7 +84,7 @@ export async function resolveLocation(query) {
     for (const result of results) {
       const lat = Number(result.lat)
       const lng = Number(result.lon)
-      const suburb = findSupportedSuburb(lat, lng, result.display_name || '')
+      const suburb = findSupportedSuburb(lat, lng, result.display_name || '', precincts)
       if (suburb) {
         const resolved = { status: 'supported', suburb, searchedLocation: { label: result.display_name, lat, lng } }
         geocodeCache.set(term, resolved)

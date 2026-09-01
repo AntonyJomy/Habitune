@@ -3,19 +3,19 @@ import { useState } from 'react'
 import { Search } from 'lucide-react'
 import { getLocationSuggestions, resolveLocation } from '../services/locationSearchApi'
 
-export default function LocationSearch({ onChoose }) {
+export default function LocationSearch({ onChoose, suburbs = [] }) {
   const [query, setQuery] = useState('')
   const [error, setError] = useState('')
   const [focused, setFocused] = useState(false)
   const [searching, setSearching] = useState(false)
-  const matches = getLocationSuggestions(query)
+  const matches = getLocationSuggestions(query, suburbs)
   const choose = (area) => { setError(''); setQuery(area.primary); onChoose(area.suburb, area.searchedLocation) }
   const submit = async (event) => {
     event.preventDefault()
     if (!query.trim()) return setError('Enter a suburb, street, address, place or postcode.')
     setSearching(true)
     setError('')
-    const result = await resolveLocation(query)
+    const result = await resolveLocation(query, suburbs)
     setSearching(false)
     if (result.status === 'supported') return onChoose(result.suburb, result.searchedLocation)
     if (result.status === 'outside') return setError('This location is outside the current Habitune study area.')

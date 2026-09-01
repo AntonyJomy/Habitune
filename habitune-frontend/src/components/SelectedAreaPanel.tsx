@@ -24,7 +24,7 @@ export default function SelectedAreaPanel({ name, summary, onExplore }: Selected
 
       <div className="biodiversity-score">
         <span>Biodiversity Score</span>
-        <strong>{Math.round(summary.biodiversityScore)} <small>/ 100</small></strong>
+        <strong>{summary.biodiversityScore.toFixed(2)} <small>/ 100</small></strong>
         <span className="score-info" title="Provisional score supplied by the processed Dataset contract.">
           <Info size={13} aria-hidden="true" /> Dataset score
         </span>
