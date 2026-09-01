@@ -2,6 +2,12 @@ version = 0.1
 
 [dev.deploy.parameters]
 parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune-backend\" LogRetentionDays=\"7\""
+stack_name = "habitune-backend-dev"
+resolve_s3 = true
+s3_prefix = "habitune-backend-dev"
+confirm_changeset = true
+capabilities = "CAPABILITY_NAMED_IAM"
+image_repositories = []
 
 [prod.deploy.parameters]
 parameter_overrides = "Stage=\"prod\" ProjectName=\"habitune-backend\" LogRetentionDays=\"REPLACE_ME_LOG_RETENTION_DAYS\""
