@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.1.0",
+  "local_sources": {
+    "canopies": {
+      "rows": 114784,
+      "accepted": 103452,
+      "rejected_outside_supported_areas": 11332
+    },
+    "trees": {
+      "rows": 82064,
+      "accepted": 77913,
+      "rejected_outside_supported_areas": 4151
+    },
+    "garden_beds": {
+      "rows": 17721,
+      "accepted": 13403,
+      "rejected_missing_species": 4084,
+      "rejected_outside_supported_areas": 163,
+      "rejected_missing_asset_coordinates": 71
+    },
+    "addresses": {
+      "rows": 63721,
+      "accepted": 61413,
+      "rejected_outside_supported_areas": 2307,
+      "rejected_missing_street": 1
+    },
+    "insect_plant_study": {
+      "rows": 3579,
+      "invalid_pollinator_flag": 0,
+      "candidate_family_count": 34,
+      "pollinator_linked_plant_species_count": 127
+    },
+    "bird_traits": {
+      "rows": 9993,
+      "accepted_name_alias_rows": 844,
+      "fuzzy_match_rows": 9,
+      "accepted_manual_fuzzy_alias_rows": 7,
+      "accepted_manual_fuzzy_aliases": [
+        {
+          "supplied_name": "Calyptorhynchus funereus",
+          "source_suggestion": "Zanda funerea funerea",
+          "accepted_species_name": "Zanda funerea"
+        },
+        {
+          "supplied_name": "Catharacta antarctica",
+          "source_suggestion": "Stercorarius antarcticus",
+          "accepted_species_name": "Stercorarius antarcticus"
+        },
+        {
+          "supplied_name": "Phalacrocorax melanoleucos",
+          "source_suggestion": "Microcarbo melanoleucos melanoleucos",
+          "accepted_species_name": "Microcarbo melanoleucos"
+        },
+        {
+          "supplied_name": "Threskiornis molucca",
+          "source_suggestion": "Threskiornis moluccus",
+          "accepted_species_name": "Threskiornis moluccus"
+        },
+        {
+          "supplied_name": "Thalassarche melanophrys",
+          "source_suggestion": "Thalassarche melanophris",
+          "accepted_species_name": "Thalassarche melanophris"
+        },
+        {
+          "supplied_name": "Chthonicola sagittatus",
+          "source_suggestion": "Pyrrholaemus sagittatus",
+          "accepted_species_name": "Pyrrholaemus sagittatus"
+        },
+        {
+          "supplied_name": "Arses telescophthalmus",
+          "source_suggestion": "Arses telescopthalmus",
+          "accepted_species_name": "Arses telescopthalmus"
+        }
+      ],
+      "rejected_unverified_fuzzy_alias_rows": 2,
+      "rejected_unverified_fuzzy_aliases": [
+        {
+          "supplied_name": "Cisticola ruficeps",
+          "suggested_name": "Cisticola (Cisticola) exilis exilis"
+        },
+        {
+          "supplied_name": "Zosterops chloronothus",
+          "suggested_name": "Zosterops lateralis chloronotus"
+        }
+      ]
+    },
+    "street_level": {
+      "street_count": 973,
+      "maximum_assignment_distance_m": 250.0,
+      "trees": {
+        "rows": 82064,
+        "accepted": 74330,
+        "rejected_no_address_within_250m": 3583,
+        "rejected_outside_supported_areas": 4151
+      },
+      "canopies": {
+        "rows": 114784,
+        "accepted": 101831,
+        "rejected_no_address_within_250m": 1621,
+        "rejected_outside_supported_areas": 11332
+      },
+      "garden_beds": {
+        "rows": 17721,
+        "accepted": 13099,
+        "rejected_missing_species_or_coordinates": 4155,
+        "rejected_outside_supported_areas": 163,
+        "rejected_no_address_within_250m": 304
+      }
+    }
+  },
+  "ala_birds": {
+    "query": "taxa:\"Birds\"",
+    "query_basis": "explicit Birds taxon query replacing the equivalent supplied qid",
+    "api_total_occurrence_records": 427596,
+    "api_species_count": 212,
+    "trait_matched_relevant_species_count": 66,
+    "trait_matched_excluded_species_count": 133,
+    "unmatched_species_count": 13,
+    "unmatched_species": [
+      "Anas superciliosa X platyrhynchos",
+      "Ceyx azureus",
+      "Chalcites basalis",
+      "Chalcites lucidus",
+      "Eolophus roseicapilla",
+      "Ninox leucopsis",
+      "Petrochelidon ariel",
+      "Petrochelidon nigricans",
+      "Petroica boodang",
+      "Poodytes gramineus",
+      "Rhipidura albiscapa",
+      "Sternula nereis",
+      "Synoicus ypsilophora"
+    ],
+    "area_query_count": 10
+  },
+  "ala_pollinator_insects": {
+    "api_total_occurrence_records": 1531,
+    "downloaded_records": 1531,
+    "accepted": 1333,
+    "rejected_outside_supported_areas": 109,
+    "rejected_non_species_taxon": 89,
+    "accepted_species_count": 100
+  },
+  "known_limitations": [
+    "ALA records are sightings/occurrences and must not be labelled as habitat polygons.",
+    "The supplied qc=-*nest_parent*:* query context returned HTTP 400 on 2026-08-28; stable identifier deduplication is used instead.",
+    "Canopy polygons are allocated by their supplied representative point; a polygon crossing a suburb boundary is not clipped.",
+    "Garden coordinates are interpreted as MGA/UTM zone 55 south and spatially assigned to the reviewed precinct polygons.",
+    "Vicmap Admin localities are clipped to the Melbourne LGA; North and West Melbourne are merged, and current DDO67/DDO74 planning polygons provide the Fishermans Bend boundary.",
+    "The biodiversity score is a provisional relative comparison across the current 10 precincts; changing a boundary, input dataset or comparison set changes its min-max values.",
+    "The score uses species richness per hectare, not abundance or evenness, so it is not a Shannon or Simpson diversity index.",
+    "Pollination corridor count remains null until the Iteration 2 manual corridor review.",
+    "The source data has no street polygons, so tree, garden and canopy assets are assigned to the nearest address within 250 m and canopy is reported as nearby area rather than street coverage percentage.",
+    "Nearby animals require live ALA access or a matching cached query; an unavailable query is returned with status and does not change the local street assets.",
+    "Pollinator insect classification is family-level evidence; it identifies candidates, not proof that every included species pollinates.",
+    "Only manually verified fuzzy bird aliases are accepted; rejected suggestions are listed in this report.",
+    "Bird relevance for Iteration 1 requires nectar or fruit in the trait table; invertebrate diet is retained only as supporting detail."
+  ]
+}

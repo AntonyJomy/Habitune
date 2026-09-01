@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "habitune-map-data"
+version = "0.1.0"
+description = "Reproducible data preparation for Habitune Map Interaction 1 - View 1"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+# Only the boundary refresh script needs Shapely. The normal build remains
+# dependency-free because it reads the prepared GeoJSON snapshot.
+boundary = ["shapely>=2.0,<3"]
+
+[project.scripts]
+habitune-data = "habitune_data.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
