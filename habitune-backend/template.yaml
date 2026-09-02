@@ -49,6 +49,244 @@ Resources:
                   - logs:PutLogEvents
                 Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-health-check-${Stage}:*"
 
+  # Shared execution role for future read-only precinct database functions.
+  PrecinctFunctionExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-precinct-role-${Stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub "${ProjectName}-precinct-logs-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-precinct-*-${Stage}:*"
+        - PolicyName: !Sub "${ProjectName}-precinct-vpc-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DescribeSubnets
+                  - ec2:DeleteNetworkInterface
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:UnassignPrivateIpAddresses
+                Resource: "*"
+        - PolicyName: !Sub "${ProjectName}-precinct-secret-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource:
+                  Fn::ImportValue:
+                    Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+
+  # Dedicated administrative role; the initializer has no API Gateway event.
+  InitDatabaseExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-database-init-role-${Stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub "${ProjectName}-database-init-logs-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-database-init-${Stage}:*"
+        - PolicyName: !Sub "${ProjectName}-database-init-vpc-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DescribeSubnets
+                  - ec2:DeleteNetworkInterface
+                  - ec2:AssignPrivateIpAddresses
+                  - ec2:UnassignPrivateIpAddresses
+                Resource: "*"
+        - PolicyName: !Sub "${ProjectName}-database-init-secret-${Stage}"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource:
+                  Fn::ImportValue:
+                    Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+
+  InitDatabaseFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ..
+      FunctionName: !Sub "${ProjectName}-database-init-${Stage}"
+      Description: Guarded one-time initializer for the private Habitune database
+      Handler: functions.init_database.handler.lambda_handler
+      Role: !GetAtt InitDatabaseExecutionRole.Arn
+      MemorySize: 256
+      Timeout: 120
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+
+  GetPrecinctsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-precinct-list-${Stage}"
+      Handler: functions.get_precincts.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetPrecincts:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /precincts
+            Method: GET
+
+  GetPrecinctFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-precinct-get-${Stage}"
+      Handler: functions.get_precinct.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetPrecinct:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /precincts/{precinct_id}
+            Method: GET
+
+  # API route for precinct boundary GeoJSON.
+  GetPrecinctGeoJsonFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-precinct-geojson-${Stage}"
+      Handler: functions.get_precinct_geojson.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetPrecinctGeoJson:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /precincts/geojson
+            Method: GET
+
   HealthCheckFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -68,6 +306,26 @@ Resources:
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-health-check-${Stage}"
       RetentionInDays: !Ref LogRetentionDays
+  GetPrecinctsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-precinct-list-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetPrecinctLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-precinct-get-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetPrecinctGeoJsonLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-precinct-geojson-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  InitDatabaseLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-database-init-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
 
 Outputs:
   ApiUrl:
@@ -76,3 +334,6 @@ Outputs:
   HealthUrl:
     Description: Health-check endpoint
     Value: !Sub "https://${HabituneApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${Stage}/health"
+  PrecinctsUrl:
+    Description: Precinct collection endpoint
+    Value: !Sub "https://${HabituneApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${Stage}/precincts"

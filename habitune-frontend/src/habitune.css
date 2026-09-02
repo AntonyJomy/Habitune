@@ -26,7 +26,7 @@ h1 em { color: #679f5d; font-style: normal; }
 .error { color: #a43d35; font-size: 13px; margin: 9px 4px 0; }
 .source-note { margin: 13px 5px 0; color: #718078; font-size: 13px; }
 .source-note span { color: #68a85c; }
-.search-suggestions { position:absolute; z-index:1000; top:calc(100% + 7px); left:0; right:0; overflow:hidden; padding:5px; border:1px solid #d9e2d7; border-radius:13px; background:#fff; box-shadow:0 16px 38px rgba(28,65,43,.16); }.search-suggestions button { width:100%; padding:10px 11px; display:flex; align-items:center; gap:10px; border:0; border-radius:9px; background:transparent; color:#294b3a; text-align:left; }.search-suggestions button:hover,.search-suggestions button:focus-visible { outline:0; background:#edf4e9; }.search-suggestions button > svg { color:#659069; }.search-suggestions button span,.search-suggestions button strong,.search-suggestions button small { display:block; }.search-suggestions button span { flex:1; }.search-suggestions button strong { font-size:12px; }.search-suggestions button small { margin-top:2px; color:#89958e; font-size:9px; }
+.search-suggestions { position:absolute; z-index:1000; top:calc(100% + 7px); left:0; right:0; max-height:min(360px,50vh); overflow-y:auto; padding:5px; border:1px solid #d9e2d7; border-radius:13px; background:#fff; box-shadow:0 16px 38px rgba(28,65,43,.16); }.search-suggestions button { width:100%; padding:10px 11px; display:flex; align-items:center; gap:10px; border:0; border-radius:9px; background:transparent; color:#294b3a; text-align:left; }.search-suggestions button:hover,.search-suggestions button:focus-visible { outline:0; background:#edf4e9; }.search-suggestions button > svg { color:#659069; }.search-suggestions button span,.search-suggestions button strong,.search-suggestions button small { display:block; }.search-suggestions button span { flex:1; }.search-suggestions button strong { font-size:12px; }.search-suggestions button small { margin-top:2px; color:#89958e; font-size:9px; }
 .search-suggestions button em { padding:3px 5px; border-radius:5px; background:#edf3e9; color:#6e8176; font-size:7px; font-style:normal; text-transform:uppercase; letter-spacing:.05em; }.search-attribution { display:block; padding:5px 10px 3px; color:#9aa49f; font-size:7px; }.searching-indicator { flex:0 0 auto; color:#718078; font-size:9px; }
 .hero-visual { position: relative; height: 480px; border-radius: 50% 42% 48% 43%; background: linear-gradient(145deg, #e8f0df, #cfdfc7); overflow: hidden; box-shadow: inset 0 0 80px rgba(37, 99, 67, .08); }
 .visual-orbit { position: absolute; border: 1px dashed rgba(28, 100, 69, .25); border-radius: 50%; }
@@ -135,7 +135,6 @@ footer { max-width:1184px; margin:auto; padding:34px 0 45px; display:grid; grid-
 /* Landing-page area selector */
 .home-suburb-selector { min-width:0; }.home-suburb-selector .suburb-map-shell { min-height:480px; border:1px solid #d4ddd2; border-radius:24px; box-shadow:0 18px 45px rgba(31,71,49,.11); }.home-suburb-selector .suburb-overview-map { min-height:480px; }.selected-location { margin:10px 5px 0; color:#61736a; font-size:12px; }.selected-location strong { color:#245e43; }.area-selection-copy { min-width:0; }
 .choose-area-button { margin:0 0 9px; padding:0; display:inline-flex; align-items:center; gap:5px; border:0; background:transparent; color:#4b755f; font-size:9px; font-weight:800; }.choose-area-button:hover { color:#1f6043; }
-.back-to-landing { margin:0 0 18px; padding:8px 0; border:0; background:transparent; color:#397052; font-weight:700; }.back-to-landing:hover { color:#174b35; }
 .searched-location-marker { overflow:visible !important; border:0; background:transparent; }.searched-location-marker span { width:32px; height:32px; display:grid; place-items:center; border:3px solid #fff; border-radius:50% 50% 50% 7px; transform:rotate(-45deg); background:#245f9b; color:#fff; box-shadow:0 5px 15px rgba(29,58,80,.3); }.searched-location-marker svg { transform:rotate(45deg); }.popup-category.location { background:#e6eff8; color:#315f8b; }
 @media (max-width:800px) { .home-suburb-selector .suburb-map-shell,.home-suburb-selector .suburb-overview-map { min-height:430px; } }
 @media (max-width:800px) { .location-search .search-row { min-height:54px; flex-direction:row; gap:3px; }.location-search .search-row input { min-height:40px; }.search-suggestions button { width:100%; } }
@@ -143,6 +142,10 @@ footer { max-width:1184px; margin:auto; padding:34px 0 45px; display:grid; grid-
 /* Biodiversity overview / area search */
 body:has(.biodiversity-overview) { background:#f7f8f5; }
 body:has(.biodiversity-overview) .navbar { height:64px; max-width:1280px; padding:0 40px; border-bottom:1px solid #f0f1ef; background:#fff; font-family:Inter,"Helvetica Neue",Arial,sans-serif; }
+.navbar-home-actions { min-width:0; display:flex; align-items:center; gap:8px; }
+.navbar-back { flex:0 0 auto; width:34px; height:34px; padding:0; display:grid; place-items:center; border:1px solid #e4e7e2; border-radius:9px; background:#fff; color:#397052; }
+.navbar-back:hover { border-color:#b9cdb9; background:#f3f7f1; color:#174b35; }
+.navbar-back:focus-visible { outline:3px solid rgb(100 161 102 / 25%); outline-offset:2px; }
 body:has(.biodiversity-overview) .navbar .brand { gap:9px; color:#171817; font-family:inherit; font-size:20px; font-weight:800; }
 body:has(.biodiversity-overview) .navbar nav { gap:28px; }
 body:has(.biodiversity-overview) .navbar nav button { padding:12px 0; border-radius:0; color:#6f706f; font-size:16px; font-weight:500; }
@@ -150,8 +153,6 @@ body:has(.biodiversity-overview) .navbar nav button:hover,
 body:has(.biodiversity-overview) .navbar nav button.active { background:transparent; color:#578f5b; }
 .biodiversity-overview { min-height:calc(100vh - 64px); max-width:1280px; margin:0 auto; padding:32px 40px 40px; display:grid; grid-template-columns:minmax(350px,32%) minmax(0,1fr); align-items:stretch; gap:24px; background:#fff; color:#171817; font-family:Inter,"Helvetica Neue",Arial,sans-serif; box-shadow:0 24px 40px rgb(0 0 0 / 4%); }
 .overview-panel { min-width:0; padding:30px 28px; display:flex; flex-direction:column; border:1px solid #e7e8e5; border-radius:16px; background:#fafafa; box-shadow:none; }
-.overview-panel .back-to-landing { align-self:flex-start; margin:0 0 20px; padding:3px 0; border-bottom:1px solid transparent; color:#6f706f; font-size:12px; font-weight:500; }
-.overview-panel .back-to-landing:hover { border-bottom-color:#b9cdb9; color:#578f5b; }
 .overview-mode-row { margin:0 0 25px; }
 .overview-toggle { width:max-content; margin:0; padding:3px; display:grid; grid-template-columns:repeat(2,auto); gap:2px; border:1px solid #e4e5e2; border-radius:999px; background:#f2f3f0; }
 .overview-toggle button { min-width:108px; min-height:32px; padding:6px 14px; border:0; border-radius:999px; background:transparent; color:#777b77; font-size:11px; font-weight:600; transition:background 160ms ease,color 160ms ease; }
@@ -189,9 +190,6 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 .area-metrics div { min-height:33px; display:flex; align-items:center; justify-content:space-between; gap:15px; border-bottom:1px solid #edf0ec; }
 .area-metrics dt { color:#687970; font-size:10px; }
 .area-metrics dd { margin:0; color:#294d3b; font:800 11px Manrope; }
-.explore-selected-area { width:100%; min-height:50px; margin-top:22px; padding:12px 22px; display:flex; align-items:center; justify-content:space-between; border:0; border-radius:999px; background:#64a166; color:#fff; font-size:12px; font-weight:700; transition:background 160ms ease,transform 160ms ease; }
-.explore-selected-area:hover { background:#578f5b; }
-.explore-selected-area:hover { transform:translateY(-1px); }
 .overview-map { min-width:0; }
 .overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:calc(100vh - 136px); }
 .overview-map .suburb-map-shell { border:1px solid #dedfdd; border-radius:24px; box-shadow:0 12px 30px rgb(22 29 23 / 7%); }
@@ -209,4 +207,4 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 .score-legend-steps > span:nth-child(4) small,.score-legend-steps > span:nth-child(5) small { color:#fff; text-shadow:0 1px 2px rgba(18,55,31,.65); }
 .score-legend-labels { margin-top:5px; display:flex; justify-content:space-between; color:#7a8981; font-size:7px; }
 @media (max-width:900px) { .biodiversity-overview { grid-template-columns:1fr; padding-top:24px; }.overview-panel { min-height:auto; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:560px; } }
-@media (max-width:600px) { body:has(.biodiversity-overview) .navbar { padding:0 18px; }body:has(.biodiversity-overview) .navbar nav { gap:14px; }body:has(.biodiversity-overview) .navbar nav button { font-size:14px; }.biodiversity-overview { padding:18px 16px 28px; gap:18px; }.overview-panel { padding:24px 22px; border-radius:16px; }.overview-panel .back-to-landing { margin-bottom:20px; }.overview-toggle { width:100%; }.overview-toggle button { min-width:0; }.overview-intro .section-kicker { font-size:11px; }.overview-intro h1 { font-size:34px; line-height:1.16; }.overview-intro p { font-size:14px; }.overview-selection-region { padding:16px; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:500px; }.overview-map .suburb-map-shell { border-radius:20px; }.biodiversity-score-legend { right:10px; bottom:20px; width:205px; } }
+@media (max-width:600px) { body:has(.biodiversity-overview) .navbar { padding:0 12px; }body:has(.biodiversity-overview) .navbar .navbar-home-actions { gap:4px; }body:has(.biodiversity-overview) .navbar .navbar-back { width:32px; height:32px; }body:has(.biodiversity-overview) .navbar .brand { gap:6px; font-size:18px; }body:has(.biodiversity-overview) .navbar nav { gap:2px; }body:has(.biodiversity-overview) .navbar nav button { padding:8px 4px; font-size:12px; }.biodiversity-overview { padding:18px 16px 28px; gap:18px; }.overview-panel { padding:24px 22px; border-radius:16px; }.overview-toggle { width:100%; }.overview-toggle button { min-width:0; }.overview-intro .section-kicker { font-size:11px; }.overview-intro h1 { font-size:34px; line-height:1.16; }.overview-intro p { font-size:14px; }.overview-selection-region { padding:16px; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:500px; }.overview-map .suburb-map-shell { border-radius:20px; }.biodiversity-score-legend { right:10px; bottom:20px; width:205px; } }

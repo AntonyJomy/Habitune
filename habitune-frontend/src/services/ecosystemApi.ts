@@ -1,16 +1,21 @@
 // @ts-nocheck
 import { locations, trees, observations, canopyPolygons, habitatPolygons, ecologicalActivityAreas, pollinationCorridors, suburbBoundary, summary, species } from '../data/mockEcosystemData'
-import { datasetSuburbPolygons } from '../data/suburbBiodiversityData'
+import { buildSuburbPolygons, toSuburbBiodiversitySummary } from '../data/suburbBiodiversityData'
+import { getPrecinct, getPrecinctGeoJson, listPrecincts } from './precinctApi'
 
 const wait = (value) => Promise.resolve(value)
 
 export async function getSuburbOverview() {
-  // Future FastAPI: GET /api/suburbs/ecosystem-overview
-  return wait({
-    locations,
-    polygons: datasetSuburbPolygons,
+  const [precincts, geoJson] = await Promise.all([listPrecincts(), getPrecinctGeoJson()])
+  return {
+    polygons: buildSuburbPolygons(precincts, geoJson),
     isMock: false,
-  })
+  }
+}
+
+export async function getPrecinctOverview(precinctId) {
+  const precinct = await getPrecinct(precinctId)
+  return precinct ? toSuburbBiodiversitySummary(precinct) : null
 }
 
 export async function getEcosystemContext(location = 'Carlton') {

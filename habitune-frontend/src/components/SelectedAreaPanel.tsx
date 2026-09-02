@@ -4,7 +4,6 @@ import type { SuburbBiodiversitySummary } from '../data/suburbBiodiversityData'
 type SelectedAreaPanelProps = {
   name: string
   summary: SuburbBiodiversitySummary
-  onExplore: () => void
 }
 
 const metrics: Array<[keyof SuburbBiodiversitySummary, string]> = [
@@ -14,7 +13,7 @@ const metrics: Array<[keyof SuburbBiodiversitySummary, string]> = [
   ['relevantBirdSpecies', 'Relevant bird species'],
 ]
 
-export default function SelectedAreaPanel({ name, summary, onExplore }: SelectedAreaPanelProps) {
+export default function SelectedAreaPanel({ name, summary }: SelectedAreaPanelProps) {
   return (
     <section className="selected-area-panel" aria-live="polite">
       <div className="selected-area-heading">
@@ -24,7 +23,7 @@ export default function SelectedAreaPanel({ name, summary, onExplore }: Selected
 
       <div className="biodiversity-score">
         <span>Biodiversity Score</span>
-        <strong>{Math.round(summary.biodiversityScore)} <small>/ 100</small></strong>
+        <strong>{summary.biodiversityScore.toFixed(2)} <small>/ 100</small></strong>
         <span className="score-info" title="Provisional score supplied by the processed Dataset contract.">
           <Info size={13} aria-hidden="true" /> Dataset score
         </span>
@@ -35,8 +34,6 @@ export default function SelectedAreaPanel({ name, summary, onExplore }: Selected
         <div><dt>Canopy coverage</dt><dd>{summary.canopyCoverage.toFixed(2)}%</dd></div>
         <div><dt>Species density</dt><dd>{summary.speciesDensityPerHa.toFixed(2)} / ha</dd></div>
       </dl>
-
-      <button className="explore-selected-area" type="button" onClick={onExplore}>Explore {name} <span aria-hidden="true">→</span></button>
     </section>
   )
 }

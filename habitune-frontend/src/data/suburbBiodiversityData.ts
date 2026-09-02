@@ -1,6 +1,3 @@
-import mapView1Raw from './dataset/map_view1.json?raw'
-import suburbGeoJsonRaw from './dataset/map_view1_suburbs.geojson?raw'
-
 export type SuburbBiodiversityIndicators = {
   plantSpecies: number
   animalSpecies: number
@@ -24,9 +21,9 @@ export type SuburbBiodiversitySummary = SuburbBiodiversityIndicators & {
   isPrototype: false
 }
 
-type ProcessedSuburb = {
+export type PrecinctRecord = {
   precinct_id: string
-  suburb: string
+  name: string
   precinct_area_ha: number
   canopy_coverage_pct: number
   plant_species_count: number
@@ -43,14 +40,17 @@ type ProcessedSuburb = {
   biodiversity_score_version: string
 }
 
-type GeoJsonFeature = {
+export type GeoJsonFeature = {
   type: 'Feature'
-  properties: { precinct_id: string; suburb: string }
-  geometry: { type: 'Polygon' | 'MultiPolygon'; coordinates: unknown[] }
+  id?: string
+  properties: PrecinctRecord
+  geometry: { type: 'MultiPolygon'; coordinates: unknown[] }
 }
 
-const mapView1 = JSON.parse(mapView1Raw) as { suburbs?: ProcessedSuburb[] }
-const suburbGeoJson = JSON.parse(suburbGeoJsonRaw) as { features?: GeoJsonFeature[] }
+export type GeoJsonFeatureCollection = {
+  type: 'FeatureCollection'
+  features?: GeoJsonFeature[]
+}
 
 export const normalizeSuburbName = (name: string) => name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()
 
@@ -68,8 +68,6 @@ export function resolveOverviewSuburbName(name: string) {
   return overviewAliases[normalizeSuburbName(name)] || name
 }
 
-// The detailed prototype currently uses several combined/legacy area keys.
-// Keep that compatibility at the navigation boundary without changing its data.
 export function resolveDetailedAreaName(name: string) {
   const aliases: Record<string, string> = {
     'North and West Melbourne': 'North & West Melbourne',
@@ -77,8 +75,8 @@ export function resolveDetailedAreaName(name: string) {
   return aliases[name] || name
 }
 
-const summaries = new Map((mapView1.suburbs || []).map((row) => {
-  const summary: SuburbBiodiversitySummary = {
+export function toSuburbBiodiversitySummary(row: PrecinctRecord): SuburbBiodiversitySummary {
+  return {
     precinctId: row.precinct_id,
     precinctAreaHa: row.precinct_area_ha,
     plantSpecies: row.plant_species_count,
@@ -97,13 +95,6 @@ const summaries = new Map((mapView1.suburbs || []).map((row) => {
     corridorStatus: row.pollination_corridor_status,
     isPrototype: false,
   }
-  return [normalizeSuburbName(row.suburb), summary]
-}))
-
-const summariesByPrecinctId = new Map([...summaries.values()].map((summary) => [summary.precinctId, summary]))
-
-export function getSuburbBiodiversitySummary(suburb: string): SuburbBiodiversitySummary | null {
-  return summaries.get(normalizeSuburbName(resolveOverviewSuburbName(suburb))) || null
 }
 
 const swapCoordinateOrder = (coordinates: unknown): unknown => {
@@ -113,9 +104,20 @@ const swapCoordinateOrder = (coordinates: unknown): unknown => {
   return Array.isArray(coordinates) ? coordinates.map(swapCoordinateOrder) : coordinates
 }
 
-export const datasetSuburbPolygons = (suburbGeoJson.features || []).map((feature) => ({
-  id: feature.properties.precinct_id,
-  name: feature.properties.suburb,
-  positions: swapCoordinateOrder(feature.geometry.coordinates),
-  summary: summariesByPrecinctId.get(feature.properties.precinct_id) || getSuburbBiodiversitySummary(feature.properties.suburb),
-}))
+export function buildSuburbPolygons(
+  precincts: PrecinctRecord[],
+  geoJson: GeoJsonFeatureCollection,
+) {
+  const records = new Map(precincts.map((record) => [record.precinct_id, record]))
+  return (geoJson.features || []).flatMap((feature) => {
+    const precinctId = feature.properties.precinct_id || feature.id
+    const record = precinctId ? records.get(precinctId) : undefined
+    if (!record) return []
+    return [{
+      id: record.precinct_id,
+      name: record.name,
+      positions: swapCoordinateOrder(feature.geometry.coordinates),
+      summary: toSuburbBiodiversitySummary(record),
+    }]
+  })
+}
