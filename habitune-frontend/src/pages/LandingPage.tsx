@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatedEcosystemHero } from '../components/AnimatedEcosystemHero'
 import HabituneBrand from '../components/HabituneBrand'
 import flowerPlaceholderIcon from '../assets/home/flower-placeholder.svg'
-import videoPlaceholderIcon from '../assets/home/video-placeholder.svg'
+import pollinationCorridorVideo from '../assets/home/pollination-corridor.mp4'
+import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
 import '../landing.css'
 
 const HERO_ANIMATION_ENABLED = false
@@ -11,6 +12,22 @@ const ArrowIcon = () => <span aria-hidden="true">→</span>
 
 type LandingPageProps = {
   onExploreArea: () => void
+}
+
+type LandingVideoProps = {
+  className: string
+  label: string
+  src: string
+}
+
+function LandingVideo({ className, label, src }: LandingVideoProps) {
+  return (
+    <div className={`${className} landing-video`}>
+      <video autoPlay muted loop playsInline preload="auto" aria-label={label}>
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  )
 }
 
 function Header({ onExploreArea }: LandingPageProps) {
@@ -40,12 +57,13 @@ function Header({ onExploreArea }: LandingPageProps) {
 
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="Habitune home">
-        <HabituneBrand />
-      </a>
+      <div className="site-header-inner">
+        <a className="brand" href="#top" aria-label="Habitune home">
+          <HabituneBrand />
+        </a>
 
-      <div className="header-actions">
-        <div className="page-menu" ref={menuRef}>
+        <div className="header-actions">
+          <div className="page-menu" ref={menuRef}>
           <button
             className="page-menu-trigger"
             type="button"
@@ -67,9 +85,10 @@ function Header({ onExploreArea }: LandingPageProps) {
               </button>
             </div>
           )}
-        </div>
+          </div>
 
-        <button className="button button-compact" type="button" onClick={onExploreArea}>Explore my area</button>
+          <button className="button button-compact" type="button" onClick={onExploreArea}>Explore my area</button>
+        </div>
       </div>
     </header>
   )
@@ -80,11 +99,8 @@ function HeroSection() {
     <section className="hero-section" id="top">
       <div className="hero-copy">
         <p className="eyebrow">Urban ecosystem</p>
-        <h1>
-          You are part of an<br />urban ecosystem.
-          <span className="hero-heading-gap" />
-          See how it works,<br />and how you can<br />contribute.
-        </h1>
+        <h1>You are part of an urban ecosystem.</h1>
+        <p className="hero-secondary">See how it works, and how you can contribute.</p>
         <a className="button hero-button" href="#features">Explore <ArrowIcon /></a>
       </div>
 
@@ -108,10 +124,11 @@ function PollinationCorridorSection() {
           can&apos;t reach.
         </p>
       </div>
-      <div className="media-placeholder corridor-placeholder" aria-label="Botanical corridor illustration placeholder">
-        <span className="corridor-icon-wrap" aria-hidden="true"><img src={flowerPlaceholderIcon} alt="" /></span>
-        <span>Botanical Corridor Illustration</span>
-      </div>
+      <LandingVideo
+        className="corridor-placeholder"
+        label="An urban pollination corridor connecting green spaces"
+        src={pollinationCorridorVideo}
+      />
     </section>
   )
 }
@@ -119,9 +136,11 @@ function PollinationCorridorSection() {
 function StrategySection() {
   return (
     <section className="content-section two-column strategy-section" data-node-id="8:15">
-      <div className="media-placeholder video-placeholder" aria-label="Urban forest strategy video placeholder">
-        <img className="video-placeholder-icon" src={videoPlaceholderIcon} alt="" aria-hidden="true" />
-      </div>
+      <LandingVideo
+        className="video-placeholder"
+        label="A bee travelling through an urban pollination landscape"
+        src={urbanPollinationBeeVideo}
+      />
       <div className="section-copy strategy-copy">
         <h2>
           The key vision of the Urban Forest Strategy and Nature in the City Strategy isn&apos;t just
