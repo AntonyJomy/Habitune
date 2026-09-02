@@ -1,0 +1,13 @@
+version = 0.1
+
+[dev.deploy.parameters]
+parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune\" CloudFrontPriceClass=\"PriceClass_100\""
+stack_name = "habitune-frontend-dev"
+resolve_s3 = true
+s3_prefix = "habitune-frontend-dev"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
+
+[prod.deploy.parameters]
+parameter_overrides = "Stage=\"prod\" ProjectName=\"habitune\" CloudFrontPriceClass=\"REPLACE_ME_CLOUDFRONT_PRICE_CLASS\""

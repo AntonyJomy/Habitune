@@ -16,7 +16,7 @@ Parameters:
 Globals:
   Function:
     Runtime: python3.12
-    CodeUri: .
+    CodeUri: ../../habitune-backend
     MemorySize: 128
     Timeout: 10
 
@@ -144,7 +144,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      CodeUri: ..
+      CodeUri: ../..
       FunctionName: !Sub "${ProjectName}-database-init-${Stage}"
       Description: Guarded one-time initializer for the private Habitune database
       Handler: functions.init_database.handler.lambda_handler
