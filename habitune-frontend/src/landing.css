@@ -526,22 +526,6 @@ html:has(.landing-page) { scroll-behavior: smooth; }
   max-width: 670px;
   margin: 26px 0 0;
 }
-.landing-page .action-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  border: 1.5px dashed #bfc1bd;
-  border-radius: 18px;
-  background: #fff;
-  color: #565856;
-}
-.landing-page .placeholder-icon {
-  color: var(--color-green);
-  font-size: 34px;
-  line-height: 1;
-}
 .landing-page .strategy-section {
   grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
 }
@@ -660,30 +644,6 @@ html:has(.landing-page) { scroll-behavior: smooth; }
   font-size: 14px;
   line-height: 22px;
 }
-.landing-page .action-placeholder {
-  width: 100%;
-  aspect-ratio: 23 / 10;
-  gap: 12px;
-  border-radius: 12px;
-  background: #fafafa;
-  font-size: 14px;
-  line-height: 18px;
-}
-.landing-page .contribution-icon {
-  width: 32px;
-  height: 32px;
-  display: block;
-}
-.landing-page .trowel {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-35deg);
-  font-size: 32px;
-}
-
 .landing-page .feature-section {
   height: auto;
 }
@@ -749,8 +709,7 @@ html:has(.landing-page) { scroll-behavior: smooth; }
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 48px;
   }
-  .landing-page .contribution-item,
-  .landing-page .action-placeholder {
+  .landing-page .contribution-item {
     width: 100%;
   }
   .landing-page .feature-grid {
@@ -931,7 +890,6 @@ html:has(.landing-page) { scroll-behavior: smooth; }
 .landing-page .contribution-heading p,
 .landing-page .contribution-grid,
 .landing-page .contribution-item,
-.landing-page .action-placeholder,
 .landing-page .feature-grid {
   width: 100%;
   height: auto;
@@ -1193,12 +1151,22 @@ html:has(.landing-page) { scroll-behavior: smooth; }
   margin: 0.5rem 0 var(--space-md);
 }
 
-.landing-page .action-placeholder {
+.landing-page .contribution-media {
   width: 100%;
   height: auto;
-  min-height: 0;
   margin-top: auto;
-  aspect-ratio: 23 / 10;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  background: #fafafa;
+}
+
+.landing-page .contribution-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
 }
 
 .landing-page .feature-section > h2 {
@@ -1287,10 +1255,6 @@ html:has(.landing-page) { scroll-behavior: smooth; }
     gap: var(--space-lg);
   }
 
-  .landing-page .action-placeholder {
-    aspect-ratio: 16 / 7;
-  }
-
   .landing-page .feature-card {
     min-height: 0;
   }
@@ -1324,7 +1288,4 @@ html:has(.landing-page) { scroll-behavior: smooth; }
     gap: var(--space-lg);
   }
 
-  .landing-page .action-placeholder {
-    aspect-ratio: 3 / 2;
-  }
 }

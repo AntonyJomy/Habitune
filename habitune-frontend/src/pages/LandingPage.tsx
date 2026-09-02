@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatedEcosystemHero } from '../components/AnimatedEcosystemHero'
 import HabituneBrand from '../components/HabituneBrand'
-import flowerPlaceholderIcon from '../assets/home/flower-placeholder.svg'
+import nativePollinatorGardenImage from '../assets/Native plant for polianots.png'
+import natureStripGardenImage from '../assets/strip gradening.png'
 import pollinationCorridorVideo from '../assets/home/pollination-corridor.mp4'
 import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
 import '../landing.css'
@@ -26,6 +27,14 @@ function LandingVideo({ className, label, src }: LandingVideoProps) {
       <video autoPlay muted loop playsInline preload="auto" aria-label={label}>
         <source src={src} type="video/mp4" />
       </video>
+    </div>
+  )
+}
+
+function ContributionImage({ alt, className, src }: { alt: string; className: string; src: string }) {
+  return (
+    <div className={`contribution-media ${className}`}>
+      <img src={src} alt={alt} />
     </div>
   )
 }
@@ -168,19 +177,21 @@ function ContributionSection() {
           <article className="contribution-item" data-node-id="20:5">
             <h3>Select the right plant.</h3>
             <p>Planting species that promote pollination in your garden, e.g. native species, high-nectar plants.</p>
-            <div className="action-placeholder" data-node-id="19:17">
-              <img className="contribution-icon" src={flowerPlaceholderIcon} alt="" aria-hidden="true" />
-              <span>Plant species</span>
-            </div>
+            <ContributionImage
+              className="pollinator-garden-image"
+              src={nativePollinatorGardenImage}
+              alt="Native pollinator garden with flowering plants and a butterfly"
+            />
           </article>
 
           <article className="contribution-item" data-node-id="20:6">
             <h3>Nature strip gardening.</h3>
             <p>We can help you plan an outdoor strip gardening activity by following council&apos;s guidelines.</p>
-            <div className="action-placeholder" data-node-id="19:20">
-              <span className="placeholder-icon trowel" aria-hidden="true">♧</span>
-              <span>Nature strip planting</span>
-            </div>
+            <ContributionImage
+              className="nature-strip-image"
+              src={natureStripGardenImage}
+              alt="Nature strip garden with native plants beside a suburban footpath and street"
+            />
           </article>
         </div>
       </div>
