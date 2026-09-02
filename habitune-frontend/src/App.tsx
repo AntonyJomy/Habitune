@@ -24,8 +24,6 @@ export default function App() {
     }
   }
   const showAreaSelection = () => { setPage('area'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const showLanding = () => { setPage('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-
   if (page === 'landing') return <LandingPage onExploreArea={showAreaSelection} />
-  return <><Navbar page="home" onNavigate={navigate} /><HomePage selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelectArea={selectArea} onLanding={showLanding} /></>
+  return <><Navbar page="home" onNavigate={navigate} showBack /><HomePage selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelectArea={selectArea} /></>
 }

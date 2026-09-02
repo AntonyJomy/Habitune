@@ -6,7 +6,7 @@ import SelectedAreaPanel from '../components/SelectedAreaPanel'
 import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
 import { normalizeSuburbName, resolveOverviewSuburbName } from '../data/suburbBiodiversityData'
 
-export default function HomePage({ selectedSuburb, searchedLocation, onSelectArea, onLanding }) {
+export default function HomePage({ selectedSuburb, searchedLocation, onSelectArea }) {
   const [suburbs, setSuburbs] = useState([])
   const [overviewStatus, setOverviewStatus] = useState('loading')
   const [selectedSummary, setSelectedSummary] = useState(null)
@@ -50,7 +50,6 @@ export default function HomePage({ selectedSuburb, searchedLocation, onSelectAre
   return (
     <main className="biodiversity-overview" id="area-selection">
       <section className="overview-panel">
-        <button className="back-to-landing" type="button" onClick={onLanding}>← Back to Habitune home</button>
         <div className="overview-mode-row"><div className="overview-toggle" aria-label="Overview mode"><button className="active" type="button">Precinct view</button><button type="button" disabled title="Corridor overview data is not yet available">Corridor view</button></div><p className="corridor-unavailable" role="status">Corridor view coming later.</p></div>
         <div className="overview-intro"><span className="section-kicker">Melbourne study area</span><h1>Explore local biodiversity</h1><p>Choose an area to see its biodiversity indicators before opening the detailed ecosystem map.</p></div>
         <LocationSearch onChoose={selectSearchResult} suburbs={suburbs} />
