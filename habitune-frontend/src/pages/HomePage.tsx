@@ -6,7 +6,7 @@ import SelectedAreaPanel from '../components/SelectedAreaPanel'
 import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
 import { normalizeSuburbName, resolveOverviewSuburbName } from '../data/suburbBiodiversityData'
 
-export default function HomePage({ selectedSuburb, searchedLocation, onSelectArea, onExploreArea, onLanding }) {
+export default function HomePage({ selectedSuburb, searchedLocation, onSelectArea, onLanding }) {
   const [suburbs, setSuburbs] = useState([])
   const [overviewStatus, setOverviewStatus] = useState('loading')
   const [selectedSummary, setSelectedSummary] = useState(null)
@@ -62,7 +62,7 @@ export default function HomePage({ selectedSuburb, searchedLocation, onSelectAre
           {selectedArea && detailStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading {selectedArea.name} biodiversity data…</p></div>}
           {selectedArea && detailStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Unable to load biodiversity details for {selectedArea.name}.</p></div>}
           {selectedArea && detailStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No biodiversity details are available for {selectedArea.name}.</p></div>}
-          {selectedArea && selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} onExplore={onExploreArea} />}
+          {selectedArea && selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} />}
         </div>
       </section>
       <aside className="overview-map" aria-label="Select a Melbourne precinct on the map"><SuburbOverviewMap suburbs={suburbs} selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelect={onSelectArea} /></aside>

@@ -189,9 +189,6 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 .area-metrics div { min-height:33px; display:flex; align-items:center; justify-content:space-between; gap:15px; border-bottom:1px solid #edf0ec; }
 .area-metrics dt { color:#687970; font-size:10px; }
 .area-metrics dd { margin:0; color:#294d3b; font:800 11px Manrope; }
-.explore-selected-area { width:100%; min-height:50px; margin-top:22px; padding:12px 22px; display:flex; align-items:center; justify-content:space-between; border:0; border-radius:999px; background:#64a166; color:#fff; font-size:12px; font-weight:700; transition:background 160ms ease,transform 160ms ease; }
-.explore-selected-area:hover { background:#578f5b; }
-.explore-selected-area:hover { transform:translateY(-1px); }
 .overview-map { min-width:0; }
 .overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:calc(100vh - 136px); }
 .overview-map .suburb-map-shell { border:1px solid #dedfdd; border-radius:24px; box-shadow:0 12px 30px rgb(22 29 23 / 7%); }
