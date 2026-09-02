@@ -85,7 +85,7 @@ function HeroSection() {
           <span className="hero-heading-gap" />
           See how it works,<br />and how you can<br />contribute.
         </h1>
-        <a className="button hero-button" href="#pollination-corridor">Explore <ArrowIcon /></a>
+        <a className="button hero-button" href="#features">Explore <ArrowIcon /></a>
       </div>
 
       <div className="hero-visual">
