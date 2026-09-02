@@ -23,7 +23,12 @@ export default function App() {
       return setTimeout(() => document.getElementById('area-selection')?.scrollIntoView({ behavior: 'smooth' }), 0)
     }
   }
-  const showAreaSelection = () => { setPage('area'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const showAreaSelection = () => {
+    setSelectedSuburb(null)
+    setSearchedLocation(null)
+    setPage('area')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
   if (page === 'landing') return <LandingPage onExploreArea={showAreaSelection} />
   return <><Navbar page="home" onNavigate={navigate} showBack hideNavigation /><HomePage selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelectArea={selectArea} /></>
 }
