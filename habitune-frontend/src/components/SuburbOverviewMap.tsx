@@ -3,6 +3,11 @@ import { useEffect } from 'react'
 import { MapContainer, Polygon, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import { biodiversityScoreClasses, getBiodiversityScoreColor } from '../config/biodiversityScoreScale'
 
+const precinctLabelAnchors = {
+  central_city: [-37.8158, 144.967],
+  southbank: [-37.825308, 144.963907],
+}
+
 function MapFocus({ searchedLocation }) {
   const map = useMap()
   useEffect(() => {
@@ -21,7 +26,7 @@ export default function SuburbOverviewMap({ suburbs = [], selectedSuburb, search
         const score = suburb.summary?.biodiversityScore ?? 0
         const displayScore = suburb.summary ? Math.round(score) : '—'
         const baseStyle = { color: isSelected ? '#124C2E' : '#F8FBF6', fillColor: getBiodiversityScoreColor(score), fillOpacity: .72, weight: isSelected ? 3 : 1.25, lineJoin: 'round' }
-        return <Polygon key={suburb.id} positions={suburb.positions} pathOptions={{ ...baseStyle, className: `suburb-polygon${isSelected ? ' selected' : ''}` }} eventHandlers={{ click: () => onSelect(suburb.name, null), mouseover: (event) => event.target.setStyle({ color: isSelected ? '#124C2E' : '#2F7048', fillColor: baseStyle.fillColor, fillOpacity: .75, weight: isSelected ? 3 : 2 }), mouseout: (event) => event.target.setStyle(baseStyle) }}><Tooltip permanent direction="center" className={`suburb-label score-badge${isSelected ? ' selected' : ''}`}><strong>{displayScore}</strong><span>{suburb.label || suburb.name}</span></Tooltip></Polygon>
+        return <Polygon key={suburb.id} positions={suburb.positions} pathOptions={{ ...baseStyle, className: `suburb-polygon${isSelected ? ' selected' : ''}` }} eventHandlers={{ click: () => onSelect(suburb.name, null), mouseover: (event) => event.target.setStyle({ color: isSelected ? '#124C2E' : '#2F7048', fillColor: baseStyle.fillColor, fillOpacity: .75, weight: isSelected ? 3 : 2 }), mouseout: (event) => event.target.setStyle(baseStyle) }}><Tooltip permanent position={precinctLabelAnchors[suburb.id]} direction="center" className={`suburb-label score-badge${isSelected ? ' selected' : ''}`}><strong>{displayScore}</strong><span>{suburb.label || suburb.name}</span></Tooltip></Polygon>
       })}
     </MapContainer>
     <div className="biodiversity-score-legend" aria-label="Biodiversity Score color scale">
