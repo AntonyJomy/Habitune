@@ -1,7 +1,9 @@
+import habituneLogo from '../assets/brand/habitune-logo.png'
+
 export default function HabituneBrand() {
   return (
     <>
-      <span className="brand-dot" aria-hidden="true" />
+      <img className="brand-logo" src={habituneLogo} alt="" aria-hidden="true" />
       <span>Habitune</span>
     </>
   )
