@@ -687,6 +687,34 @@ html:has(.landing-page) { scroll-behavior: smooth; }
   margin-top: auto;
   font-size: 16px;
 }
+.landing-page .feature-card.is-disabled {
+  border-color: #d5d7d4;
+  background: #f5f6f4;
+  box-shadow: 0 6px 18px rgb(32 43 34 / 4%);
+}
+.landing-page .feature-card.is-disabled h3 {
+  color: #4f514f;
+}
+.landing-page .feature-card.is-disabled p {
+  color: #696b69;
+}
+.landing-page .feature-button:disabled {
+  background: #a3a7a2;
+  color: #fff;
+  cursor: not-allowed;
+  transform: none;
+}
+.landing-page .coming-soon {
+  width: fit-content;
+  margin-bottom: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #e2e4e1;
+  color: #565956;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
 
 @media (max-width: 1180px) {
   .landing-page .contribution-section,

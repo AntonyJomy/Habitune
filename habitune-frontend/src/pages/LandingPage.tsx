@@ -200,9 +200,9 @@ function ContributionSection() {
 }
 
 const featureCards = [
-  { title: 'Know your ecosystem.', description: 'View pollination corridors, green canopy and info on local species in and around your area of residence.', action: 'Explore my area' },
-  { title: 'Find the right plants.', description: 'Find the plant species that is compatible and promotes your local biodiversity.', action: 'Find my plant' },
-  { title: 'Plant with confidence.', description: 'Check if you can plant outdoors in your locality. We will help you find the right plant by verifying council guidelines.', action: 'Check local nature strips' },
+  { title: 'Know your ecosystem.', description: 'View pollination corridors, green canopy and info on local species in and around your area of residence.', action: 'Explore my area', available: true },
+  { title: 'Find the right plants.', description: 'Find the plant species that is compatible and promotes your local biodiversity.', action: 'Find my plant', available: false },
+  { title: 'Plant with confidence.', description: 'Check if you can plant outdoors in your locality. We will help you find the right plant by verifying council guidelines.', action: 'Check local nature strips', available: false },
 ]
 
 function FeatureSection({ onExploreArea }: LandingPageProps) {
@@ -210,11 +210,12 @@ function FeatureSection({ onExploreArea }: LandingPageProps) {
     <section className="content-section feature-section" id="features" data-node-id="21:5">
       <h2>Here&apos;s what you can do with Habitune:</h2>
       <div className="feature-grid" data-node-id="21:6">
-        {featureCards.map((feature, index) => (
-          <article className="feature-card" key={feature.title}>
+        {featureCards.map((feature) => (
+          <article className={`feature-card${feature.available ? '' : ' is-disabled'}`} key={feature.title}>
+            {!feature.available && <span className="coming-soon">Coming soon</span>}
             <h3>{feature.title}</h3>
             <p>{feature.description}</p>
-            <button className="button feature-button" type="button" onClick={index === 0 ? onExploreArea : undefined}>{feature.action}</button>
+            <button className="button feature-button" type="button" disabled={!feature.available} onClick={feature.available ? onExploreArea : undefined}>{feature.action}</button>
           </article>
         ))}
       </div>
