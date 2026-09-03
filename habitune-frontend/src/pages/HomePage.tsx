@@ -58,13 +58,18 @@ export default function HomePage({ selectedSuburb, searchedLocation, onSelectAre
           {overviewStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Biodiversity data is temporarily unavailable. Please try again later.</p></div>}
           {overviewStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No precinct biodiversity data is currently available.</p></div>}
           {overviewStatus === 'success' && !selectedArea && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Click an area on the map to explore its biodiversity data.</p></div>}
-          {selectedArea && detailStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading {selectedArea.name} biodiversity data…</p></div>}
-          {selectedArea && detailStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Unable to load biodiversity details for {selectedArea.name}.</p></div>}
-          {selectedArea && detailStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No biodiversity details are available for {selectedArea.name}.</p></div>}
-          {selectedArea && selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} />}
+          {selectedArea && <div className="overview-active-selection"><span aria-hidden="true" /><strong>1 Active Precinct selected</strong><a href="#selected-area-details">Scroll down for details ↓</a></div>}
         </div>
       </section>
       <aside className="overview-map" aria-label="Select a Melbourne precinct on the map"><SuburbOverviewMap suburbs={suburbs} selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelect={onSelectArea} /></aside>
+      {selectedArea && (
+        <section className="overview-selected-details" id="selected-area-details">
+          {detailStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading {selectedArea.name} biodiversity data…</p></div>}
+          {detailStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Unable to load biodiversity details for {selectedArea.name}.</p></div>}
+          {detailStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No biodiversity details are available for {selectedArea.name}.</p></div>}
+          {selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} />}
+        </section>
+      )}
     </main>
   )
 }
