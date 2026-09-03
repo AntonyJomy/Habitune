@@ -142,7 +142,7 @@ footer { max-width:1184px; margin:auto; padding:34px 0 45px; display:grid; grid-
 
 /* Biodiversity overview / area search */
 body:has(.biodiversity-overview) { background:#f7f8f5; }
-body:has(.biodiversity-overview) .navbar { height:64px; max-width:1280px; padding:0 40px; border-bottom:1px solid #f0f1ef; background:#fff; font-family:Inter,"Helvetica Neue",Arial,sans-serif; }
+body:has(.biodiversity-overview) .navbar { width:100%; height:64px; max-width:none; padding:0 clamp(16px,2.5vw,48px); border-bottom:1px solid #f0f1ef; background:#fff; font-family:Inter,"Helvetica Neue",Arial,sans-serif; }
 .navbar-home-actions { min-width:0; display:flex; align-items:center; gap:8px; }
 .navbar-back { flex:0 0 auto; width:34px; height:34px; padding:0; display:grid; place-items:center; border:1px solid #e4e7e2; border-radius:9px; background:#fff; color:#397052; }
 .navbar-back:hover { border-color:#b9cdb9; background:#f3f7f1; color:#174b35; }
@@ -152,8 +152,8 @@ body:has(.biodiversity-overview) .navbar nav { gap:28px; }
 body:has(.biodiversity-overview) .navbar nav button { padding:12px 0; border-radius:0; color:#6f706f; font-size:16px; font-weight:500; }
 body:has(.biodiversity-overview) .navbar nav button:hover,
 body:has(.biodiversity-overview) .navbar nav button.active { background:transparent; color:#578f5b; }
-.biodiversity-overview { min-height:calc(100vh - 64px); max-width:1280px; margin:0 auto; padding:32px 40px 40px; display:grid; grid-template-columns:minmax(350px,32%) minmax(0,1fr); align-items:stretch; gap:24px; background:#fff; color:#171817; font-family:Inter,"Helvetica Neue",Arial,sans-serif; box-shadow:0 24px 40px rgb(0 0 0 / 4%); }
-.overview-panel { min-width:0; padding:30px 28px; display:flex; flex-direction:column; border:1px solid #e7e8e5; border-radius:16px; background:#fafafa; box-shadow:none; }
+.biodiversity-overview { width:100%; min-height:calc(100vh - 64px); margin:0; padding:clamp(20px,2.5vw,40px) clamp(16px,2.5vw,48px) clamp(28px,3vw,48px); display:grid; grid-template-columns:minmax(360px,32%) minmax(0,1fr); align-items:stretch; gap:clamp(20px,2vw,32px); background:#fff; color:#171817; font-family:Inter,"Helvetica Neue",Arial,sans-serif; }
+.overview-panel { min-width:0; padding:clamp(24px,2vw,34px); display:flex; flex-direction:column; border:1px solid #e7e8e5; border-radius:16px; background:#fafafa; box-shadow:none; }
 .overview-mode-row { margin:0 0 25px; }
 .overview-toggle { width:max-content; margin:0; padding:3px; display:grid; grid-template-columns:repeat(2,auto); gap:2px; border:1px solid #e4e5e2; border-radius:999px; background:#f2f3f0; }
 .overview-toggle button { min-width:108px; min-height:32px; padding:6px 14px; border:0; border-radius:999px; background:transparent; color:#777b77; font-size:11px; font-weight:600; transition:background 160ms ease,color 160ms ease; }
@@ -182,17 +182,23 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 .selected-area-heading span { color:#839088; text-transform:uppercase; letter-spacing:.09em; font-size:8px; font-weight:800; }
 .selected-area-heading h2 { margin:3px 0 0; color:#1c4634; font:800 24px Manrope; letter-spacing:-.03em; }
 .selected-area-heading > small { padding:4px 6px; border-radius:6px; background:#f3ecdd; color:#806b43; font-size:7px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
-.biodiversity-score { position:relative; margin:15px 0 10px; padding:14px; display:grid; grid-template-columns:1fr auto; gap:3px 12px; border-radius:12px; background:linear-gradient(135deg,#e8f2e3,#f5f8f2); }
+.biodiversity-score { position:relative; margin:15px 0 18px; padding:16px; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:5px 14px; border-radius:12px; background:linear-gradient(135deg,#e8f2e3,#f5f8f2); }
 .biodiversity-score > span:first-child { align-self:center; color:#426251; font-size:11px; font-weight:800; }
-.biodiversity-score > strong { grid-row:span 2; color:#1e6848; font:800 28px Manrope; }
+.biodiversity-score > strong { grid-row:1; grid-column:2; align-self:center; color:#1e6848; font:800 28px Manrope; white-space:nowrap; }
 .biodiversity-score > strong small { font-size:10px; }
-.score-info { display:flex; align-items:center; gap:4px; color:#708078; font-size:8px; }
-.area-metrics { margin:0; display:grid; }
-.area-metrics div { min-height:33px; display:flex; align-items:center; justify-content:space-between; gap:15px; border-bottom:1px solid #edf0ec; }
-.area-metrics dt { color:#687970; font-size:10px; }
-.area-metrics dd { margin:0; color:#294d3b; font:800 11px Manrope; }
+.biodiversity-score > p { grid-column:1/-1; margin:3px 0 2px; color:#607269; font-size:9px; line-height:1.45; }
+.score-info { grid-column:1/-1; display:flex; align-items:center; gap:4px; color:#708078; font-size:8px; }
+.area-data-heading { margin:0 0 7px; color:#496458; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.area-metrics { margin:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); gap:8px; }
+.area-metrics div { min-width:0; padding:11px 12px; display:grid; gap:5px; border:1px solid #e8ece6; border-radius:10px; background:#fff; }
+.area-metrics dt { color:#607269; font-size:9px; font-weight:700; }
+.area-metrics dd { min-width:0; margin:0; display:grid; gap:3px; }
+.area-metrics dd strong { color:#294d3b; font:800 13px Manrope; }
+.area-metrics dd span { color:#78857e; font-size:8px; line-height:1.4; }
+.area-data-note { margin:11px 0 0; padding-top:10px; display:flex; align-items:flex-start; gap:6px; border-top:1px solid #edf0ec; color:#7b8780; font-size:8px; line-height:1.45; }
+.area-data-note svg { flex:0 0 auto; margin-top:1px; }
 .overview-map { min-width:0; }
-.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:calc(100vh - 136px); }
+.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:max(640px,calc(100vh - 136px)); }
 .overview-map .suburb-map-shell { border:1px solid #dedfdd; border-radius:24px; box-shadow:0 12px 30px rgb(22 29 23 / 7%); }
 .suburb-label.score-badge { min-width:39px; padding:5px 6px; border-radius:9px; }
 .suburb-label.score-badge,.suburb-label.score-badge.selected { border:1px solid rgba(31,63,44,.1); background:rgba(255,255,255,.96); color:#284b38; box-shadow:0 3px 10px rgba(25,52,35,.16); }
@@ -207,5 +213,5 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 .score-legend-steps small { position:absolute; inset:auto 0 2px; color:#173824; font-size:6px; font-weight:800; text-align:center; text-shadow:0 1px 2px rgba(255,255,255,.85); }
 .score-legend-steps > span:nth-child(4) small,.score-legend-steps > span:nth-child(5) small { color:#fff; text-shadow:0 1px 2px rgba(18,55,31,.65); }
 .score-legend-labels { margin-top:5px; display:flex; justify-content:space-between; color:#7a8981; font-size:7px; }
-@media (max-width:900px) { .biodiversity-overview { grid-template-columns:1fr; padding-top:24px; }.overview-panel { min-height:auto; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:560px; } }
-@media (max-width:600px) { body:has(.biodiversity-overview) .navbar { padding:0 12px; }body:has(.biodiversity-overview) .navbar .navbar-home-actions { gap:4px; }body:has(.biodiversity-overview) .navbar .navbar-back { width:32px; height:32px; }body:has(.biodiversity-overview) .navbar .brand { gap:6px; font-size:18px; }body:has(.biodiversity-overview) .navbar nav { gap:2px; }body:has(.biodiversity-overview) .navbar nav button { padding:8px 4px; font-size:12px; }.biodiversity-overview { padding:18px 16px 28px; gap:18px; }.overview-panel { padding:24px 22px; border-radius:16px; }.overview-toggle { width:100%; }.overview-toggle button { min-width:0; }.overview-intro .section-kicker { font-size:11px; }.overview-intro h1 { font-size:34px; line-height:1.16; }.overview-intro p { font-size:14px; }.overview-selection-region { padding:16px; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:500px; }.overview-map .suburb-map-shell { border-radius:20px; }.biodiversity-score-legend { right:10px; bottom:20px; width:205px; } }
+@media (max-width:1100px) { .biodiversity-overview { grid-template-columns:1fr; padding-top:24px; }.overview-panel { min-height:auto; }.overview-intro h1,.overview-intro p { max-width:680px; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:clamp(500px,68vw,680px); } }
+@media (max-width:600px) { body:has(.biodiversity-overview) .navbar { padding:0 12px; }body:has(.biodiversity-overview) .navbar .navbar-home-actions { gap:4px; }body:has(.biodiversity-overview) .navbar .navbar-back { width:32px; height:32px; }body:has(.biodiversity-overview) .navbar .brand { gap:6px; font-size:18px; }body:has(.biodiversity-overview) .navbar nav { gap:2px; }body:has(.biodiversity-overview) .navbar nav button { padding:8px 4px; font-size:12px; }.biodiversity-overview { padding:18px 12px 28px; gap:18px; }.overview-panel { padding:22px 18px; border-radius:16px; }.overview-toggle { width:100%; }.overview-toggle button { min-width:0; }.overview-intro .section-kicker { font-size:11px; }.overview-intro h1 { font-size:clamp(30px,9vw,34px); line-height:1.16; }.overview-intro p { font-size:14px; }.overview-selection-region { padding:14px; }.biodiversity-score { grid-template-columns:1fr; }.biodiversity-score > strong { grid-row:auto; grid-column:1; }.biodiversity-score > p,.score-info { grid-column:1; }.area-metrics { grid-template-columns:1fr; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:clamp(400px,125vw,520px); }.overview-map .suburb-map-shell { border-radius:18px; }.biodiversity-score-legend { right:8px; bottom:18px; width:min(205px,calc(100% - 16px)); } }

@@ -6,13 +6,6 @@ type SelectedAreaPanelProps = {
   summary: SuburbBiodiversitySummary
 }
 
-const metrics: Array<[keyof SuburbBiodiversitySummary, string]> = [
-  ['plantSpecies', 'Plant species'],
-  ['pollinatorLinkedPlants', 'Pollinator-linked plants'],
-  ['pollinatorInsectSpecies', 'Pollinator insect species'],
-  ['relevantBirdSpecies', 'Relevant bird species'],
-]
-
 export default function SelectedAreaPanel({ name, summary }: SelectedAreaPanelProps) {
   return (
     <section className="selected-area-panel" aria-live="polite">
@@ -22,18 +15,39 @@ export default function SelectedAreaPanel({ name, summary }: SelectedAreaPanelPr
       </div>
 
       <div className="biodiversity-score">
-        <span>Biodiversity Score</span>
+        <span>Provisional biodiversity indicator</span>
         <strong>{summary.biodiversityScore.toFixed(2)} <small>/ 100</small></strong>
-        <span className="score-info" title="Provisional score supplied by the processed Dataset contract.">
-          <Info size={13} aria-hidden="true" /> Dataset score
+        <p>Compares canopy coverage and recorded species density across the 10 areas in this dataset. It is not a complete biodiversity assessment.</p>
+        <span className="score-info" title="The mean of min-max scaled canopy, plant-density and animal-density scores across 10 precincts.">
+          <Info size={13} aria-hidden="true" /> Relative dataset indicator
         </span>
       </div>
 
+      <h3 className="area-data-heading">What the data shows</h3>
       <dl className="area-metrics">
-        {metrics.map(([key, label]) => <div key={key}><dt>{label}</dt><dd>{summary[key]}</dd></div>)}
-        <div><dt>Canopy coverage</dt><dd>{summary.canopyCoverage.toFixed(2)}%</dd></div>
-        <div><dt>Species density</dt><dd>{summary.speciesDensityPerHa.toFixed(2)} / ha</dd></div>
+        <div>
+          <dt>Estimated canopy coverage</dt>
+          <dd><strong>{summary.canopyCoverage.toFixed(2)}%</strong><span>Share of the precinct covered by allocated 2019 canopy polygons.</span></dd>
+        </div>
+        <div>
+          <dt>Recorded plant diversity</dt>
+          <dd><strong>{summary.plantSpecies}</strong><span>Distinct scientific names in available council tree and garden inventories.</span></dd>
+        </div>
+        <div>
+          <dt>Pollinator-linked flowering plants</dt>
+          <dd><strong>{summary.pollinatorLinkedPlants}</strong><span>Inventory species linked to pollinator evidence in the supporting dataset.</span></dd>
+        </div>
+        <div>
+          <dt>Recorded wildlife indicators</dt>
+          <dd><strong>{summary.pollinatorInsectSpecies} insects · {summary.relevantBirdSpecies} birds</strong><span>Pollinator-candidate insects and nectar/fruit diet-filtered bird species.</span></dd>
+        </div>
+        <div>
+          <dt>Combined recorded species density</dt>
+          <dd><strong>{summary.speciesDensityPerHa.toFixed(2)} per hectare</strong><span>Recorded plant and filtered animal species divided by precinct area.</span></dd>
+        </div>
       </dl>
+
+      <p className="area-data-note"><Info size={14} aria-hidden="true" /> Counts describe available inventory and occurrence records, not wildlife population size or confirmed habitat quality.</p>
     </section>
   )
 }
