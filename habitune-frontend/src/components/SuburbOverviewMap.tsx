@@ -44,10 +44,10 @@ export default function SuburbOverviewMap({ suburbs = [], selectedSuburb, search
         return <Polygon key={suburb.id} positions={suburb.positions} pathOptions={{ ...baseStyle, className: `suburb-polygon${isSelected ? ' selected' : ''}` }} eventHandlers={{ click: () => onSelect(suburb.name, null), mouseover: (event) => event.target.setStyle({ color: isSelected ? '#124C2E' : '#2F7048', fillColor: baseStyle.fillColor, fillOpacity: .75, weight: isSelected ? 3 : 2 }), mouseout: (event) => event.target.setStyle(baseStyle) }}><Tooltip permanent position={precinctLabelAnchors[suburb.id]} direction="center" className={`suburb-label score-badge${isSelected ? ' selected' : ''}`}><strong>{displayScore}</strong><span>{suburb.label || suburb.name}</span></Tooltip></Polygon>
       })}
     </MapContainer>
-    <div className="biodiversity-score-legend" aria-label="Biodiversity Score color scale">
-      <strong>Biodiversity Score</strong>
+    <div className="biodiversity-score-legend" aria-label="Provisional biodiversity indicator color scale">
+      <strong>Provisional biodiversity indicator</strong>
       <div className="score-legend-steps">{biodiversityScoreClasses.map((scoreClass) => <span key={scoreClass.label} style={{ backgroundColor: scoreClass.color }} title={scoreClass.label}><small>{scoreClass.label}</small></span>)}</div>
-      <div className="score-legend-labels"><span>Lower score</span><span>Higher score</span></div>
+      <div className="score-legend-labels"><span>Lower among 10 areas</span><span>Higher among 10 areas</span></div>
     </div>
   </div>
 }
