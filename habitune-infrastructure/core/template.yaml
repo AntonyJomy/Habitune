@@ -20,6 +20,13 @@ Parameters:
     Type: String
   DatabaseSubnetTwoCidr:
     Type: String
+  DatabaseAccessSubnetCidr:
+    Type: String
+  DatabaseAccessInstanceType:
+    Type: String
+  DatabaseAccessAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
   DBPort:
     Type: Number
     MinValue: 1150
@@ -115,6 +122,17 @@ Resources:
         - Key: Name
           Value: !Sub "${ProjectName}-database-two-${Stage}"
 
+  DatabaseAccessSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref DatabaseAccessSubnetCidr
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+
   AppRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -130,6 +148,35 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${ProjectName}-database-routes-${Stage}"
+
+  DatabaseAccessInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+
+  DatabaseAccessInternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref DatabaseAccessInternetGateway
+      VpcId: !Ref HabituneVpc
+
+  DatabaseAccessRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref HabituneVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-routes-${Stage}"
+
+  DatabaseAccessInternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: DatabaseAccessInternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref DatabaseAccessRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DatabaseAccessInternetGateway
 
   AppSubnetOneRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -154,6 +201,12 @@ Resources:
     Properties:
       RouteTableId: !Ref DatabaseRouteTable
       SubnetId: !Ref DatabaseSubnetTwo
+
+  DatabaseAccessSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseAccessRouteTable
+      SubnetId: !Ref DatabaseAccessSubnet
 
   LambdaSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -188,6 +241,17 @@ Resources:
         - Key: Name
           Value: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
 
+  DatabaseAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-database-access-${Stage}"
+      GroupDescription: !Sub "Outbound-only Session Manager database access for ${ProjectName} in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+
   LambdaToDatabaseEgress:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -205,6 +269,33 @@ Resources:
       FromPort: !Ref DBPort
       ToPort: !Ref DBPort
       SourceSecurityGroupId: !Ref LambdaSecurityGroup
+
+  DatabaseAccessToDatabaseEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref DatabaseAccessSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      DestinationSecurityGroupId: !Ref DatabaseSecurityGroup
+
+  DatabaseFromAccessHostIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DatabaseSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      SourceSecurityGroupId: !Ref DatabaseAccessSecurityGroup
+
+  DatabaseAccessToHttpsEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref DatabaseAccessSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 0.0.0.0/0
 
   LambdaToSecretsEndpointEgress:
     Type: AWS::EC2::SecurityGroupEgress
@@ -250,6 +341,52 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${ProjectName}-database-${Stage}"
+
+  DatabaseAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-database-access-${Stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  DatabaseAccessInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${ProjectName}-database-access-${Stage}"
+      Roles:
+        - !Ref DatabaseAccessRole
+
+  DatabaseAccessInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref DatabaseAccessAmiId
+      InstanceType: !Ref DatabaseAccessInstanceType
+      IamInstanceProfile: !Ref DatabaseAccessInstanceProfile
+      SubnetId: !Ref DatabaseAccessSubnet
+      SecurityGroupIds:
+        - !Ref DatabaseAccessSecurityGroup
+      MetadataOptions:
+        HttpEndpoint: enabled
+        HttpTokens: required
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
 
   PostgreSQLDatabase:
     Type: AWS::RDS::DBInstance
@@ -314,3 +451,8 @@ Outputs:
     Value: !GetAtt PostgreSQLDatabase.MasterUserSecret.SecretArn
     Export:
       Name: !Sub "${ProjectName}-${Stage}-database-secret-arn"
+  DatabaseAccessInstanceId:
+    Description: SSM managed instance used for database port forwarding
+    Value: !Ref DatabaseAccessInstance
+  DatabaseAccessSecurityGroupId:
+    Value: !Ref DatabaseAccessSecurityGroup
