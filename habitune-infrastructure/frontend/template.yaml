@@ -18,6 +18,49 @@ Parameters:
       - PriceClass_All
 
 Resources:
+  FrontendUserPool:
+    Type: AWS::Cognito::UserPool
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      UserPoolName: !Sub "${ProjectName}-frontend-users-${Stage}"
+      UsernameConfiguration:
+        CaseSensitive: false
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+      MfaConfiguration: "OFF"
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 1
+      UserPoolTags:
+        Name: !Sub "${ProjectName}-frontend-users-${Stage}"
+        Project: !Ref ProjectName
+        Stage: !Ref Stage
+
+  FrontendUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub "${ProjectName}-frontend-client-${Stage}"
+      UserPoolId: !Ref FrontendUserPool
+      GenerateSecret: false
+      EnableTokenRevocation: true
+      PreventUserExistenceErrors: ENABLED
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      AccessTokenValidity: 1
+      IdTokenValidity: 1
+      RefreshTokenValidity: 1
+      TokenValidityUnits:
+        AccessToken: hours
+        IdToken: hours
+        RefreshToken: days
+
   FrontendBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
@@ -133,6 +176,12 @@ Resources:
                 AWS:SourceArn: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
 
 Outputs:
+  CognitoUserPoolId:
+    Description: Cognito user pool used for frontend authentication
+    Value: !Ref FrontendUserPool
+  CognitoUserPoolClientId:
+    Description: Public Cognito app client identifier used by the frontend
+    Value: !Ref FrontendUserPoolClient
   FrontendBucketName:
     Description: Private S3 bucket that stores the compiled frontend
     Value: !Ref FrontendBucket
