@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 CONFIRMATION_FIELD = "confirm"
 CONFIRMATION_VALUE = "INITIALIZE_HABITUNE_DATABASE"
+# Resolve packaged schema and dataset paths relative to this source file.
 PACKAGE_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = PACKAGE_ROOT / "database" / "schema.sql"
 METRICS_PATH = PACKAGE_ROOT / "Dataset" / "processed" / "map_view1.json"
@@ -70,6 +71,7 @@ def _read_schema() -> str:
 
 
 def _verify(connection) -> dict[str, int]:
+    """Confirm that ingestion produced the expected rows, geometry, and score ranges."""
     with connection.cursor() as cursor:
         cursor.execute(VERIFY_INITIALIZED_STATE)
         values = cursor.fetchone()
@@ -103,9 +105,11 @@ def initialize_database(rows: list[dict[str, Any]], schema_sql: str) -> dict[str
             cursor.execute(schema_sql)
         import_rows_with_connection(rows, connection)
         result = _verify(connection)
+        # Commit only after schema creation, import, and validation all succeed.
         connection.commit()
         return result
     except Exception:
+        # A failure leaves the database unchanged instead of partially initialized.
         connection.rollback()
         raise
     finally:
