@@ -3,6 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Parameterized AWS SAM health API for Habitune
 
 Parameters:
+  # Deployment-specific values are passed by samconfig.toml or the SAM CLI.
   Stage:
     Type: String
     AllowedPattern: "^[a-z0-9-]+$"
@@ -14,6 +15,7 @@ Parameters:
     Type: Number
 
 Globals:
+  # Defaults shared by every Lambda unless a function overrides them below.
   Function:
     Runtime: python3.12
     CodeUri: ../../habitune-backend
@@ -22,12 +24,14 @@ Globals:
 
 Resources:
   HabituneApi:
+    # API Gateway is the public HTTP entry point for the Lambda handlers.
     Type: AWS::Serverless::Api
     Properties:
       Name: !Sub "${ProjectName}-api-${Stage}"
       StageName: !Ref Stage
 
   HealthCheckExecutionRole:
+    # The health function needs logs only; it has no database permissions.
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub "${ProjectName}-health-role-${Stage}"
@@ -85,6 +89,7 @@ Resources:
                   - ec2:UnassignPrivateIpAddresses
                 Resource: "*"
         - PolicyName: !Sub "${ProjectName}-precinct-secret-${Stage}"
+          # Read Lambdas may retrieve only the database secret exported by the core stack.
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -140,6 +145,7 @@ Resources:
                     Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
 
   InitDatabaseFunction:
+    # This function is manually invoked and intentionally has no API Gateway route.
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
@@ -152,6 +158,7 @@ Resources:
       MemorySize: 256
       Timeout: 120
       Environment:
+        # Import connection metadata instead of duplicating or hardcoding it.
         Variables:
           DB_HOST:
             Fn::ImportValue:
@@ -166,6 +173,7 @@ Resources:
             Fn::ImportValue:
               Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
       VpcConfig:
+        # Run inside the private application subnets where RDS is reachable.
         SecurityGroupIds:
           - Fn::ImportValue:
               Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
@@ -176,6 +184,7 @@ Resources:
               Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
 
   GetPrecinctsFunction:
+    # Returns the list and biodiversity metrics used to draw the map.
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-precinct-list-${Stage}"
@@ -213,6 +222,7 @@ Resources:
             Method: GET
 
   GetPrecinctFunction:
+    # Returns details for the precinct_id supplied in the URL path.
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-precinct-get-${Stage}"
@@ -251,6 +261,7 @@ Resources:
 
   # API route for precinct boundary GeoJSON.
   GetPrecinctGeoJsonFunction:
+    # Returns all precinct boundaries as GeoJSON for the Leaflet map.
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-precinct-geojson-${Stage}"
@@ -288,6 +299,7 @@ Resources:
             Method: GET
 
   HealthCheckFunction:
+    # Lightweight endpoint used to confirm that deployment and routing work.
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub "${ProjectName}-health-check-${Stage}"
@@ -302,6 +314,7 @@ Resources:
             Method: GET
 
   HealthCheckLogGroup:
+    # Explicit log groups make retention predictable instead of keeping logs forever.
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-health-check-${Stage}"
@@ -328,6 +341,7 @@ Resources:
       RetentionInDays: !Ref LogRetentionDays
 
 Outputs:
+  # SAM prints these URLs after deployment for testing and frontend configuration.
   ApiUrl:
     Description: Stage-specific API Gateway endpoint
     Value: !Sub "https://${HabituneApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${Stage}"

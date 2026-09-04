@@ -3,6 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Parameterized network and PostgreSQL infrastructure for Habitune
 
 Parameters:
+  # Values that change between environments are supplied at deployment time.
   Stage:
     Type: String
     AllowedPattern: "^[a-z0-9-]+$"
@@ -59,11 +60,13 @@ Parameters:
     AllowedValues: ["true", "false"]
 
 Conditions:
+  # Convert string parameters from samconfig.toml into CloudFormation booleans.
   UseMultiAZ: !Equals [!Ref DBMultiAZ, "true"]
   UseDeletionProtection: !Equals [!Ref DBDeletionProtection, "true"]
   UseAutoMinorVersionUpgrade: !Equals [!Ref DBAutoMinorVersionUpgrade, "true"]
 
 Resources:
+  # One isolated network contains the Lambda functions, database, and admin host.
   HabituneVpc:
     Type: AWS::EC2::VPC
     Properties:
@@ -79,6 +82,7 @@ Resources:
           Value: !Ref Stage
 
   AppSubnetOne:
+    # Lambda functions run in private application subnets with no public IP.
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref HabituneVpc
@@ -101,6 +105,7 @@ Resources:
           Value: !Sub "${ProjectName}-app-two-${Stage}"
 
   DatabaseSubnetOne:
+    # RDS uses private database subnets and cannot be reached from the internet.
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref HabituneVpc
@@ -123,6 +128,7 @@ Resources:
           Value: !Sub "${ProjectName}-database-two-${Stage}"
 
   DatabaseAccessSubnet:
+    # Only the SSM-managed admin host uses this public routing subnet.
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref HabituneVpc
@@ -209,6 +215,7 @@ Resources:
       SubnetId: !Ref DatabaseAccessSubnet
 
   LambdaSecurityGroup:
+    # Start with no default outbound access; explicit rules below allow only DB and Secrets Manager traffic.
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub "${ProjectName}-lambda-${Stage}"
@@ -316,6 +323,7 @@ Resources:
       SourceSecurityGroupId: !Ref LambdaSecurityGroup
 
   SecretsManagerEndpoint:
+    # Lets private Lambdas retrieve credentials without using the public internet.
     Type: AWS::EC2::VPCEndpoint
     Properties:
       VpcEndpointType: Interface
@@ -369,6 +377,7 @@ Resources:
         - !Ref DatabaseAccessRole
 
   DatabaseAccessInstance:
+    # Temporary database administration path: AWS Systems Manager replaces inbound SSH.
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref DatabaseAccessAmiId
@@ -389,6 +398,7 @@ Resources:
           Value: !Ref Stage
 
   PostgreSQLDatabase:
+    # PostgreSQL credentials are generated and stored by RDS in Secrets Manager.
     Type: AWS::RDS::DBInstance
     DeletionPolicy: Snapshot
     UpdateReplacePolicy: Snapshot
@@ -421,6 +431,7 @@ Resources:
           Value: !Ref Stage
 
 Outputs:
+  # Export shared values so the separate backend stack can import them safely.
   VpcId:
     Value: !Ref HabituneVpc
   AppSubnetOneId:

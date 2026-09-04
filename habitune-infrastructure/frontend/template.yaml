@@ -3,6 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Stage-aware static frontend hosting for Habitune
 
 Parameters:
+  # Stage and cost settings are supplied when the stack is deployed.
   Stage:
     Type: String
     AllowedPattern: "^[a-z0-9-]+$"
@@ -19,6 +20,7 @@ Parameters:
 
 Resources:
   FrontendUserPool:
+    # Cognito stores preview users; only administrators can create accounts.
     Type: AWS::Cognito::UserPool
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -43,6 +45,7 @@ Resources:
         Stage: !Ref Stage
 
   FrontendUserPoolClient:
+    # Browser applications cannot safely store a client secret, so this client has none.
     Type: AWS::Cognito::UserPoolClient
     Properties:
       ClientName: !Sub "${ProjectName}-frontend-client-${Stage}"
@@ -62,6 +65,7 @@ Resources:
         RefreshToken: days
 
   FrontendBucket:
+    # Stores the compiled React files privately; users never access S3 directly.
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -85,6 +89,7 @@ Resources:
           Value: !Ref Stage
 
   FrontendOriginAccessControl:
+    # CloudFront signs requests to the private S3 origin with AWS Signature V4.
     Type: AWS::CloudFront::OriginAccessControl
     Properties:
       OriginAccessControlConfig:
@@ -95,6 +100,7 @@ Resources:
         SigningProtocol: sigv4
 
   FrontendCachePolicy:
+    # Cache static files at edge locations and enable compressed responses.
     Type: AWS::CloudFront::CachePolicy
     Properties:
       CachePolicyConfig:
@@ -114,6 +120,7 @@ Resources:
             QueryStringBehavior: none
 
   FrontendDistribution:
+    # Public HTTPS delivery layer in front of the private S3 bucket.
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
@@ -142,6 +149,7 @@ Resources:
               OriginAccessIdentity: ""
         PriceClass: !Ref CloudFrontPriceClass
         CustomErrorResponses:
+          # Return index.html for client-side routes in this single-page application.
           - ErrorCode: 403
             ResponseCode: 200
             ResponsePagePath: /index.html
@@ -159,6 +167,7 @@ Resources:
           Value: !Ref Stage
 
   FrontendBucketPolicy:
+    # Only this exact CloudFront distribution can read objects from the bucket.
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref FrontendBucket
@@ -176,6 +185,7 @@ Resources:
                 AWS:SourceArn: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
 
 Outputs:
+  # These values configure the frontend build and support CloudFront invalidations.
   CognitoUserPoolId:
     Description: Cognito user pool used for frontend authentication
     Value: !Ref FrontendUserPool

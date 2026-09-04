@@ -7,6 +7,7 @@ from psycopg2.extras import RealDictCursor
 from shared.db import get_connection
 
 
+# Keep the public API shape explicit rather than returning every database column.
 PRECINCT_COLUMNS = """
     p.precinct_id,
     p.name,
@@ -63,8 +64,10 @@ ORDER BY p.name
 
 
 def _execute_read(sql, parameters=(), *, fetch_one=False):
+    """Run a parameterized query in a read-only database session."""
     connection = get_connection()
     try:
+        # The request may read data but cannot modify it through this session.
         connection.set_session(readonly=True, autocommit=True)
         with connection.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(sql, parameters)
@@ -83,12 +86,14 @@ def list_precincts():
 
 def get_precinct(precinct_id):
     """Return one current precinct and its overview metrics."""
+    # Passing a tuple keeps user input separate from SQL and prevents SQL injection.
     return _execute_read(GET_PRECINCT_SQL, (precinct_id,), fetch_one=True)
 
 
 def list_precinct_geometries():
     """Return all precinct metrics with PostGIS-serialized GeoJSON geometry."""
     rows = _execute_read(LIST_PRECINCT_GEOMETRIES_SQL)
+    # psycopg2 returns PostGIS GeoJSON as text, so decode it before the API response.
     for row in rows:
         geometry = row.get("geometry")
         if isinstance(geometry, str):
