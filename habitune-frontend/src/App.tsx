@@ -5,14 +5,17 @@ import LandingPage from './pages/LandingPage'
 import HomePage from './pages/HomePage'
 
 export default function App() {
+  // This small state machine switches between the landing and biodiversity views.
   const [page, setPage] = useState('landing')
   const [selectedSuburb, setSelectedSuburb] = useState(null)
   const [searchedLocation, setSearchedLocation] = useState(null)
   const selectArea = (suburb, location = null) => {
+    // Preserve both the selected precinct data and the user's searched location.
     setSelectedSuburb(suburb)
     setSearchedLocation(location)
   }
   const navigate = (nextPage) => {
+    // Navigation is client-side, so changing views does not reload the application.
     if (nextPage === 'home') {
       setPage('landing')
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -24,6 +27,7 @@ export default function App() {
     }
   }
   const showAreaSelection = () => {
+    // Starting a new exploration clears the previous selection.
     setSelectedSuburb(null)
     setSearchedLocation(null)
     setPage('area')

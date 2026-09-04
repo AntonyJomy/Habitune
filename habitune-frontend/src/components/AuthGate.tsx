@@ -25,6 +25,8 @@ const authenticatorComponents = {
 }
 
 export default function AuthGate({ children }: AuthGateProps) {
+  // Amplify renders login first and mounts children only after authentication.
+  // Sign-up stays hidden because preview accounts are created by an administrator.
   return (
     <Authenticator
       className="habitune-authenticator"
