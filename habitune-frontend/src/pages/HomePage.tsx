@@ -1,75 +1,244 @@
-// @ts-nocheck
-import { useEffect, useState } from 'react'
-import LocationSearch from '../components/LocationSearch'
-import SuburbOverviewMap from '../components/SuburbOverviewMap'
-import SelectedAreaPanel from '../components/SelectedAreaPanel'
-import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
-import { normalizeSuburbName, resolveOverviewSuburbName } from '../data/suburbBiodiversityData'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AnimatedEcosystemHero } from '../components/AnimatedEcosystemHero'
+import HabituneBrand from '../components/HabituneBrand'
+import nativePollinatorGardenImage from '../assets/Native plant for polianots.png'
+import natureStripGardenImage from '../assets/strip gradening.png'
+import pollinationCorridorVideo from '../assets/home/pollination-corridor.mp4'
+import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
+import '../landing.css'
 
-export default function HomePage({ selectedSuburb, searchedLocation, onSelectArea }) {
-  const [suburbs, setSuburbs] = useState([])
-  const [overviewStatus, setOverviewStatus] = useState('loading')
-  const [selectedSummary, setSelectedSummary] = useState(null)
-  const [detailStatus, setDetailStatus] = useState('idle')
-  useEffect(() => {
-    let active = true
-    getSuburbOverview()
-      .then((result) => {
-        if (!active) return
-        const polygons = Array.isArray(result?.polygons) ? result.polygons : []
-        setSuburbs(polygons)
-        setOverviewStatus(polygons.length > 0 ? 'success' : 'empty')
-      })
-      .catch(() => active && setOverviewStatus('error'))
-    return () => { active = false }
-  }, [])
-  const selectedArea = suburbs.find((suburb) => normalizeSuburbName(suburb.name) === normalizeSuburbName(resolveOverviewSuburbName(selectedSuburb || '')))
-  useEffect(() => {
-    let active = true
-    if (!selectedArea?.id) {
-      setSelectedSummary(null)
-      setDetailStatus('idle')
-      return () => { active = false }
-    }
-    setSelectedSummary(null)
-    setDetailStatus('loading')
-    getPrecinctOverview(selectedArea.id)
-      .then((summary) => {
-        if (!active) return
-        setSelectedSummary(summary)
-        setDetailStatus(summary ? 'success' : 'empty')
-      })
-      .catch(() => active && setDetailStatus('error'))
-    return () => { active = false }
-  }, [selectedArea?.id])
-  const selectSearchResult = (suburb, location) => {
-    const resolvedName = resolveOverviewSuburbName(suburb)
-    const matchingArea = suburbs.find((area) => normalizeSuburbName(area.name) === normalizeSuburbName(resolvedName))
-    onSelectArea(matchingArea?.name || resolvedName, location)
-  }
+const HERO_ANIMATION_ENABLED = false
+
+const ArrowIcon = () => <span aria-hidden="true">→</span>
+
+type HomePageProps = {
+  onExploreArea: () => void
+}
+
+type LandingVideoProps = {
+  className: string
+  label: string
+  src: string
+}
+
+function LandingVideo({ className, label, src }: LandingVideoProps) {
   return (
-    <main className="biodiversity-overview" id="area-selection">
-      <section className="overview-panel">
-        <div className="overview-mode-row"><div className="overview-toggle" aria-label="Overview mode"><button className="active" type="button">Precinct view</button><button type="button" disabled title="Corridor overview data is not yet available">Corridor view</button></div><p className="corridor-unavailable" role="status">Corridor view coming later.</p></div>
-        <div className="overview-intro"><span className="section-kicker">Melbourne study area</span><h1>Explore local biodiversity</h1><p>Choose an area to see its biodiversity indicators before opening the detailed ecosystem map.</p></div>
-        <LocationSearch onChoose={selectSearchResult} suburbs={suburbs} />
-        <div className="overview-selection-region">
-          {overviewStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading Melbourne biodiversity data…</p></div>}
-          {overviewStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Biodiversity data is temporarily unavailable. Please try again later.</p></div>}
-          {overviewStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No precinct biodiversity data is currently available.</p></div>}
-          {overviewStatus === 'success' && !selectedArea && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Click an area on the map to explore its biodiversity data.</p></div>}
-          {selectedArea && <div className="overview-active-selection"><span aria-hidden="true" /><strong>1 Active Precinct selected</strong><a href="#selected-area-details">Scroll down for details ↓</a></div>}
+    <div className={`${className} landing-video`}>
+      <video autoPlay muted loop playsInline preload="auto" aria-label={label}>
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  )
+}
+
+function ContributionImage({ alt, className, src }: { alt: string; className: string; src: string }) {
+  return (
+    <div className={`contribution-media ${className}`}>
+      <img src={src} alt={alt} />
+    </div>
+  )
+}
+
+function Header({ onExploreArea }: HomePageProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setIsMenuOpen(false)
+    }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMenuOpen(false)
+    }
+
+    document.addEventListener('mousedown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [])
+
+  const goTo = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+    setIsMenuOpen(false)
+  }
+
+  return (
+    <header className="site-header">
+      <div className="site-header-inner">
+        <a className="brand" href="#top" aria-label="Habitune home">
+          <HabituneBrand />
+        </a>
+
+        <div className="header-actions">
+          <div className="page-menu" ref={menuRef}>
+          <button
+            className="page-menu-trigger"
+            type="button"
+            aria-expanded={isMenuOpen}
+            aria-haspopup="menu"
+            onClick={() => setIsMenuOpen((current) => !current)}
+          >
+            Page content
+            <span className={`chevron ${isMenuOpen ? 'is-open' : ''}`} aria-hidden="true">⌄</span>
+          </button>
+
+          {isMenuOpen && (
+            <div className="page-menu-popover" role="menu">
+              <button type="button" role="menuitem" onClick={() => goTo('pollination-corridor')}>
+                Pollination corridor
+              </button>
+              <button type="button" role="menuitem" onClick={() => goTo('contribute')}>
+                Contribute
+              </button>
+            </div>
+          )}
+          </div>
+
+          <button className="button button-compact" type="button" onClick={onExploreArea}>Explore my area</button>
         </div>
-      </section>
-      <aside className="overview-map" aria-label="Select a Melbourne precinct on the map"><SuburbOverviewMap suburbs={suburbs} selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelect={onSelectArea} /></aside>
-      {selectedArea && (
-        <section className="overview-selected-details" id="selected-area-details">
-          {detailStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading {selectedArea.name} biodiversity data…</p></div>}
-          {detailStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Unable to load biodiversity details for {selectedArea.name}.</p></div>}
-          {detailStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No biodiversity details are available for {selectedArea.name}.</p></div>}
-          {selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} />}
-        </section>
-      )}
-    </main>
+      </div>
+    </header>
+  )
+}
+
+function HeroSection() {
+  return (
+    <section className="hero-section" id="top">
+      <div className="hero-copy">
+        <p className="eyebrow">Urban ecosystem</p>
+        <h1>You are part of an urban ecosystem.</h1>
+        <p className="hero-secondary">See how it works, and how you can contribute.</p>
+        <a className="button hero-button" href="#features">Explore <ArrowIcon /></a>
+      </div>
+
+      <div className="hero-visual">
+        <AnimatedEcosystemHero animated={HERO_ANIMATION_ENABLED} />
+      </div>
+    </section>
+  )
+}
+
+function PollinationCorridorSection() {
+  return (
+    <section className="content-section two-column corridor-section" id="pollination-corridor" data-node-id="17:36">
+      <div className="section-copy corridor-copy">
+        <p className="eyebrow">Pollination corridors</p>
+        <h2>What is a pollination corridor?</h2>
+        <p>
+          A pollination corridor is your neighbourhood&apos;s path for pollinators, a connected line of
+          flowering plants, trees and green spaces that lets bees, butterflies and birds move safely
+          between gardens and parks. Without it, even a lush garden becomes an island pollinators
+          can&apos;t reach.
+        </p>
+      </div>
+      <LandingVideo
+        className="corridor-placeholder"
+        label="An urban pollination corridor connecting green spaces"
+        src={pollinationCorridorVideo}
+      />
+    </section>
+  )
+}
+
+function StrategySection() {
+  return (
+    <section className="content-section two-column strategy-section" data-node-id="8:15">
+      <LandingVideo
+        className="video-placeholder"
+        label="A bee travelling through an urban pollination landscape"
+        src={urbanPollinationBeeVideo}
+      />
+      <div className="section-copy strategy-copy">
+        <h2>
+          The key vision of the Urban Forest Strategy and Nature in the City Strategy isn&apos;t just
+          more green cover, it&apos;s creating urban green space that helps promote local biodiversity.
+        </h2>
+        <p>
+          One way this happens is through <strong>pollination corridors</strong>: connected planting
+          that matters because fragmented urban landscapes disrupt pollination and plant reproduction.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+function ContributionSection() {
+  return (
+    <section className="content-section contribution-section" id="contribute" data-node-id="19:4">
+      <div className="contribution-container" data-node-id="19:5">
+        <div className="contribution-heading" data-node-id="20:4">
+          <h2>To promote biodiversity, we need to become a part of this pollination corridor.</h2>
+          <p>Here&apos;s how you contribute to the corridor through your gardens, small or big:</p>
+        </div>
+
+        <div className="contribution-grid" data-node-id="19:16">
+          <article className="contribution-item" data-node-id="20:5">
+            <h3>Select the right plant.</h3>
+            <p>Planting species that promote pollination in your garden, e.g. native species, high-nectar plants.</p>
+            <ContributionImage
+              className="pollinator-garden-image"
+              src={nativePollinatorGardenImage}
+              alt="Native pollinator garden with flowering plants and a butterfly"
+            />
+          </article>
+
+          <article className="contribution-item" data-node-id="20:6">
+            <h3>Nature strip gardening.</h3>
+            <p>We can help you plan an outdoor strip gardening activity by following council&apos;s guidelines.</p>
+            <ContributionImage
+              className="nature-strip-image"
+              src={natureStripGardenImage}
+              alt="Nature strip garden with native plants beside a suburban footpath and street"
+            />
+          </article>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const featureCards = [
+  { title: 'Know your ecosystem.', description: 'View pollination corridors, green canopy and info on local species in and around your area of residence.', action: 'Explore my area', available: true },
+  { title: 'Find the right plants.', description: 'Find the plant species that is compatible and promotes your local biodiversity.', action: 'Find my plant', available: false },
+  { title: 'Plant with confidence.', description: 'Check if you can plant outdoors in your locality. We will help you find the right plant by verifying council guidelines.', action: 'Check local nature strips', available: false },
+]
+
+function FeatureSection({ onExploreArea }: HomePageProps) {
+  return (
+    <section className="content-section feature-section" id="features" data-node-id="21:5">
+      <h2>Here&apos;s what you can do with Habitune:</h2>
+      <div className="feature-grid" data-node-id="21:6">
+        {featureCards.map((feature) => (
+          <article className={`feature-card${feature.available ? '' : ' is-disabled'}`} key={feature.title}>
+            {!feature.available && <span className="coming-soon">Coming soon</span>}
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+            <button className="button feature-button" type="button" disabled={!feature.available} onClick={feature.available ? onExploreArea : undefined}>{feature.action}</button>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export default function HomePage() {
+  const navigate = useNavigate()
+  const onExploreArea = () => navigate('/biodiversity')
+  return (
+    <div className="landing-page">
+      <div className="app-shell">
+        <Header onExploreArea={onExploreArea} />
+        <main>
+          <HeroSection />
+          <StrategySection />
+          <PollinationCorridorSection />
+          <ContributionSection />
+          <FeatureSection onExploreArea={onExploreArea} />
+        </main>
+      </div>
+    </div>
   )
 }
