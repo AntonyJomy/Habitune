@@ -95,7 +95,15 @@ export default function HomePage({ selectedSuburb, searchedLocation, onSelectAre
 
         {selectedArea && (
           <section className="overview-selected-details" id="selected-area-details">
-            {detailStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading {selectedArea.name} biodiversity data…</p></div>}
+            {detailStatus === 'loading' && (
+              <div className="overview-empty overview-loading" role="status">
+                <span className="overview-loading-spinner" aria-hidden="true"><LoaderCircle size={17} /></span>
+                <div>
+                  <p className="overview-loading-label">Loading {selectedArea.name} biodiversity data…</p>
+                  <LoadingFacts />
+                </div>
+              </div>
+            )}
             {detailStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Unable to load biodiversity details for {selectedArea.name}.</p></div>}
             {detailStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No biodiversity details are available for {selectedArea.name}.</p></div>}
             {selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} />}
