@@ -1,21 +1,39 @@
+import { useState } from 'react'
 import { Brain, Flower2, Leaf, MoonStar, Route, Sparkles, ThermometerSun } from 'lucide-react'
 import HabituneBrand from '../components/HabituneBrand'
 import ecosystemMap from '../assets/home/urban-ecosystem-map.png'
 import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
+import balconyBeeVideo from '../assets/Honeybee_on_balcony_flowers_202609072354.mp4'
 import '../landing.css'
 
 type LandingPageProps = { onExploreArea: () => void }
 type CardItem = { title: string; description: React.ReactNode; icon: React.ReactNode }
-type VideoBlockProps = { src: string; poster: string; label: string }
+type VideoBlockProps = { src: string; poster?: string; label: string }
 
 function StatHighlight({ value }: { value: string }) {
   return <span className="stat-highlight">{value}</span>
 }
 
 function VideoBlock({ src, poster, label }: VideoBlockProps) {
-  return <div className={`video-block${src ? '' : ' is-placeholder'}`}>
-    <video autoPlay muted loop playsInline preload="metadata" poster={poster || undefined} aria-label={label} src={src || undefined} />
-    {!src && <span aria-hidden="true">Video coming soon</span>}
+  const [showFallback, setShowFallback] = useState(!src)
+
+  return <div className={`video-block${showFallback ? ' is-placeholder' : ''}`}>
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      poster={poster}
+      aria-label={label}
+      src={src || undefined}
+      onError={() => setShowFallback(true)}
+      onLoadedData={() => setShowFallback(false)}
+      onCanPlay={(event) => {
+        event.currentTarget.play().catch(() => setShowFallback(true))
+      }}
+    />
+    {showFallback && <span aria-hidden="true">Video unavailable</span>}
   </div>
 }
 
@@ -73,14 +91,14 @@ export default function LandingPage({ onExploreArea }: LandingPageProps) {
 
       <section className="landing-section landing-container benefits-section" id="benefits">
         <div className="benefits-content">
-          <div className="section-heading"><h2>How your green balcony helps you</h2><p>Here&apos;s how a green balcony benefits you.</p></div>
+          <div className="section-heading"><h2>How your green balcony helps you</h2></div>
           <div className="benefits-frame"><div className="benefits-grid">{benefits.map((benefit) => <ProgressCard item={benefit} className="benefit-card" key={benefit.title} />)}</div></div>
         </div>
-        <VideoBlock src="" poster="" label="Green balcony benefits video" />
+        <VideoBlock src={balconyBeeVideo} label="Honeybee visiting flowers on a balcony" />
       </section>
 
       <section className="landing-section landing-container contribution-section" id="contribute">
-        <div className="section-heading"><h2>How you can contribute</h2><p>This is where we come in the picture to help you contribute</p></div>
+        <div className="section-heading"><h2>How you can contribute</h2></div>
         <div className="contribution-grid">{contributions.map((item) => <article className="contribution-card" key={item.title}>
           <h3>{item.title}</h3><p>{item.description}</p>
           <button className={`contribution-button${item.available ? '' : ' is-disabled'}`} type="button" disabled={!item.available} onClick={item.available ? onExploreArea : undefined}>{item.available ? 'Explore my area' : 'coming soon'}</button>

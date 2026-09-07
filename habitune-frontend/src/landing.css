@@ -243,6 +243,7 @@
 }
 .video-block video { width: 100%; height: 100%; display: block; object-fit: cover; }
 .video-block.is-placeholder { display: grid; place-items: center; }
+.video-block.is-placeholder video { visibility: hidden; }
 .video-block.is-placeholder::before {
   content: "";
   position: absolute;
@@ -252,7 +253,7 @@
   background: rgb(var(--bg-blob-color) / 8%);
   filter: blur(55px);
 }
-.video-block span { position: relative; color: var(--color-muted); font-size: 16px; font-weight: 600; }
+.video-block span { position: absolute; inset: 0; display: grid; place-items: center; color: var(--color-muted); font-size: 16px; font-weight: 600; }
 
 .contribution-grid { margin-top: var(--space-xl); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); align-items: stretch; }
 .contribution-card {
