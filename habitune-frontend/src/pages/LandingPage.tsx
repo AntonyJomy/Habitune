@@ -1,13 +1,23 @@
 import { useState } from 'react'
-import { Brain, Flower2, Leaf, MoonStar, Route, Sparkles, ThermometerSun } from 'lucide-react'
+import { Brain, MoonStar, ThermometerSun } from 'lucide-react'
 import HabituneBrand from '../components/HabituneBrand'
 import ecosystemMap from '../assets/home/urban-ecosystem-map.png'
 import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
 import balconyBeeVideo from '../assets/Honeybee_on_balcony_flowers_202609072354.mp4'
+import bigPicture1 from '../assets/Big picture 1.png'
+import bigPicture2 from '../assets/Big picture 2.png'
+import bigPicture3 from '../assets/Big picture 3.png'
+import bigPicture4 from '../assets/Big picture 4.png'
 import '../landing.css'
 
 type LandingPageProps = { onExploreArea: () => void }
-type CardItem = { title: string; description: React.ReactNode; icon: React.ReactNode }
+type CardItem = {
+  title: string
+  description: React.ReactNode
+  icon?: React.ReactNode
+  image?: string
+  imageAlt?: string
+}
 type VideoBlockProps = { src: string; poster?: string; label: string }
 
 function StatHighlight({ value }: { value: string }) {
@@ -38,10 +48,10 @@ function VideoBlock({ src, poster, label }: VideoBlockProps) {
 }
 
 const steps: CardItem[] = [
-  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" /> garden flowers actually feed pollinators</>, icon: <Flower2 aria-hidden="true" /> },
-  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" /> more likely to visit once gardens connect</>, icon: <Route aria-hidden="true" /> },
-  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" /> more insect species in 3 years</>, icon: <Sparkles aria-hidden="true" /> },
-  { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, icon: <Leaf aria-hidden="true" /> },
+  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" /> garden flowers actually feed pollinators</>, image: bigPicture1, imageAlt: 'A person placing a flowering native plant on a city balcony' },
+  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" /> more likely to visit once gardens connect</>, image: bigPicture2, imageAlt: 'A green corridor connecting planted balconies across apartment buildings' },
+  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" /> more insect species in 3 years</>, image: bigPicture3, imageAlt: 'Bees and a butterfly travelling between flowering balconies' },
+  { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, image: bigPicture4, imageAlt: 'A thriving balcony garden filled with flowering plants and visiting wildlife' },
 ]
 
 const benefits: CardItem[] = [
@@ -65,7 +75,10 @@ function LandingHeader({ onExploreArea }: LandingPageProps) {
 
 function ProgressCard({ item, className = '' }: { item: CardItem; className?: string }) {
   return <article className={`progress-card ${className}`}>
-    <div className="card-illustration">{item.icon}</div><h3>{item.title}</h3><div className="card-fact">{item.description}</div>
+    <div className="card-illustration">
+      {item.image ? <img src={item.image} alt={item.imageAlt ?? ''} /> : item.icon}
+    </div>
+    <h3>{item.title}</h3><div className="card-fact">{item.description}</div>
   </article>
 }
 
