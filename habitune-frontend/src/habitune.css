@@ -231,3 +231,128 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 @media (max-width:820px) { .selected-area-header { grid-template-columns:1fr; align-items:start; gap:22px; }.biodiversity-score { width:100%; }.area-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:600px) { body:has(.biodiversity-overview) .navbar { padding:0 12px; }body:has(.biodiversity-overview) .navbar .navbar-home-actions { gap:4px; }body:has(.biodiversity-overview) .navbar .navbar-back { width:32px; height:32px; }body:has(.biodiversity-overview) .navbar .brand { gap:6px; font-size:18px; }body:has(.biodiversity-overview) .navbar nav { gap:2px; }body:has(.biodiversity-overview) .navbar nav button { padding:8px 4px; font-size:12px; }.biodiversity-overview { padding:18px 12px 28px; gap:18px; }.overview-panel { padding:22px 18px; border-radius:16px; }.overview-toggle { width:100%; }.overview-toggle button { min-width:0; }.overview-intro .section-kicker { font-size:13px; }.overview-intro h1 { font-size:clamp(30px,9vw,34px); line-height:1.16; }.overview-intro p { font-size:15px; }.overview-selection-region { padding:14px; }.overview-active-selection { flex-wrap:wrap; }.overview-active-selection a { width:100%; margin:3px 0 0 13px; }.overview-selected-details { padding:22px 16px; border-radius:16px; }.selected-area-header { padding-bottom:22px; }.biodiversity-score { grid-template-columns:1fr auto; padding:16px; }.biodiversity-score > p { grid-column:1/-1; }.area-data-heading { margin-top:24px; }.area-metrics > div { min-height:190px; }.overview-map .suburb-map-shell,.overview-map .suburb-overview-map { min-height:clamp(400px,125vw,520px); }.overview-map .suburb-map-shell { border-radius:18px; }.biodiversity-score-legend { right:8px; bottom:18px; width:min(205px,calc(100% - 16px)); } }
 @media (max-width:520px) { .area-metrics { grid-template-columns:1fr; } }
+
+/* Fixed map workspace with an independently scrollable overlay panel. */
+body:has(.biodiversity-overview) { overflow:hidden; }
+.biodiversity-overview {
+  --overview-panel-width:clamp(380px,36vw,540px);
+  position:relative;
+  width:100%;
+  height:calc(100dvh - 64px);
+  min-height:0;
+  margin:0;
+  padding:0;
+  display:block;
+  overflow:hidden;
+  background:#e7ece5;
+}
+.biodiversity-overview .overview-map {
+  position:absolute;
+  inset:0;
+  z-index:1;
+  width:100%;
+  height:100%;
+}
+.biodiversity-overview .overview-map .suburb-map-shell,
+.biodiversity-overview .overview-map .suburb-overview-map {
+  width:100%;
+  height:100%;
+  min-height:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+}
+.biodiversity-overview .overview-panel {
+  position:absolute;
+  z-index:1000;
+  top:20px;
+  bottom:20px;
+  left:20px;
+  width:var(--overview-panel-width);
+  min-width:0;
+  padding:26px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  border:1px solid rgb(31 72 48 / 12%);
+  border-radius:20px;
+  background:rgb(250 251 249 / 96%);
+  box-shadow:0 14px 42px rgb(20 48 31 / 18%);
+  backdrop-filter:blur(10px);
+  transition:transform 220ms ease,opacity 180ms ease;
+}
+.biodiversity-overview.is-panel-collapsed .overview-panel {
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(calc(-100% - 32px));
+}
+.overview-panel-collapse {
+  position:absolute;
+  z-index:1100;
+  top:30px;
+  left:calc(32px + var(--overview-panel-width));
+  min-height:42px;
+  padding:0 14px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  border:1px solid rgb(31 72 48 / 14%);
+  border-radius:999px;
+  background:rgb(255 255 255 / 95%);
+  box-shadow:0 6px 20px rgb(20 48 31 / 15%);
+  color:#315b47;
+  font-size:12px;
+  font-weight:700;
+  transition:left 220ms ease,transform 160ms ease;
+}
+.overview-panel-collapse:hover { transform:translateY(-1px); }
+.overview-panel-collapse:focus-visible { outline:3px solid rgb(100 161 102 / 28%); outline-offset:2px; }
+.biodiversity-overview.is-panel-collapsed .overview-panel-collapse { left:20px; }
+.biodiversity-overview .overview-selected-details {
+  min-width:0;
+  margin-top:28px;
+  padding:28px 0 0;
+  overflow:visible;
+  border:0;
+  border-top:1px solid #e1e6e1;
+  border-radius:0;
+  background:transparent;
+}
+.biodiversity-overview .overview-selected-details > .overview-empty { min-height:130px; }
+.biodiversity-overview .selected-area-header { grid-template-columns:1fr; align-items:start; gap:20px; padding-bottom:24px; }
+.biodiversity-overview .biodiversity-score { width:100%; grid-template-columns:minmax(0,1fr) auto; padding:16px; }
+.biodiversity-overview .biodiversity-score > strong { padding:7px 9px; font-size:21px; }
+.biodiversity-overview .area-data-heading { margin-top:26px; }
+.biodiversity-overview .area-metrics { grid-template-columns:1fr; gap:10px; }
+.biodiversity-overview .area-metrics > div { min-height:170px; }
+.biodiversity-overview .area-metrics dd > span { padding-top:14px; }
+.biodiversity-overview .overview-active-selection a { white-space:nowrap; }
+
+@media (max-width:760px) {
+  .biodiversity-overview { height:calc(100dvh - 64px); }
+  .biodiversity-overview .overview-panel {
+    top:auto;
+    right:12px;
+    bottom:12px;
+    left:12px;
+    width:auto;
+    height:min(72dvh,680px);
+    padding:22px 18px;
+    border-radius:20px;
+  }
+  .biodiversity-overview.is-panel-collapsed .overview-panel { transform:translateY(calc(100% + 24px)); }
+  .overview-panel-collapse {
+    top:auto;
+    right:16px;
+    bottom:calc(min(72dvh,680px) + 20px);
+    left:auto;
+  }
+  .biodiversity-overview.is-panel-collapsed .overview-panel-collapse { right:16px; bottom:16px; left:auto; }
+  .biodiversity-overview .area-metrics { grid-template-columns:1fr; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .biodiversity-overview .overview-panel,
+  .overview-panel-collapse { transition:none; }
+}
