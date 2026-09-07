@@ -42,35 +42,6 @@
 .landing-page button { color: inherit; }
 .landing-container { width: min(calc(100% - (2 * var(--page-gutter))), var(--container-width)); margin-inline: auto; }
 
-.landing-header {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  z-index: 50;
-  width: min(calc(100% - (2 * var(--page-gutter))), 1200px);
-  height: 68px;
-  transform: translateX(-50%);
-  border: 1px solid rgb(18 59 45 / 8%);
-  border-radius: var(--radius-pill);
-  background: rgb(255 255 255 / 88%);
-  box-shadow: 0 4px 20px rgb(0 0 0 / 8%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.landing-nav {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding-inline: var(--space-lg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.landing-brand { display: inline-flex; align-items: center; gap: 10px; color: #202320; font-size: 20px; font-weight: 800; text-decoration: none; }
-.landing-brand .brand-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--color-accent); }
-
 .outline-pill,
 .contribution-button {
   min-height: 46px;
@@ -95,8 +66,6 @@
 }
 
 .outline-pill:hover { color: #fff; background: var(--color-heading); transform: translateY(-1px); }
-.nav-cta { position: static; transform: none; }
-.nav-cta:hover { transform: translateY(-1px); }
 .outline-pill:focus-visible, .contribution-button:focus-visible, .landing-brand:focus-visible { outline: 3px solid rgb(87 162 99 / 35%); outline-offset: 3px; }
 
 .landing-hero {
@@ -318,11 +287,6 @@
     --text-h3: 20px;
     --text-body: 16px;
   }
-  .landing-header { top: 14px; width: calc(100% - 24px); height: 60px; }
-  .landing-nav { padding-inline: var(--space-sm); }
-  .landing-brand { font-size: 18px; }
-  .nav-cta { min-height: 42px; margin-left: auto; padding-inline: 18px; font-size: 14px; }
-  .nav-cta:hover { transform: translateY(-1px); }
   .landing-hero { padding-top: 100px; padding-bottom: 48px; gap: var(--space-lg); }
   .hero-copy h1 { max-width: none; }
   .hero-copy p { margin-top: var(--space-sm); }

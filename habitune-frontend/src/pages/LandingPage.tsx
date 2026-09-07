@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Brain, MoonStar, ThermometerSun } from 'lucide-react'
-import HabituneBrand from '../components/HabituneBrand'
+import Navbar from '../components/Navbar'
 import ecosystemMap from '../assets/home/urban-ecosystem-map.png'
 import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
 import balconyBeeVideo from '../assets/Honeybee_on_balcony_flowers_202609072354.mp4'
@@ -66,13 +66,6 @@ const contributions = [
   { title: 'Plant inside and outdoors.', description: 'We will help you plant outside in your locality by verifying council guidelines.', available: false },
 ]
 
-function LandingHeader({ onExploreArea }: LandingPageProps) {
-  return <header className="landing-header"><div className="landing-container landing-nav">
-    <a className="landing-brand" href="#top" aria-label="Habitune home"><HabituneBrand /></a>
-    <button className="outline-pill nav-cta" type="button" onClick={onExploreArea}>Explore my area</button>
-  </div></header>
-}
-
 function ProgressCard({ item, className = '' }: { item: CardItem; className?: string }) {
   return <article className={`progress-card ${className}`}>
     <div className="card-illustration">
@@ -84,7 +77,12 @@ function ProgressCard({ item, className = '' }: { item: CardItem; className?: st
 
 export default function LandingPage({ onExploreArea }: LandingPageProps) {
   return <div className="landing-page">
-    <LandingHeader onExploreArea={onExploreArea} />
+    <Navbar
+      page="landing"
+      hideNavigation
+      onExploreArea={onExploreArea}
+      onNavigate={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    />
     <main>
       <section className="landing-container landing-hero" id="top">
         <div className="hero-copy">
