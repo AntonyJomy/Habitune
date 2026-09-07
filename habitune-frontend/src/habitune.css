@@ -178,6 +178,14 @@ body:has(.biodiversity-overview) .navbar nav button.active { background:transpar
 .overview-empty { min-height:72px; margin:0; padding:0; display:flex; align-items:center; gap:12px; border:0; border-radius:0; background:transparent; color:#6f706f; text-align:left; }
 .overview-empty > span { flex:0 0 auto; width:30px; height:30px; display:grid; place-items:center; border-radius:50%; background:#f2f6f1; color:#64a166; font-size:14px; }
 .overview-empty p { max-width:250px; margin:0; font-size:12px; line-height:1.5; }
+.overview-loading { min-height:118px; align-items:flex-start; }
+.overview-loading > div { min-width:0; padding-top:4px; }
+.overview-loading .overview-loading-spinner { animation:overview-spinner 900ms linear infinite; }
+.overview-loading-label { color:#40584d; font-weight:600; }
+.overview-empty .loading-fact { max-width:310px; min-height:42px; margin-top:9px; color:#708078; font-size:12px; font-weight:400; line-height:1.5; opacity:0; transition:opacity 350ms ease; }
+.overview-empty .loading-fact.is-visible { opacity:1; }
+.loading-fact > span { color:#4f755f; font-weight:600; }
+@keyframes overview-spinner { to { transform:rotate(360deg); } }
 .overview-active-selection { min-height:40px; display:flex; align-items:center; gap:7px; color:#365b49; font-size:12px; line-height:1.4; }
 .overview-active-selection > span { width:7px; height:7px; flex:0 0 auto; border-radius:50%; background:#24a558; }
 .overview-active-selection strong { font-weight:600; }
@@ -420,4 +428,6 @@ body:has(.biodiversity-overview) .navbar.floating-navbar .brand {
 @media (prefers-reduced-motion:reduce) {
   .biodiversity-overview .overview-panel,
   .overview-panel-collapse { transition:none; }
+  .overview-loading .overview-loading-spinner { animation:none; }
+  .overview-empty .loading-fact { transition:none; }
 }

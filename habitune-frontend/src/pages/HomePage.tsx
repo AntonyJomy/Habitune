@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react'
+import { LoaderCircle } from 'lucide-react'
 import LocationSearch from '../components/LocationSearch'
+import LoadingFacts from '../components/LoadingFacts'
 import SuburbOverviewMap from '../components/SuburbOverviewMap'
 import SelectedAreaPanel from '../components/SelectedAreaPanel'
 import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
@@ -76,7 +78,15 @@ export default function HomePage({ selectedSuburb, searchedLocation, onSelectAre
         <LocationSearch onChoose={selectSearchResult} suburbs={suburbs} />
 
         <div className="overview-selection-region">
-          {overviewStatus === 'loading' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Loading Melbourne biodiversity data…</p></div>}
+          {overviewStatus === 'loading' && (
+            <div className="overview-empty overview-loading" role="status">
+              <span className="overview-loading-spinner" aria-hidden="true"><LoaderCircle size={17} /></span>
+              <div>
+                <p className="overview-loading-label">Loading Melbourne biodiversity data…</p>
+                <LoadingFacts />
+              </div>
+            </div>
+          )}
           {overviewStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Biodiversity data is temporarily unavailable. Please try again later.</p></div>}
           {overviewStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No precinct biodiversity data is currently available.</p></div>}
           {overviewStatus === 'success' && !selectedArea && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Click an area on the map to explore its biodiversity data.</p></div>}
