@@ -17,6 +17,7 @@ const knownPlaces = [
 ].map((place) => ({ ...place, searchedLocation: { label: `${place.primary}, ${place.secondary}`, lat: place.lat, lng: place.lng } }))
 
 const geocodeCache = new Map()
+const suggestionCache = new Map()
 const normalize = (value) => value.trim().toLowerCase()
 
 const buildCatalog = (precincts) => [
@@ -39,6 +40,43 @@ export function getLocationSuggestions(query, precincts = []) {
   if (!term) return []
   const catalog = buildCatalog(precincts)
   return catalog.filter((entry) => entry.primary.toLowerCase().includes(term) || entry.secondary.toLowerCase().includes(term) || entry.postcodes?.some((postcode) => postcode.startsWith(term))).slice(0, 6)
+}
+
+export async function searchLocationSuggestions(query, precincts = [], signal) {
+  const term = normalize(query)
+  if (term.length < 3) return []
+  if (suggestionCache.has(term)) return suggestionCache.get(term)
+
+  const params = new URLSearchParams({
+    q: `${query}, Melbourne VIC, Australia`,
+    format: 'jsonv2',
+    limit: '6',
+    countrycodes: 'au',
+    'accept-language': 'en',
+    viewbox: '144.80,-37.70,145.10,-38.00',
+    bounded: '1',
+  })
+  const response = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, { signal })
+  if (!response.ok) throw new Error('Location suggestions request failed')
+  const results = await response.json()
+  if (!Array.isArray(results)) return []
+
+  const suggestions = results.flatMap((result) => {
+    const lat = Number(result.lat)
+    const lng = Number(result.lon)
+    const suburb = findSupportedSuburb(lat, lng, result.display_name || '', precincts)
+    if (!suburb || !Number.isFinite(lat) || !Number.isFinite(lng)) return []
+    const parts = String(result.display_name || query).split(',').map((part) => part.trim()).filter(Boolean)
+    return [{
+      primary: parts[0] || query,
+      secondary: `${suburb} precinct`,
+      type: result.type === 'postcode' ? 'Postcode' : 'Place',
+      suburb,
+      searchedLocation: { label: result.display_name || query, lat, lng },
+    }]
+  })
+  suggestionCache.set(term, suggestions)
+  return suggestions
 }
 
 function pointInPolygon([lat, lng], polygon) {
