@@ -69,7 +69,6 @@ export default function HomePage({ selectedSuburb, searchedLocation, onSelectAre
         </div>
 
         <div className="overview-intro">
-          <span className="section-kicker">Melbourne study area</span>
           <h1>Explore local biodiversity</h1>
           <p>Choose an area to see its biodiversity indicators before opening the detailed ecosystem map.</p>
         </div>

@@ -238,7 +238,7 @@ body:has(.biodiversity-overview) { overflow:hidden; }
   --overview-panel-width:clamp(380px,36vw,540px);
   position:relative;
   width:100%;
-  height:calc(100dvh - 64px);
+  height:100dvh;
   min-height:0;
   margin:0;
   padding:0;
@@ -265,7 +265,7 @@ body:has(.biodiversity-overview) { overflow:hidden; }
 .biodiversity-overview .overview-panel {
   position:absolute;
   z-index:1000;
-  top:20px;
+  top:108px;
   bottom:20px;
   left:20px;
   width:var(--overview-panel-width);
@@ -290,7 +290,7 @@ body:has(.biodiversity-overview) { overflow:hidden; }
 .overview-panel-collapse {
   position:absolute;
   z-index:1100;
-  top:30px;
+  top:118px;
   left:calc(32px + var(--overview-panel-width));
   min-height:42px;
   padding:0 14px;
@@ -330,7 +330,7 @@ body:has(.biodiversity-overview) { overflow:hidden; }
 .biodiversity-overview .overview-active-selection a { white-space:nowrap; }
 
 @media (max-width:760px) {
-  .biodiversity-overview { height:calc(100dvh - 64px); }
+  .biodiversity-overview { height:100dvh; }
   .biodiversity-overview .overview-panel {
     top:auto;
     right:12px;
@@ -350,6 +350,67 @@ body:has(.biodiversity-overview) { overflow:hidden; }
   }
   .biodiversity-overview.is-panel-collapsed .overview-panel-collapse { right:16px; bottom:16px; left:auto; }
   .biodiversity-overview .area-metrics { grid-template-columns:1fr; }
+}
+
+/* Shared floating navigation surface used by landing and map pages. */
+.floating-navbar,
+body:has(.biodiversity-overview) .navbar.floating-navbar {
+  position:fixed;
+  z-index:2000;
+  top:20px;
+  left:50%;
+  width:min(calc(100% - (2 * clamp(32px,4vw,72px))),1200px);
+  max-width:1200px;
+  height:68px;
+  margin:0;
+  padding:0 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border:1px solid rgb(18 59 45 / 8%);
+  border-radius:999px;
+  background:rgb(255 255 255 / 88%);
+  box-shadow:0 4px 20px rgb(0 0 0 / 8%);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transform:translateX(-50%);
+  font-family:Inter,"Helvetica Neue",Arial,sans-serif;
+}
+.floating-navbar .brand,
+body:has(.biodiversity-overview) .navbar.floating-navbar .brand {
+  gap:9px;
+  color:#171817;
+  font-family:inherit;
+  font-size:20px;
+  font-weight:800;
+}
+.floating-navbar-cta {
+  min-height:46px;
+  padding:0 28px;
+  border:1px solid #252a26;
+  border-radius:999px;
+  background:#fff;
+  color:#202320;
+  font-size:16px;
+  font-weight:700;
+  line-height:1;
+  cursor:pointer;
+  transition:background-color 160ms ease,color 160ms ease,transform 160ms ease;
+}
+.floating-navbar-cta:hover { background:#123b2d; color:#fff; transform:translateY(-1px); }
+.floating-navbar-cta:focus-visible { outline:3px solid rgb(87 162 99 / 35%); outline-offset:3px; }
+
+@media (max-width:760px) {
+  .floating-navbar,
+  body:has(.biodiversity-overview) .navbar.floating-navbar {
+    top:14px;
+    width:calc(100% - 24px);
+    height:60px;
+    padding:0 16px;
+  }
+  .floating-navbar .brand,
+  body:has(.biodiversity-overview) .navbar.floating-navbar .brand { font-size:18px; }
+  .floating-navbar-cta { min-height:42px; padding-inline:18px; font-size:14px; }
 }
 
 @media (prefers-reduced-motion:reduce) {
