@@ -6,21 +6,29 @@ import '../landing.css'
 
 type LandingPageProps = { onExploreArea: () => void }
 type CardItem = { title: string; description: React.ReactNode; icon: React.ReactNode }
+type VideoBlockProps = { src: string; poster: string; label: string }
 
-function StatHighlight({ value, variant }: { value: string; variant: 'pill' | 'underline' }) {
-  return <span className={`stat-highlight stat-highlight-${variant}`}>{value}</span>
+function StatHighlight({ value }: { value: string }) {
+  return <span className="stat-highlight">{value}</span>
+}
+
+function VideoBlock({ src, poster, label }: VideoBlockProps) {
+  return <div className={`video-block${src ? '' : ' is-placeholder'}`}>
+    <video autoPlay muted loop playsInline preload="metadata" poster={poster || undefined} aria-label={label} src={src || undefined} />
+    {!src && <span aria-hidden="true">Video coming soon</span>}
+  </div>
 }
 
 const steps: CardItem[] = [
-  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" variant="pill" /> garden flowers actually feed pollinators</>, icon: <Flower2 aria-hidden="true" /> },
-  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" variant="underline" /> more likely to visit once gardens connect</>, icon: <Route aria-hidden="true" /> },
-  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" variant="pill" /> more insect species in 3 years</>, icon: <Sparkles aria-hidden="true" /> },
+  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" /> garden flowers actually feed pollinators</>, icon: <Flower2 aria-hidden="true" /> },
+  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" /> more likely to visit once gardens connect</>, icon: <Route aria-hidden="true" /> },
+  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" /> more insect species in 3 years</>, icon: <Sparkles aria-hidden="true" /> },
   { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, icon: <Leaf aria-hidden="true" /> },
 ]
 
 const benefits: CardItem[] = [
-  { title: 'Cooler days', description: <>Tree cover offsets up to <strong>49%</strong> of local heat island warming</>, icon: <ThermometerSun aria-hidden="true" /> },
-  { title: 'Calmer mind', description: <>Regular gardening is linked to <strong>28%</strong> lower dementia risk</>, icon: <Brain aria-hidden="true" /> },
+  { title: 'Cooler days', description: <>Tree cover offsets up to <StatHighlight value="49%" /> of local heat island warming</>, icon: <ThermometerSun aria-hidden="true" /> },
+  { title: 'Calmer mind', description: <>Regular gardening is linked to <StatHighlight value="28%" /> lower dementia risk</>, icon: <Brain aria-hidden="true" /> },
   { title: 'Better sleep', description: <>Greener streets promote better sleep</>, icon: <MoonStar aria-hidden="true" /> },
 ]
 
@@ -64,8 +72,11 @@ export default function LandingPage({ onExploreArea }: LandingPageProps) {
       </section>
 
       <section className="landing-section landing-container benefits-section" id="benefits">
-        <div className="section-heading"><h2>How your green balcony helps you</h2><p>Here&apos;s how a green balcony benefits you.</p></div>
-        <div className="benefits-frame"><div className="benefits-grid">{benefits.map((benefit) => <ProgressCard item={benefit} className="benefit-card" key={benefit.title} />)}</div></div>
+        <div className="benefits-content">
+          <div className="section-heading"><h2>How your green balcony helps you</h2><p>Here&apos;s how a green balcony benefits you.</p></div>
+          <div className="benefits-frame"><div className="benefits-grid">{benefits.map((benefit) => <ProgressCard item={benefit} className="benefit-card" key={benefit.title} />)}</div></div>
+        </div>
+        <VideoBlock src="" poster="" label="Green balcony benefits video" />
       </section>
 
       <section className="landing-section landing-container contribution-section" id="contribute">

@@ -190,36 +190,27 @@
   padding: var(--space-md);
 }
 .stat-highlight {
-  position: relative;
-  z-index: 0;
   display: inline-block;
-  margin-inline: 3px;
+  margin-inline: 2px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: #eaf3e6;
   color: #286b3a;
-  font-size: clamp(28px, 2.2vw, 32px);
+  font-size: clamp(20px, 1.5vw, 22px);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  vertical-align: middle;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  vertical-align: baseline;
   white-space: nowrap;
 }
-.stat-highlight-pill {
-  padding: 6px 10px;
-  border-radius: var(--radius-pill);
-  background: #e8f3e0;
-}
-.stat-highlight-underline::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 1px;
-  left: 0;
-  z-index: -1;
-  height: 7px;
-  border-radius: var(--radius-pill);
-  background: #cfe7c8;
-}
 
-.benefits-section { isolation: isolate; }
+.benefits-section {
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: center;
+  gap: clamp(32px, 3.5vw, 48px);
+}
 .benefits-section::before {
   content: "";
   position: absolute;
@@ -233,9 +224,35 @@
   filter: blur(110px);
   pointer-events: none;
 }
-.benefits-frame { width: min(100%, 940px); margin-top: var(--space-xl); padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
-.benefits-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); align-items: stretch; }
-.benefit-card { min-height: 360px; }
+.benefits-content { min-width: 0; }
+.benefits-frame { width: 100%; margin-top: var(--space-xl); padding: var(--space-sm); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
+.benefits-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-sm); align-items: stretch; }
+.benefit-card { min-height: 350px; padding: 14px; }
+.benefit-card .card-illustration { aspect-ratio: 16 / 9; }
+.benefit-card h3 { min-height: 50px; margin-block: 14px; font-size: 18px; }
+.benefit-card .card-fact { min-height: 92px; padding: 12px 10px; font-size: 14px; }
+.benefit-card .stat-highlight { padding: 3px 7px; font-size: 19px; }
+.video-block {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface-soft);
+}
+.video-block video { width: 100%; height: 100%; display: block; object-fit: cover; }
+.video-block.is-placeholder { display: grid; place-items: center; }
+.video-block.is-placeholder::before {
+  content: "";
+  position: absolute;
+  width: 48%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(var(--bg-blob-color) / 8%);
+  filter: blur(55px);
+}
+.video-block span { position: relative; color: var(--color-muted); font-size: 16px; font-weight: 600; }
 
 .contribution-grid { margin-top: var(--space-xl); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); align-items: stretch; }
 .contribution-card {
@@ -267,7 +284,10 @@
   .hero-media { width: min(100%, 780px); aspect-ratio: 4 / 3; }
   .steps-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
   .step-arrow { display: none; }
-  .benefits-grid, .contribution-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contribution-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .benefits-section { grid-template-columns: 1fr; }
+  .benefits-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .video-block { aspect-ratio: 16 / 9; }
   .vision-section { grid-template-columns: 1fr; gap: var(--space-xl); }
   .vision-media { width: min(100%, 780px); }
 }
@@ -290,7 +310,8 @@
   .hero-copy p { margin-top: var(--space-sm); }
   .hero-cta { margin-top: var(--space-md); }
   .hero-media { aspect-ratio: 1.08 / 1; border-radius: var(--radius-card); }
-  .steps-grid, .benefits-grid, .contribution-grid { margin-top: var(--space-lg); grid-template-columns: 1fr; gap: var(--space-md); }
+  .steps-grid, .contribution-grid { margin-top: var(--space-lg); grid-template-columns: 1fr; gap: var(--space-md); }
+  .benefits-grid { grid-template-columns: 1fr; gap: var(--space-md); }
   .benefits-frame { margin-top: var(--space-lg); padding: var(--space-sm); }
   .progress-card, .benefit-card { min-height: 350px; }
   .contribution-card { min-height: 250px; padding: var(--space-md); }
