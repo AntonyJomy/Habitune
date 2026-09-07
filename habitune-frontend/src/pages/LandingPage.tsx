@@ -1,241 +1,127 @@
-import { useEffect, useRef, useState } from 'react'
-import { AnimatedEcosystemHero } from '../components/AnimatedEcosystemHero'
+import { useState } from 'react'
+import { Brain, MoonStar, ThermometerSun } from 'lucide-react'
 import HabituneBrand from '../components/HabituneBrand'
-import nativePollinatorGardenImage from '../assets/Native plant for polianots.png'
-import natureStripGardenImage from '../assets/strip gradening.png'
-import pollinationCorridorVideo from '../assets/home/pollination-corridor.mp4'
+import ecosystemMap from '../assets/home/urban-ecosystem-map.png'
 import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
+import balconyBeeVideo from '../assets/Honeybee_on_balcony_flowers_202609072354.mp4'
+import bigPicture1 from '../assets/Big picture 1.png'
+import bigPicture2 from '../assets/Big picture 2.png'
+import bigPicture3 from '../assets/Big picture 3.png'
+import bigPicture4 from '../assets/Big picture 4.png'
 import '../landing.css'
 
-const HERO_ANIMATION_ENABLED = false
+type LandingPageProps = { onExploreArea: () => void }
+type CardItem = {
+  title: string
+  description: React.ReactNode
+  icon?: React.ReactNode
+  image?: string
+  imageAlt?: string
+}
+type VideoBlockProps = { src: string; poster?: string; label: string }
 
-const ArrowIcon = () => <span aria-hidden="true">→</span>
-
-type LandingPageProps = {
-  onExploreArea: () => void
+function StatHighlight({ value }: { value: string }) {
+  return <span className="stat-highlight">{value}</span>
 }
 
-type LandingVideoProps = {
-  className: string
-  label: string
-  src: string
+function VideoBlock({ src, poster, label }: VideoBlockProps) {
+  const [showFallback, setShowFallback] = useState(!src)
+
+  return <div className={`video-block${showFallback ? ' is-placeholder' : ''}`}>
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      poster={poster}
+      aria-label={label}
+      src={src || undefined}
+      onError={() => setShowFallback(true)}
+      onLoadedData={() => setShowFallback(false)}
+      onCanPlay={(event) => {
+        event.currentTarget.play().catch(() => setShowFallback(true))
+      }}
+    />
+    {showFallback && <span aria-hidden="true">Video unavailable</span>}
+  </div>
 }
 
-function LandingVideo({ className, label, src }: LandingVideoProps) {
-  return (
-    <div className={`${className} landing-video`}>
-      <video autoPlay muted loop playsInline preload="auto" aria-label={label}>
-        <source src={src} type="video/mp4" />
-      </video>
-    </div>
-  )
-}
-
-function ContributionImage({ alt, className, src }: { alt: string; className: string; src: string }) {
-  return (
-    <div className={`contribution-media ${className}`}>
-      <img src={src} alt={alt} />
-    </div>
-  )
-}
-
-function Header({ onExploreArea }: LandingPageProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const closeOnOutsideClick = (event: MouseEvent) => {
-      if (!menuRef.current?.contains(event.target as Node)) setIsMenuOpen(false)
-    }
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsMenuOpen(false)
-    }
-
-    document.addEventListener('mousedown', closeOnOutsideClick)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('mousedown', closeOnOutsideClick)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [])
-
-  const goTo = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
-    setIsMenuOpen(false)
-  }
-
-  return (
-    <header className="site-header">
-      <div className="site-header-inner">
-        <a className="brand" href="#top" aria-label="Habitune home">
-          <HabituneBrand />
-        </a>
-
-        <div className="header-actions">
-          <div className="page-menu" ref={menuRef}>
-          <button
-            className="page-menu-trigger"
-            type="button"
-            aria-expanded={isMenuOpen}
-            aria-haspopup="menu"
-            onClick={() => setIsMenuOpen((current) => !current)}
-          >
-            Page content
-            <span className={`chevron ${isMenuOpen ? 'is-open' : ''}`} aria-hidden="true">⌄</span>
-          </button>
-
-          {isMenuOpen && (
-            <div className="page-menu-popover" role="menu">
-              <button type="button" role="menuitem" onClick={() => goTo('pollination-corridor')}>
-                Pollination corridor
-              </button>
-              <button type="button" role="menuitem" onClick={() => goTo('contribute')}>
-                Contribute
-              </button>
-            </div>
-          )}
-          </div>
-
-          <button className="button button-compact" type="button" onClick={onExploreArea}>Explore my area</button>
-        </div>
-      </div>
-    </header>
-  )
-}
-
-function HeroSection() {
-  return (
-    <section className="hero-section" id="top">
-      <div className="hero-copy">
-        <p className="eyebrow">Urban ecosystem</p>
-        <h1>You are part of an urban ecosystem.</h1>
-        <p className="hero-secondary">See how it works, and how you can contribute.</p>
-        <a className="button hero-button" href="#features">Explore <ArrowIcon /></a>
-      </div>
-
-      <div className="hero-visual">
-        <AnimatedEcosystemHero animated={HERO_ANIMATION_ENABLED} />
-      </div>
-    </section>
-  )
-}
-
-function PollinationCorridorSection() {
-  return (
-    <section className="content-section two-column corridor-section" id="pollination-corridor" data-node-id="17:36">
-      <div className="section-copy corridor-copy">
-        <p className="eyebrow">Pollination corridors</p>
-        <h2>What is a pollination corridor?</h2>
-        <p>
-          A pollination corridor is your neighbourhood&apos;s path for pollinators, a connected line of
-          flowering plants, trees and green spaces that lets bees, butterflies and birds move safely
-          between gardens and parks. Without it, even a lush garden becomes an island pollinators
-          can&apos;t reach.
-        </p>
-      </div>
-      <LandingVideo
-        className="corridor-placeholder"
-        label="An urban pollination corridor connecting green spaces"
-        src={pollinationCorridorVideo}
-      />
-    </section>
-  )
-}
-
-function StrategySection() {
-  return (
-    <section className="content-section two-column strategy-section" data-node-id="8:15">
-      <LandingVideo
-        className="video-placeholder"
-        label="A bee travelling through an urban pollination landscape"
-        src={urbanPollinationBeeVideo}
-      />
-      <div className="section-copy strategy-copy">
-        <h2>
-          The key vision of the Urban Forest Strategy and Nature in the City Strategy isn&apos;t just
-          more green cover, it&apos;s creating urban green space that helps promote local biodiversity.
-        </h2>
-        <p>
-          One way this happens is through <strong>pollination corridors</strong>: connected planting
-          that matters because fragmented urban landscapes disrupt pollination and plant reproduction.
-        </p>
-      </div>
-    </section>
-  )
-}
-
-function ContributionSection() {
-  return (
-    <section className="content-section contribution-section" id="contribute" data-node-id="19:4">
-      <div className="contribution-container" data-node-id="19:5">
-        <div className="contribution-heading" data-node-id="20:4">
-          <h2>To promote biodiversity, we need to become a part of this pollination corridor.</h2>
-          <p>Here&apos;s how you contribute to the corridor through your gardens, small or big:</p>
-        </div>
-
-        <div className="contribution-grid" data-node-id="19:16">
-          <article className="contribution-item" data-node-id="20:5">
-            <h3>Select the right plant.</h3>
-            <p>Planting species that promote pollination in your garden, e.g. native species, high-nectar plants.</p>
-            <ContributionImage
-              className="pollinator-garden-image"
-              src={nativePollinatorGardenImage}
-              alt="Native pollinator garden with flowering plants and a butterfly"
-            />
-          </article>
-
-          <article className="contribution-item" data-node-id="20:6">
-            <h3>Nature strip gardening.</h3>
-            <p>We can help you plan an outdoor strip gardening activity by following council&apos;s guidelines.</p>
-            <ContributionImage
-              className="nature-strip-image"
-              src={natureStripGardenImage}
-              alt="Nature strip garden with native plants beside a suburban footpath and street"
-            />
-          </article>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-const featureCards = [
-  { title: 'Know your ecosystem.', description: 'View pollination corridors, green canopy and info on local species in and around your area of residence.', action: 'Explore my area', available: true },
-  { title: 'Find the right plants.', description: 'Find the plant species that is compatible and promotes your local biodiversity.', action: 'Find my plant', available: false },
-  { title: 'Plant with confidence.', description: 'Check if you can plant outdoors in your locality. We will help you find the right plant by verifying council guidelines.', action: 'Check local nature strips', available: false },
+const steps: CardItem[] = [
+  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" /> garden flowers actually feed pollinators</>, image: bigPicture1, imageAlt: 'A person placing a flowering native plant on a city balcony' },
+  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" /> more likely to visit once gardens connect</>, image: bigPicture2, imageAlt: 'A green corridor connecting planted balconies across apartment buildings' },
+  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" /> more insect species in 3 years</>, image: bigPicture3, imageAlt: 'Bees and a butterfly travelling between flowering balconies' },
+  { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, image: bigPicture4, imageAlt: 'A thriving balcony garden filled with flowering plants and visiting wildlife' },
 ]
 
-function FeatureSection({ onExploreArea }: LandingPageProps) {
-  return (
-    <section className="content-section feature-section" id="features" data-node-id="21:5">
-      <h2>Here&apos;s what you can do with Habitune:</h2>
-      <div className="feature-grid" data-node-id="21:6">
-        {featureCards.map((feature) => (
-          <article className={`feature-card${feature.available ? '' : ' is-disabled'}`} key={feature.title}>
-            {!feature.available && <span className="coming-soon">Coming soon</span>}
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
-            <button className="button feature-button" type="button" disabled={!feature.available} onClick={feature.available ? onExploreArea : undefined}>{feature.action}</button>
-          </article>
-        ))}
-      </div>
-    </section>
-  )
+const benefits: CardItem[] = [
+  { title: 'Cooler days', description: <>Tree cover offsets up to <StatHighlight value="49%" /> of local heat island warming</>, icon: <ThermometerSun aria-hidden="true" /> },
+  { title: 'Calmer mind', description: <>Regular gardening is linked to <StatHighlight value="28%" /> lower dementia risk</>, icon: <Brain aria-hidden="true" /> },
+  { title: 'Better sleep', description: <>Greener streets promote better sleep</>, icon: <MoonStar aria-hidden="true" /> },
+]
+
+const contributions = [
+  { title: 'Know your ecosystem.', description: 'View pollination corridors, green canopy and info on local species in and around your area of residence.', available: true },
+  { title: 'Find the right plants.', description: 'Find the plant species that is compatible and promotes your local biodiversity.', available: false },
+  { title: 'Plant inside and outdoors.', description: 'We will help you plant outside in your locality by verifying council guidelines.', available: false },
+]
+
+function LandingHeader({ onExploreArea }: LandingPageProps) {
+  return <header className="landing-header"><div className="landing-container landing-nav">
+    <a className="landing-brand" href="#top" aria-label="Habitune home"><HabituneBrand /></a>
+    <button className="outline-pill nav-cta" type="button" onClick={onExploreArea}>Explore my area</button>
+  </div></header>
+}
+
+function ProgressCard({ item, className = '' }: { item: CardItem; className?: string }) {
+  return <article className={`progress-card ${className}`}>
+    <div className="card-illustration">
+      {item.image ? <img src={item.image} alt={item.imageAlt ?? ''} /> : item.icon}
+    </div>
+    <h3>{item.title}</h3><div className="card-fact">{item.description}</div>
+  </article>
 }
 
 export default function LandingPage({ onExploreArea }: LandingPageProps) {
-  return (
-    <div className="landing-page">
-      <div className="app-shell">
-        <Header onExploreArea={onExploreArea} />
-        <main>
-          <HeroSection />
-          <StrategySection />
-          <PollinationCorridorSection />
-          <ContributionSection />
-          <FeatureSection onExploreArea={onExploreArea} />
-        </main>
-      </div>
-    </div>
-  )
+  return <div className="landing-page">
+    <LandingHeader onExploreArea={onExploreArea} />
+    <main>
+      <section className="landing-container landing-hero" id="top">
+        <div className="hero-copy">
+          <h1>Your balcony can help the local biodiversity thrive.</h1>
+          <p>Our local biodiversity elevates our quality of life. We want to help you contribute to it, the right way.</p>
+          <a className="outline-pill hero-cta" href="#big-picture">See how <span aria-hidden="true">→</span></a>
+        </div>
+        <div className="hero-media"><img src={ecosystemMap} alt="An illustrated map showing connected urban gardens and pollinators" /></div>
+      </section>
+
+      <section className="landing-section landing-container" id="big-picture">
+        <div className="section-heading"><h2>See how you fit in the big picture</h2><p>Every balcony plays a part. Here&apos;s how yours can too.</p></div>
+        <div className="steps-grid">{steps.map((step, index) => <div className="step-slot" key={step.title}>
+          <ProgressCard item={step} />{index < steps.length - 1 && <span className="step-arrow" aria-hidden="true">→</span>}
+        </div>)}</div>
+      </section>
+
+      <section className="landing-section landing-container benefits-section" id="benefits">
+        <div className="benefits-content">
+          <div className="section-heading"><h2>How your green balcony helps you</h2></div>
+          <div className="benefits-frame"><div className="benefits-grid">{benefits.map((benefit) => <ProgressCard item={benefit} className="benefit-card" key={benefit.title} />)}</div></div>
+        </div>
+        <VideoBlock src={balconyBeeVideo} label="Honeybee visiting flowers on a balcony" />
+      </section>
+
+      <section className="landing-section landing-container contribution-section" id="contribute">
+        <div className="section-heading"><h2>How you can contribute</h2></div>
+        <div className="contribution-grid">{contributions.map((item) => <article className="contribution-card" key={item.title}>
+          <h3>{item.title}</h3><p>{item.description}</p>
+          <button className={`contribution-button${item.available ? '' : ' is-disabled'}`} type="button" disabled={!item.available} onClick={item.available ? onExploreArea : undefined}>{item.available ? 'Explore my area' : 'coming soon'}</button>
+        </article>)}</div>
+      </section>
+
+      <section className="landing-section landing-container vision-section">
+        <div className="vision-media"><video autoPlay muted loop playsInline preload="auto" aria-label="A bee travelling through an urban pollination landscape"><source src={urbanPollinationBeeVideo} type="video/mp4" /></video></div>
+        <div className="vision-copy"><h2>The key vision of the Urban Forest Strategy and Nature in the City Strategy isn&apos;t just more green cover, it&apos;s creating urban green space that helps promote local biodiversity.</h2></div>
+      </section>
+    </main>
+  </div>
 }
