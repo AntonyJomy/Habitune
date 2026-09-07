@@ -184,6 +184,40 @@
   line-height: 1.5;
 }
 .card-fact strong { color: var(--color-accent-dark); font-size: 1.05em; font-weight: 800; }
+.steps-grid .card-fact {
+  height: 150px;
+  min-height: 150px;
+  padding: var(--space-md);
+}
+.stat-highlight {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  margin-inline: 3px;
+  color: #286b3a;
+  font-size: clamp(28px, 2.2vw, 32px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.stat-highlight-pill {
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  background: #e8f3e0;
+}
+.stat-highlight-underline::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  left: 0;
+  z-index: -1;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: #cfe7c8;
+}
 
 .benefits-section { isolation: isolate; }
 .benefits-section::before {

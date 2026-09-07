@@ -7,10 +7,14 @@ import '../landing.css'
 type LandingPageProps = { onExploreArea: () => void }
 type CardItem = { title: string; description: React.ReactNode; icon: React.ReactNode }
 
+function StatHighlight({ value, variant }: { value: string; variant: 'pill' | 'underline' }) {
+  return <span className={`stat-highlight stat-highlight-${variant}`}>{value}</span>
+}
+
 const steps: CardItem[] = [
-  { title: 'You choose the right plant for your balcony', description: <>Only <strong>4 in 10</strong> garden flowers actually feed pollinators</>, icon: <Flower2 aria-hidden="true" /> },
-  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <strong>3.4x</strong> more likely to visit once gardens connect</>, icon: <Route aria-hidden="true" /> },
-  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <strong>7.3x</strong> more insect species in 3 years</>, icon: <Sparkles aria-hidden="true" /> },
+  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" variant="pill" /> garden flowers actually feed pollinators</>, icon: <Flower2 aria-hidden="true" /> },
+  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" variant="underline" /> more likely to visit once gardens connect</>, icon: <Route aria-hidden="true" /> },
+  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" variant="pill" /> more insect species in 3 years</>, icon: <Sparkles aria-hidden="true" /> },
   { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, icon: <Leaf aria-hidden="true" /> },
 ]
 
