@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Least-privilege GitHub Actions roles for Habitune static-site deployments
+
+Parameters:
+  GitHubOidcProviderArn:
+    Type: String
+    Description: ARN of the existing token.actions.githubusercontent.com OIDC provider
+  GitHubRepository:
+    Type: String
+    AllowedPattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    Description: GitHub owner/repository
+  DevBucketName:
+    Type: String
+    Default: habitune-dev
+  DevDistributionId:
+    Type: String
+  LiveBucketName:
+    Type: String
+    Default: habitune-live
+  LiveDistributionId:
+    Type: String
+
+Resources:
+  DevDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: habitune-github-dev-deployer
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOidcProviderArn
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:development"
+      Policies:
+        - PolicyName: DeployOnlyDevFrontend
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${DevBucketName}"
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${DevBucketName}/*"
+              - Effect: Allow
+                Action: cloudfront:CreateInvalidation
+                Resource: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${DevDistributionId}"
+
+  LiveDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: habitune-github-live-deployer
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOidcProviderArn
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:production"
+      Policies:
+        - PolicyName: DeployOnlyLiveFrontend
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${LiveBucketName}"
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${LiveBucketName}/*"
+              - Effect: Allow
+                Action: cloudfront:CreateInvalidation
+                Resource: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${LiveDistributionId}"
+
+  IterationArchiveRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: habitune-github-iteration-archiver
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOidcProviderArn
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:iteration-archive"
+      Policies:
+        - PolicyName: ArchiveLiveToIterationBuckets
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: [cloudformation:CreateStack, cloudformation:CreateChangeSet, cloudformation:DeleteChangeSet, cloudformation:DescribeChangeSet, cloudformation:ExecuteChangeSet, cloudformation:DescribeStacks, cloudformation:DescribeStackEvents, cloudformation:DescribeStackResource, cloudformation:ListStackResources, cloudformation:GetTemplateSummary]
+                Resource: !Sub "arn:${AWS::Partition}:cloudformation:*:${AWS::AccountId}:stack/habitune-static-iteration*/*"
+              - Effect: Allow
+                Action: [s3:GetBucketLocation, s3:GetBucketVersioning, s3:ListBucket]
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:s3:::${LiveBucketName}"
+                  - !Sub "arn:${AWS::Partition}:s3:::habitune-iteration*"
+              - Effect: Allow
+                Action: s3:GetObject
+                Resource: !Sub "arn:${AWS::Partition}:s3:::${LiveBucketName}/*"
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject, s3:DeleteObject]
+                Resource: !Sub "arn:${AWS::Partition}:s3:::habitune-iteration*/*"
+              - Effect: Allow
+                Action: [s3:CreateBucket, s3:DeleteBucket, s3:GetBucketPolicy, s3:GetBucketPublicAccessBlock, s3:GetBucketOwnershipControls, s3:GetEncryptionConfiguration, s3:GetBucketTagging, s3:PutEncryptionConfiguration, s3:PutBucketPublicAccessBlock, s3:PutBucketOwnershipControls, s3:PutBucketTagging, s3:PutBucketVersioning]
+                Resource: !Sub "arn:${AWS::Partition}:s3:::habitune-iteration*"
+
+Outputs:
+  DevDeploymentRoleArn:
+    Value: !GetAtt DevDeploymentRole.Arn
+  LiveDeploymentRoleArn:
+    Value: !GetAtt LiveDeploymentRole.Arn
+  IterationArchiveRoleArn:
+    Value: !GetAtt IterationArchiveRole.Arn

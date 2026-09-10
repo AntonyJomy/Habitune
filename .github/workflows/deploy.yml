@@ -1,0 +1,144 @@
+name: Deploy Habitune frontend
+
+on:
+  push:
+    branches: [dev, main]
+    paths:
+      - "habitune-frontend/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+    inputs:
+      iteration_name:
+        description: "Archive name, for example iteration1"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: habitune-frontend-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-southeast-4
+  NODE_VERSION: "22"
+
+jobs:
+  deploy-dev:
+    name: Build and deploy development
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: habitune-frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: habitune-frontend
+        run: npm ci
+      - name: Build frontend
+        working-directory: habitune-frontend
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_COGNITO_USER_POOL_ID: ${{ secrets.VITE_COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_USER_POOL_CLIENT_ID: ${{ secrets.VITE_COGNITO_USER_POOL_CLIENT_ID }}
+        run: npm run build
+      - name: Authenticate to the development deployment role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Sync development site
+        run: aws s3 sync habitune-frontend/dist s3://${{ vars.S3_BUCKET_NAME }} --delete --only-show-errors
+      - name: Invalidate development CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/*"
+
+  deploy-live:
+    name: Build and deploy production
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: habitune-frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: habitune-frontend
+        run: npm ci
+      - name: Build frontend
+        working-directory: habitune-frontend
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_COGNITO_USER_POOL_ID: ${{ secrets.VITE_COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_USER_POOL_CLIENT_ID: ${{ secrets.VITE_COGNITO_USER_POOL_CLIENT_ID }}
+        run: npm run build
+      - name: Authenticate to the production deployment role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Sync production site
+        run: aws s3 sync habitune-frontend/dist s3://${{ vars.S3_BUCKET_NAME }} --delete --only-show-errors
+      - name: Invalidate production CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" --paths "/*"
+
+  archive-iteration:
+    name: Archive current live build
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: iteration-archive
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/setup-sam@v2
+      - name: Authenticate to the iteration archive role
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Validate iteration name
+        id: iteration
+        shell: bash
+        env:
+          REQUESTED_NAME: ${{ inputs.iteration_name }}
+        run: |
+          if [[ ! "$REQUESTED_NAME" =~ ^iteration[0-9]+$ ]]; then
+            echo "Iteration name must match iteration<number>, for example iteration2." >&2
+            exit 1
+          fi
+          echo "name=$REQUESTED_NAME" >> "$GITHUB_OUTPUT"
+          echo "bucket=habitune-$REQUESTED_NAME" >> "$GITHUB_OUTPUT"
+          echo "stack=habitune-static-$REQUESTED_NAME" >> "$GITHUB_OUTPUT"
+      - name: Create or update private iteration bucket
+        run: |
+          sam deploy \
+            --template-file habitune-infrastructure/static-site-environments/template.yaml \
+            --stack-name "${{ steps.iteration.outputs.stack }}" \
+            --region "$AWS_REGION" \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              EnvironmentName="${{ steps.iteration.outputs.name }}" \
+              BucketName="${{ steps.iteration.outputs.bucket }}" \
+              CreateDistribution=false
+      - name: Copy the current live site into the iteration bucket
+        run: aws s3 sync s3://${{ vars.LIVE_BUCKET_NAME }} s3://${{ steps.iteration.outputs.bucket }} --delete --only-show-errors
+      - name: Publish archive summary
+        shell: bash
+        run: |
+          {
+            echo "## Iteration archive created"
+            echo ""
+            echo "- Source: \`${{ vars.LIVE_BUCKET_NAME }}\`"
+            echo "- Archive: \`${{ steps.iteration.outputs.bucket }}\`"
+            echo "- Stack: \`${{ steps.iteration.outputs.stack }}\`"
+            echo ""
+            echo "> This archive is private. For a public preview, update its stack with CreateDistribution=true, pass the wildcard ACM certificate ARN and iteration subdomain, then add the printed CloudFront CNAME manually at get.tech."
+          } >> "$GITHUB_STEP_SUMMARY"
