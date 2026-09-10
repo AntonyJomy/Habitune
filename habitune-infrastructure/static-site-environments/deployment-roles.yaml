@@ -5,10 +5,10 @@ Parameters:
   GitHubOidcProviderArn:
     Type: String
     Description: ARN of the existing token.actions.githubusercontent.com OIDC provider
-  GitHubRepository:
+  GitHubRepositorySubject:
     Type: String
-    AllowedPattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
-    Description: GitHub owner/repository
+    AllowedPattern: "^[A-Za-z0-9_.-]+@[0-9]+/[A-Za-z0-9_.-]+@[0-9]+$"
+    Description: GitHub OIDC repository subject using immutable owner and repository IDs
   DevBucketName:
     Type: String
     Default: habitune-frontend-dev-166828110280
@@ -35,7 +35,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:development"
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepositorySubject}:environment:development"
       Policies:
         - PolicyName: DeployOnlyDevFrontend
           PolicyDocument:
@@ -65,7 +65,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:production"
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepositorySubject}:environment:production"
       Policies:
         - PolicyName: DeployOnlyLiveFrontend
           PolicyDocument:
@@ -95,7 +95,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:iteration-archive"
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepositorySubject}:environment:iteration-archive"
       Policies:
         - PolicyName: ArchiveLiveToIterationBuckets
           PolicyDocument:
