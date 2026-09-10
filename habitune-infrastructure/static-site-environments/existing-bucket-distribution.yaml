@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: CloudFront distribution for an existing private Habitune S3 bucket
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    AllowedPattern: "^[a-z0-9][a-z0-9-]*$"
+  BucketName:
+    Type: String
+  BucketRegionalDomainName:
+    Type: String
+  AlternateDomainName:
+    Type: String
+  CertificateArn:
+    Type: String
+    AllowedPattern: "^arn:aws[a-zA-Z-]*:acm:us-east-1:[0-9]{12}:certificate/.+$"
+  CloudFrontPriceClass:
+    Type: String
+    Default: PriceClass_100
+    AllowedValues: [PriceClass_100, PriceClass_200, PriceClass_All]
+
+Resources:
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "habitune-existing-${EnvironmentName}-oac"
+        Description: !Sub "CloudFront access to existing Habitune ${EnvironmentName} bucket"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  StaticCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub "habitune-existing-${EnvironmentName}-static-cache"
+        DefaultTTL: 86400
+        MaxTTL: 31536000
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  SecurityHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "habitune-existing-${EnvironmentName}-security-headers"
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: strict-origin-when-cross-origin
+            Override: true
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Preload: false
+            Override: true
+
+  SiteDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref AlternateDomainName
+        Comment: !Sub "Habitune ${EnvironmentName} existing-bucket distribution"
+        DefaultCacheBehavior:
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD]
+          CachePolicyId: !Ref StaticCachePolicy
+          Compress: true
+          ResponseHeadersPolicyId: !Ref SecurityHeadersPolicy
+          TargetOriginId: !Sub "habitune-${EnvironmentName}-origin"
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        Origins:
+          - DomainName: !Ref BucketRegionalDomainName
+            Id: !Sub "habitune-${EnvironmentName}-origin"
+            OriginAccessControlId: !Ref OriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        PriceClass: !Ref CloudFrontPriceClass
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+      Tags:
+        - Key: Project
+          Value: habitune
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  ExistingBucketName:
+    Value: !Ref BucketName
+  CloudFrontDistributionId:
+    Description: Distribution ID used by the development deployment pipeline
+    Value: !Ref SiteDistribution
+  CloudFrontDomainName:
+    Description: IMPORTANT - create the manual get.tech CNAME using this target
+    Value: !GetAtt SiteDistribution.DomainName
+  RequiredBucketPolicySourceArn:
+    Description: Add this distribution ARN to the existing bucket policy
+    Value: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${SiteDistribution}"

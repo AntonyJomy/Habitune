@@ -17,6 +17,29 @@ Parameters:
       - PriceClass_100
       - PriceClass_200
       - PriceClass_All
+  DistributionOriginBucketName:
+    Type: String
+    Default: ""
+    Description: Optional existing bucket used by the primary distribution instead of FrontendBucket
+  DevelopmentDistributionId:
+    Type: String
+    Default: ""
+    Description: Optional CloudFront distribution ID allowed to read the retained development bucket
+  AlternateDomainName:
+    Type: String
+    Default: ""
+    Description: Optional custom hostname served by the primary distribution
+  CertificateArn:
+    Type: String
+    Default: ""
+    Description: ACM certificate ARN in us-east-1 for AlternateDomainName
+
+Conditions:
+  UseExternalDistributionOrigin: !Not [!Equals [!Ref DistributionOriginBucketName, ""]]
+  HasDevelopmentDistribution: !Not [!Equals [!Ref DevelopmentDistributionId, ""]]
+  HasCustomDomain: !And
+    - !Not [!Equals [!Ref AlternateDomainName, ""]]
+    - !Not [!Equals [!Ref CertificateArn, ""]]
 
 Resources:
   FrontendUserPool:
@@ -124,6 +147,10 @@ Resources:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
+        Aliases: !If
+          - HasCustomDomain
+          - [!Ref AlternateDomainName]
+          - !Ref AWS::NoValue
         Comment: !Sub "${ProjectName}-frontend-${Stage}"
         DefaultCacheBehavior:
           AllowedMethods:
@@ -142,12 +169,21 @@ Resources:
         HttpVersion: http2and3
         IPV6Enabled: true
         Origins:
-          - DomainName: !GetAtt FrontendBucket.RegionalDomainName
+          - DomainName: !If
+              - UseExternalDistributionOrigin
+              - !Sub "${DistributionOriginBucketName}.s3.${AWS::Region}.${AWS::URLSuffix}"
+              - !GetAtt FrontendBucket.RegionalDomainName
             Id: !Sub "${ProjectName}-frontend-origin-${Stage}"
             OriginAccessControlId: !Ref FrontendOriginAccessControl
             S3OriginConfig:
               OriginAccessIdentity: ""
         PriceClass: !Ref CloudFrontPriceClass
+        ViewerCertificate: !If
+          - HasCustomDomain
+          - AcmCertificateArn: !Ref CertificateArn
+            MinimumProtocolVersion: TLSv1.2_2021
+            SslSupportMethod: sni-only
+          - CloudFrontDefaultCertificate: true
         CustomErrorResponses:
           # Return index.html for client-side routes in this single-page application.
           - ErrorCode: 403
@@ -167,7 +203,7 @@ Resources:
           Value: !Ref Stage
 
   FrontendBucketPolicy:
-    # Only this exact CloudFront distribution can read objects from the bucket.
+    # After cutover, the retained original bucket is the development origin.
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref FrontendBucket
@@ -182,7 +218,10 @@ Resources:
             Resource: !Sub "${FrontendBucket.Arn}/*"
             Condition:
               StringEquals:
-                AWS:SourceArn: !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
+                AWS:SourceArn: !If
+                  - HasDevelopmentDistribution
+                  - !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${DevelopmentDistributionId}"
+                  - !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
 
 Outputs:
   # These values configure the frontend build and support CloudFront invalidations.
@@ -201,6 +240,9 @@ Outputs:
   FrontendDomainName:
     Description: CloudFront domain serving the frontend
     Value: !GetAtt FrontendDistribution.DomainName
+  DistributionOriginBucket:
+    Description: Bucket currently configured as the primary CloudFront origin
+    Value: !If [UseExternalDistributionOrigin, !Ref DistributionOriginBucketName, !Ref FrontendBucket]
   FrontendUrl:
     Description: HTTPS URL for the deployed frontend
     Value: !Sub "https://${FrontendDistribution.DomainName}"

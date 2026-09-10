@@ -1,7 +1,7 @@
 version = 0.1
 
 [dev.deploy.parameters]
-parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune\" CloudFrontPriceClass=\"PriceClass_100\""
+parameter_overrides = "Stage=\"dev\" ProjectName=\"habitune\" CloudFrontPriceClass=\"PriceClass_100\" DistributionOriginBucketName=\"habitune-live\" DevelopmentDistributionId=\"EZPXER5XZK3NH\" AlternateDomainName=\"www.habitune.tech\" CertificateArn=\"arn:aws:acm:us-east-1:166828110280:certificate/b8e07bd8-a973-4a42-87c5-cb3724a9c844\""
 stack_name = "habitune-frontend-dev"
 resolve_s3 = true
 s3_prefix = "habitune-frontend-dev"
