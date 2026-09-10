@@ -11,7 +11,7 @@ Parameters:
     Description: GitHub owner/repository
   DevBucketName:
     Type: String
-    Default: habitune-dev
+    Default: habitune-frontend-dev-166828110280
   DevDistributionId:
     Type: String
   LiveBucketName:

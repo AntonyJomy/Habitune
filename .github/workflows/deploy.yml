@@ -2,7 +2,7 @@ name: Deploy Habitune frontend
 
 on:
   push:
-    branches: [dev, main]
+    branches: [develop, main]
     paths:
       - "habitune-frontend/**"
       - ".github/workflows/deploy.yml"
@@ -28,7 +28,7 @@ env:
 jobs:
   deploy-dev:
     name: Build and deploy development
-    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     environment: development
     steps:
