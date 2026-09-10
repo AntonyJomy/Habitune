@@ -1,0 +1,974 @@
+street_key,street_id,street_name,suburb,centroid_latitude,centroid_longitude,address_count,planted_tree_count,planted_tree_species_count,garden_plant_row_count,garden_plant_species_count,plant_species_count,pollinator_flowering_plant_species_count,nearby_canopy_area_m2,nearby_canopy_polygon_count
+Carlton|379,379,Alma Place,Carlton,-37.8056698,144.9610943,23,0,0,0,0,0,0,1227.56,9
+Carlton|396,396,Argyle Place East,Carlton,-37.8035845,144.9670748,7,0,0,0,0,0,0,141.01,16
+Carlton|397,397,Argyle Place North,Carlton,-37.8020169,144.9659443,38,37,9,6,6,15,2,501.33,9
+Carlton|398,398,Argyle Place South,Carlton,-37.803456,144.9656993,36,21,3,2,1,4,2,98.71,13
+Carlton|1203,1203,Astor Place,Carlton,-37.7968393,144.9681237,23,0,0,0,0,0,0,138.46,19
+Carlton|414,414,Barkly Place,Carlton,-37.8030377,144.9613517,8,1,1,0,0,1,0,299.52,19
+Carlton|415,415,Barkly Street,Carlton,-37.7993268,144.9725017,153,73,8,0,0,8,1,5274.49,126
+Carlton|419,419,Barrup Street,Carlton,-37.8002744,144.9736109,16,22,4,12,3,7,2,682.01,16
+Carlton|421,421,Barry Street,Carlton,-37.8020447,144.9597221,151,123,24,38,34,57,4,2610.15,91
+Carlton|117733,117733,Belle Vue Place,Carlton,-37.79729,144.9725011,5,0,0,0,0,0,0,17.92,14
+Carlton|441,441,Berkeley Street,Carlton,-37.8026817,144.9591455,111,49,9,0,0,9,1,811.01,63
+Carlton|456,456,Bouverie Street,Carlton,-37.8036261,144.9618909,210,121,10,0,0,10,3,6928.32,172
+Carlton|479,479,Canning Street,Carlton,-37.7964588,144.9731054,211,226,23,6,5,27,4,3478.1,230
+Carlton|483,483,Cardigan Street,Carlton,-37.8002899,144.9654928,459,288,32,16,10,42,7,18610.78,423
+Carlton|485,485,Carlow Place,Carlton,-37.7994262,144.9709405,9,0,0,0,0,0,0,12.03,2
+Carlton|1218,1218,Carlton Place,Carlton,-37.8041791,144.9629414,8,0,0,0,0,0,0,9.12,21
+Carlton|486,486,Carlton Street,Carlton,-37.8010004,144.972216,109,199,46,67,49,93,17,40130.1,175
+Carlton|117731,117731,Casamento Place,Carlton,-37.7971919,144.9709422,14,0,0,0,0,0,0,59.36,11
+Carlton|497,497,Cemetery Road East,Carlton,-37.7931789,144.9670014,40,25,4,0,0,4,2,1784.48,79
+Carlton|120151,120151,Challis Lane,Carlton,-37.7953692,144.9673454,4,0,0,0,0,0,0,283.47,19
+Carlton|502,502,Charles Street,Carlton,-37.7945356,144.9726298,21,7,3,0,0,3,0,395.3,43
+Carlton|117735,117735,Chummie Place,Carlton,-37.8017346,144.9662898,2,0,0,0,0,0,0,0.0,0
+Carlton|512,512,Church Street,Carlton,-37.8009719,144.9628788,39,0,0,0,0,0,0,53.4,5
+Carlton|1582,1582,Cl1002,Carlton,-37.8027311,144.9610541,2,0,0,0,0,0,0,19.83,3
+Carlton|522,522,Cochrane Place,Carlton,-37.7976144,144.9681562,2,0,0,0,0,0,0,0.0,0
+Carlton|3155,3155,Coleman Place,Carlton,-37.7934781,144.9724305,10,6,1,0,0,1,1,991.96,43
+Carlton|120134,120134,Colgan Street,Carlton,-37.7939151,144.9703656,36,24,2,12,11,13,2,117.32,45
+Carlton|534,534,Cornell Place,Carlton,-37.8051295,144.9637342,11,0,0,0,0,0,0,64.21,10
+Carlton|3003,3003,Court House Place,Carlton,-37.7975974,144.9686741,7,0,0,0,0,0,0,2.76,2
+Carlton|1227,1227,Cumberland Place,Carlton,-37.8036456,144.9624048,12,0,0,0,0,0,0,13.28,9
+Carlton|558,558,David Street,Carlton,-37.7970355,144.9719156,25,0,0,0,0,0,0,371.17,39
+Carlton|575,575,Dorrit Street,Carlton,-37.7997183,144.9663446,70,0,0,0,0,0,0,629.76,60
+Carlton|120044,120044,Druce Lane,Carlton,-37.7949629,144.9747053,3,0,0,0,0,0,0,123.45,9
+Carlton|582,582,Drummond Place,Carlton,-37.8037814,144.9672981,20,0,0,0,0,0,0,66.92,22
+Carlton|583,583,Drummond Street,Carlton,-37.8003641,144.9685022,452,412,26,12,8,34,5,11894.74,651
+Carlton|592,592,Earl Street,Carlton,-37.8060249,144.9652531,31,11,2,0,0,2,0,261.98,12
+Carlton|2014,2014,Elgin Place,Carlton,-37.796429,144.9650972,4,0,0,0,0,0,0,126.23,8
+Carlton|598,598,Elgin Street,Carlton,-37.7974142,144.969864,273,152,9,25,18,27,6,4398.45,227
+Carlton|603,603,Elm Tree Place,Carlton,-37.8057451,144.9681135,41,0,0,0,0,0,0,285.21,62
+Carlton|620,620,Faraday Lane,Carlton,-37.7989271,144.9663119,3,0,0,0,0,0,0,113.51,8
+Carlton|621,621,Faraday Street,Carlton,-37.7989244,144.9696069,267,182,17,12,12,29,7,4787.2,243
+Carlton|628,628,Finlay Place,Carlton,-37.8039239,144.9669102,10,0,0,0,0,0,0,0.86,4
+Carlton|3042,3042,Gibbons Place,Carlton,-37.8039552,144.9645111,7,0,0,0,0,0,0,0.45,5
+Carlton|1254,1254,Goldspink Place,Carlton,-37.8000658,144.9695693,10,0,0,0,0,0,0,717.11,14
+Carlton|673,673,Grattan Place,Carlton,-37.801291,144.9657849,49,0,0,0,0,0,0,191.27,36
+Carlton|674,674,Grattan Street,Carlton,-37.8006316,144.9656359,190,92,11,1,1,12,3,5808.64,160
+Carlton|716,716,Holmwood Place,Carlton,-37.7962848,144.9656517,3,0,0,0,0,0,0,218.78,10
+Carlton|729,729,Hudson Place,Carlton,-37.8054972,144.9685135,7,0,0,0,0,0,0,57.85,10
+Carlton|731,731,Hyam Place,Carlton,-37.8016859,144.9661516,9,0,0,0,0,0,0,79.84,13
+Carlton|734,734,Ievers Terrace,Carlton,-37.8034432,144.9644773,23,0,0,0,0,0,0,3.44,3
+Carlton|750,750,Kay Street,Carlton,-37.7951745,144.9729522,115,62,6,2,2,8,0,4168.98,109
+Carlton|751,751,Kelvin Place,Carlton,-37.8037926,144.9643689,23,0,0,0,0,0,0,117.84,6
+Carlton|755,755,Keppel Street,Carlton,-37.7954677,144.9663085,104,67,15,9,9,24,5,4260.71,152
+Carlton|117729,117729,Kingsland Place,Carlton,-37.7969951,144.9724998,3,2,1,7,7,7,1,154.02,16
+Carlton|120045,120045,Kulin Place,Carlton,-37.7991623,144.9741556,8,0,0,0,0,0,0,91.61,10
+Carlton|777,777,Lansdowne Place,Carlton,-37.804765,144.961242,26,0,0,0,0,0,0,48.7,12
+Carlton|785,785,Leicester Place,Carlton,-37.8025705,144.9610909,15,0,0,0,0,0,0,8.78,1
+Carlton|786,786,Leicester Street,Carlton,-37.8029248,144.9606043,197,145,21,153,48,67,8,1381.42,89
+Carlton|793,793,Lincoln Place,Carlton,-37.8038899,144.9629319,10,3,1,0,0,1,0,118.55,9
+Carlton|794,794,Lincoln Square North,Carlton,-37.8016961,144.9629866,40,31,14,38,30,42,7,1343.47,36
+Carlton|795,795,Lincoln Square South,Carlton,-37.8031393,144.9627592,42,48,18,87,44,61,11,1951.18,15
+Carlton|807,807,Little Barkly Street,Carlton,-37.7996589,144.9710814,20,0,0,0,0,0,0,142.23,31
+Carlton|810,810,Little Cardigan Street,Carlton,-37.8043602,144.965298,28,0,0,0,0,0,0,2.64,4
+Carlton|817,817,Little Elgin Street,Carlton,-37.7975773,144.9668024,21,0,0,0,0,0,0,219.88,22
+Carlton|828,828,Little Palmerston Street,Carlton,-37.796545,144.9692036,40,6,1,0,0,1,0,658.19,66
+Carlton|834,834,Little Queensberry Street,Carlton,-37.8042985,144.9643219,32,0,0,0,0,0,0,1.03,4
+Carlton|771,771,Lygon Lane,Carlton,-37.7995158,144.9666492,1,0,0,0,0,0,0,20.23,1
+Carlton|840,840,Lygon Street,Carlton,-37.7999411,144.9670907,506,233,12,15,15,27,7,25783.46,457
+Carlton|1995,1995,Lynch Street,Carlton,-37.7992729,144.965319,3,0,0,0,0,0,0,3.84,9
+Carlton|841,841,Lytton Street,Carlton,-37.793663,144.9673984,40,36,7,0,0,7,3,1130.75,26
+Carlton|843,843,MacArthur Place North,Carlton,-37.7981825,144.9715894,75,10,2,0,0,2,1,291.95,27
+Carlton|844,844,MacArthur Place South,Carlton,-37.798538,144.9715008,70,10,2,0,0,2,1,5716.17,24
+Carlton|865,865,Magenta Place,Carlton,-37.8043271,144.9658286,12,0,0,0,0,0,0,26.0,5
+Carlton|867,867,Malvina Place,Carlton,-37.800544,144.9617357,11,0,0,0,0,0,0,106.75,4
+Carlton|2868,2868,McDonald Lane,Carlton,-37.80567,144.9670172,17,0,0,0,0,0,0,85.82,32
+Carlton|902,902,Mission Place,Carlton,-37.8044784,144.9669562,30,0,0,0,0,0,0,296.76,25
+Carlton|915,915,Moton Place,Carlton,-37.7992593,144.969374,30,0,0,0,0,0,0,145.84,9
+Carlton|921,921,Murchison Street,Carlton,-37.7999465,144.9734784,52,26,5,2,1,6,2,1068.38,43
+Carlton|924,924,Naughton Place,Carlton,-37.8000315,144.9682164,7,0,0,0,0,0,0,47.03,10
+Carlton|925,925,Neill Street,Carlton,-37.7938961,144.972701,111,75,15,12,12,27,4,2969.25,171
+Carlton|931,931,Nicholson Street,Carlton,-37.7968771,144.9748849,136,151,35,110,34,69,16,9846.39,247
+Carlton|1427,1427,O'Connell Lane,Carlton,-37.8019752,144.9689525,2,0,0,0,0,0,0,223.19,8
+Carlton|946,946,Ormond Place,Carlton,-37.8020985,144.9674472,12,0,0,0,0,0,0,369.81,23
+Carlton|948,948,Orr Street,Carlton,-37.8063839,144.9652122,28,5,1,0,0,1,0,26.18,5
+Carlton|950,950,Owen Street,Carlton,-37.8005595,144.9733641,52,19,4,2,1,5,2,458.95,53
+Carlton|120173,120173,Pagan Lane,Carlton,-37.7939784,144.9748092,3,0,0,0,0,0,0,365.95,11
+Carlton|952,952,Painsdale Place,Carlton,-37.796141,144.9651836,4,0,0,0,0,0,0,138.14,2
+Carlton|954,954,Palmerston Place,Carlton,-37.7957157,144.9656252,26,0,0,0,0,0,0,602.12,33
+Carlton|955,955,Palmerston Street,Carlton,-37.796324,144.9708635,238,257,42,30,17,58,9,6002.84,288
+Carlton|975,975,Pelham Street,Carlton,-37.8025715,144.9642771,201,65,8,19,13,21,3,1230.36,122
+Carlton|989,989,Pitt Street,Carlton,-37.7957518,144.9719764,62,23,2,21,8,10,2,2024.15,84
+Carlton|117806,117806,Powell Lane,Carlton,-37.798209,144.9663478,8,0,0,0,0,0,0,112.71,11
+Carlton|999,999,Princes Street,Carlton,-37.7927854,144.9719734,103,88,10,1,1,11,3,2908.25,110
+Carlton|1006,1006,Queensberry Place,Carlton,-37.8051005,144.9641769,23,0,0,0,0,0,0,94.58,21
+Carlton|1008,1008,Queensberry Street,Carlton,-37.8046879,144.9643455,249,126,6,0,0,6,1,7748.03,147
+Carlton|119685,119685,Raffa Place,Carlton,-37.7976851,144.9683278,1,0,0,0,0,0,0,0.0,0
+Carlton|1023,1023,Rathdowne Place,Carlton,-37.7997084,144.9705707,12,1,1,0,0,1,0,9.36,9
+Carlton|1024,1024,Rathdowne Street,Carlton,-37.7990592,144.9701759,380,356,60,140,50,109,22,32484.47,753
+Carlton|120050,120050,Reeves Street,Carlton,-37.7933282,144.9704692,36,27,4,23,22,26,7,719.48,57
+Carlton|1036,1036,Rodney Place,Carlton,-37.8035477,144.9674411,3,0,0,0,0,0,0,41.52,10
+Carlton|1066,1066,Scotts Place,Carlton,-37.801572,144.961634,7,0,0,0,0,0,0,102.09,20
+Carlton|117758,117758,Shiels Lane,Carlton,-37.7999666,144.9721301,18,1,1,0,0,1,0,213.79,25
+Carlton|118780,118780,Silver Top Terrace,Carlton,-37.7995999,144.9707814,10,4,1,0,0,1,0,11.1,15
+Carlton|117882,117882,Snowball Lane,Carlton,-37.8052268,144.967232,2,0,0,0,0,0,0,8.39,2
+Carlton|120094,120094,Stable Lane,Carlton,-37.795666,144.9739045,19,0,0,0,0,0,0,306.51,25
+Carlton|1092,1092,Station Street,Carlton,-37.7947844,144.9744301,135,44,7,0,0,7,1,1533.25,137
+Carlton|1110,1110,Sutton Place,Carlton,-37.7968883,144.9701854,2,0,0,0,0,0,0,9.31,5
+Carlton|1114,1114,Swanston Street,Carlton,-37.8012373,144.963895,367,97,13,29,17,30,4,5535.16,349
+Carlton|1128,1128,Trades Hall Place,Carlton,-37.8064825,144.9667477,16,0,0,0,0,0,0,328.02,29
+Carlton|1137,1137,Tyne Street,Carlton,-37.7979296,144.9666674,32,4,1,0,0,1,0,374.33,20
+Carlton|1142,1142,Union Place,Carlton,-37.7965165,144.9655203,6,0,0,0,0,0,0,130.52,12
+Carlton|1145,1145,University Street,Carlton,-37.7995064,144.9686499,65,0,0,0,0,0,0,104.58,51
+Carlton|1151,1151,Victoria Parade,Carlton,-37.8077641,144.9723441,1,68,18,0,0,18,5,6117.41,71
+Carlton|2005,2005,Victoria Place,Carlton,-37.7930608,144.9722801,22,4,2,0,0,2,0,261.51,30
+Carlton|1152,1152,Victoria Street,Carlton,-37.8066482,144.9641963,105,187,43,149,53,95,20,29643.5,305
+Carlton|120177,120177,Warrior Woman Lane,Carlton,-37.7946151,144.9751088,2,0,0,0,0,0,0,208.79,4
+Carlton|1164,1164,Waterloo Street,Carlton,-37.7952466,144.9671332,26,0,0,0,0,0,0,349.24,33
+Carlton|1294,1294,Willow Lane,Carlton,-37.796695,144.97128,10,0,0,0,0,0,0,171.39,33
+Carlton|1192,1192,York Place,Carlton,-37.8001457,144.9675937,5,0,0,0,0,0,0,88.25,20
+Carlton|1194,1194,Youngs Place,Carlton,-37.8040658,144.9674989,10,0,0,0,0,0,0,33.83,2
+Central City|368,368,A'Beckett Street,Central City,-37.809571,144.9597589,230,43,6,0,0,6,0,3937.37,117
+Central City|117944,117944,ACDC Lane,Central City,-37.8158114,144.9710056,1,0,0,0,0,0,0,0.0,0
+Central City|117923,117923,Albert Coates Lane,Central City,-37.8109967,144.9651374,28,0,0,0,0,0,0,0.0,0
+Central City|376,376,Alexandra Avenue,Central City,-37.8246046,144.9769387,14,2022,211,297,122,328,29,139608.63,2047
+Central City|1198,1198,Alfred Lane,Central City,-37.8466458,144.9811477,1,0,0,0,0,0,0,660.41,38
+Central City|377,377,Alfred Place,Central City,-37.8138317,144.9699737,37,3,1,0,0,1,0,0.0,0
+Central City|380,380,Altson Lane,Central City,-37.8137668,144.9541244,10,0,0,0,0,0,0,49.7,4
+Central City|383,383,Anderson Street,Central City,-37.831037,144.9840346,1,25,2,0,0,2,1,6211.92,183
+Central City|388,388,Anthony Street,Central City,-37.8091418,144.9590512,32,13,3,0,0,3,0,262.06,32
+Central City|384,384,Armadale Street,Central City,-37.841143,144.9782823,20,15,2,21,3,5,0,1419.15,158
+Central City|399,399,Arnold Street,Central City,-37.8359347,144.9763552,20,10,2,3,3,5,0,104.41,11
+Central City|117925,117925,Artemis Lane,Central City,-37.8105162,144.9664055,23,0,0,0,0,0,0,0.0,0
+Central City|404,404,Austral Lane,Central City,-37.8164034,144.9607838,21,0,0,0,0,0,0,1.04,1
+Central City|117954,117954,Banana Alley Wharf,Central City,-37.8199556,144.9623642,3,19,3,2,2,5,0,905.18,28
+Central City|412,412,Bank Place,Central City,-37.8166203,144.9604081,24,8,2,0,0,2,0,175.49,21
+Central City|413,413,Baptist Place,Central City,-37.8144908,144.9674381,1,0,0,0,0,0,0,0.0,0
+Central City|120178,120178,Baskerville Lane,Central City,-37.8095724,144.9626746,9,0,0,0,0,0,0,1.23,1
+Central City|422,422,Batman Avenue,Central City,-37.8201456,144.9754686,12,724,36,96,35,71,11,29676.29,550
+Central City|437,437,Bennetts Lane,Central City,-37.8091039,144.9678071,27,0,0,0,0,0,0,2.66,6
+Central City|120181,120181,Benson Walk,Central City,-37.813674,144.9707077,10,0,0,0,0,0,0,0.0,0
+Central City|441,441,Berkeley Street,Central City,-37.8027396,144.9589473,116,22,5,2,2,7,1,919.99,46
+Central City|445,445,Birdwood Avenue,Central City,-37.8305745,144.9771219,12,229,68,75,42,108,11,247975.56,1246
+Central City|1210,1210,Bligh Place,Central City,-37.8171923,144.9637204,15,0,0,0,0,0,0,10.19,13
+Central City|1600,1600,Block Arcade,Central City,-37.8155785,144.9644029,32,0,0,0,0,0,0,0.0,0
+Central City|448,448,Block Place,Central City,-37.8153854,144.964371,48,0,0,0,0,0,0,0.0,0
+Central City|117829,117829,Boathouse Drive,Central City,-37.8197221,144.9708878,17,82,19,68,34,53,8,5265.79,97
+Central City|451,451,Bond Street,Central City,-37.818221,144.9627854,39,5,1,0,0,1,0,66.1,10
+Central City|454,454,Bourke Place,Central City,-37.8156444,144.9557674,8,0,0,0,0,0,0,18.29,10
+Central City|455,455,Bourke Street,Central City,-37.8141445,144.963593,809,170,14,70,46,59,4,19282.8,292
+Central City|466,466,Bromby Street,Central City,-37.8348723,144.9765253,74,40,2,0,0,2,0,180.51,21
+Central City|1265,1265,Brown Alley,Central City,-37.8148593,144.9554754,37,2,2,0,0,2,1,212.75,2
+Central City|468,468,Brunton Avenue,Central City,-37.8234918,144.9883824,1,51,12,5,5,17,0,515.14,28
+Central City|475,475,Caledonian Lane,Central City,-37.8122422,144.964458,16,0,0,0,0,0,0,0.0,0
+Central City|1601,1601,Campbell Arcade,Central City,-37.8178114,144.9660386,15,0,0,0,0,0,0,0.0,0
+Central City|490,490,Carson Place,Central City,-37.8151052,144.9651027,20,0,0,0,0,0,0,0.0,0
+Central City|492,492,Casselden Place,Central City,-37.8088528,144.9710561,1,0,0,0,0,0,0,45.91,11
+Central City|496,496,Celestial Avenue,Central City,-37.811846,144.9662555,30,0,0,0,0,0,0,0.1,1
+Central City|499,499,Centre Place,Central City,-37.816574,144.96548,34,0,0,0,0,0,0,1.74,3
+Central City|1602,1602,Centreway Arcade,Central City,-37.8162545,144.9653655,17,0,0,0,0,0,0,0.0,0
+Central City|513,513,Church Lane,Central City,-37.8172538,144.9575965,10,0,0,0,0,0,0,1.76,5
+Central City|509,509,Church Street,Central City,-37.8165297,144.9572819,36,9,1,0,0,1,0,191.79,19
+Central City|523,523,Cohen Place,Central City,-37.8109955,144.9691557,26,1,1,2,2,3,0,57.77,12
+Central City|526,526,Collins Street,Central City,-37.8162945,144.9637954,622,221,9,0,0,9,1,21356.32,287
+Central City|527,527,Collins Way,Central City,-37.8159138,144.9624123,12,0,0,0,0,0,0,0.11,1
+Central City|529,529,Commercial Road,Central City,-37.845311,144.9815015,63,28,4,0,0,4,1,3984.93,230
+Central City|535,535,Coromandel Place,Central City,-37.8131787,144.9691878,32,1,1,0,0,1,0,6.05,3
+Central City|538,538,Corrs Lane,Central City,-37.8111447,144.9682583,38,0,0,0,0,0,0,34.72,9
+Central City|542,542,Coverlid Place,Central City,-37.8120001,144.9684001,28,0,0,0,0,0,0,0.71,2
+Central City|543,543,Croft Alley,Central City,-37.8120527,144.9691239,3,0,0,0,0,0,0,1.29,1
+Central City|545,545,Crossley Street,Central City,-37.8113376,144.9710814,42,0,0,0,0,0,0,4.12,3
+Central City|553,553,Custom House Lane,Central City,-37.8193764,144.9589143,13,0,0,0,0,0,0,157.63,27
+Central City|1230,1230,Dallas Brooks Drive,Central City,-37.8321437,144.9763844,30,230,57,194,122,177,17,18828.08,256
+Central City|119319,119319,Dame Edna Place,Central City,-37.8152392,144.9645492,18,0,0,0,0,0,0,0.0,0
+Central City|559,559,Davisons Place,Central City,-37.8092347,144.9673712,28,1,1,2,2,3,0,88.64,33
+Central City|566,566,Degraves Street,Central City,-37.8173221,144.9657832,40,0,0,0,0,0,0,0.0,0
+Central City|572,572,Domain Road,Central City,-37.8334603,144.9774679,149,373,89,22,15,104,13,26230.37,418
+Central City|574,574,Domain Street,Central City,-37.8344236,144.9786353,30,14,3,0,0,3,1,1605.59,20
+Central City|577,577,Downie Street,Central City,-37.8202571,144.9557348,32,0,0,0,0,0,0,12.39,10
+Central City|578,578,Drewery Alley,Central City,-37.8110072,144.9637663,14,0,0,0,0,0,0,3.82,3
+Central City|580,580,Drewery Lane,Central City,-37.8111668,144.9640801,25,3,2,0,0,2,0,123.03,7
+Central City|579,579,Drewery Place,Central City,-37.8112134,144.9638799,19,4,2,0,0,2,0,225.57,5
+Central City|581,581,Driver Lane,Central City,-37.8129574,144.9630379,15,0,0,0,0,0,0,0.77,2
+Central City|1240,1240,Duckboard Place,Central City,-37.8154913,144.971333,19,0,0,0,0,0,0,0.0,0
+Central City|591,591,Eagle Alley,Central City,-37.8128284,144.9546956,46,0,0,0,0,0,0,8.85,7
+Central City|599,599,Elizabeth Street,Central City,-37.8093996,144.9609857,732,217,9,9,8,17,4,21917.04,314
+Central City|606,606,Equitable Place,Central City,-37.8158118,144.9631714,35,0,0,0,0,0,0,5.44,2
+Central City|3187,3187,Evan Walker Bridge,Central City,-37.8196233,144.965128,1,1,1,0,0,1,0,0.29,1
+Central City|613,613,Evans Lane,Central City,-37.808931,144.9687003,15,0,0,0,0,0,0,42.88,3
+Central City|615,615,Exhibition Street,Central City,-37.8117129,144.9703919,329,156,10,32,18,28,6,10443.57,169
+Central City|616,616,Exploration Lane,Central City,-37.8089071,144.9681983,34,0,0,0,0,0,0,119.55,32
+Central City|630,630,Flanigan Lane,Central City,-37.8110368,144.9601676,38,0,0,0,0,0,0,0.75,3
+Central City|631,631,Fleming Place,Central City,-37.8157888,144.9629162,24,0,0,0,0,0,0,0.0,0
+Central City|632,632,Flemington Road,Central City,-37.8002171,144.9562263,7,19,2,0,0,2,2,1608.09,69
+Central City|634,634,Flinders Court,Central City,-37.8177906,144.964353,19,0,0,0,0,0,0,0.89,2
+Central City|635,635,Flinders Lane,Central City,-37.8172144,144.9644609,569,109,10,11,6,16,1,6477.95,340
+Central City|636,636,Flinders Street,Central City,-37.8181278,144.965116,537,145,11,24,17,28,3,14024.28,308
+Central City|1604,1604,Flinders Street Station Concourse,Central City,-37.8183032,144.9670197,27,15,3,2,2,5,1,2606.25,19
+Central City|117860,117860,Flinders Walk,Central City,-37.8192777,144.9647154,5,25,3,31,29,32,5,1475.56,46
+Central City|642,642,Francis Street,Central City,-37.8182071,144.9551414,83,1,1,0,0,1,0,87.97,35
+Central City|644,644,Franklin Street,Central City,-37.8084151,144.9597507,243,62,10,9,9,19,5,3635.2,235
+Central City|120139,120139,Frederick Way,Central City,-37.8100505,144.9568635,6,0,0,0,0,0,0,20.78,11
+Central City|645,645,Fulham Place,Central City,-37.8173479,144.9630595,12,0,0,0,0,0,0,49.05,24
+Central City|1252,1252,Gallaghers Place,Central City,-37.8167251,144.9565149,35,0,0,0,0,0,0,0.0,0
+Central City|119549,119549,Gem Place,Central City,-37.8208796,144.9568911,12,0,0,0,0,0,0,28.54,13
+Central City|651,651,George Parade,Central City,-37.8149967,144.9702618,38,0,0,0,0,0,0,32.38,12
+Central City|661,661,Godfrey Street,Central City,-37.8174474,144.9540229,38,11,2,0,0,2,0,20.62,4
+Central City|663,663,Goldie Place,Central City,-37.8134468,144.9606811,24,0,0,0,0,0,0,104.46,16
+Central City|664,664,Goldsbrough Lane,Central City,-37.8153299,144.9573851,40,0,0,0,0,0,0,0.0,0
+Central City|1445,1445,Gordon Place,Central City,-37.8103301,144.9719219,14,0,0,0,0,0,0,13.04,8
+Central City|667,667,Government House Drive,Central City,-37.8271487,144.9746119,8,298,97,215,120,215,20,55830.57,361
+Central City|674,674,Grattan Street,Central City,-37.7998331,144.9573563,28,13,1,0,0,1,0,209.38,31
+Central City|681,681,Guests Lane,Central City,-37.8146262,144.9570507,11,0,0,0,0,0,0,4.53,14
+Central City|682,682,Guildford Lane,Central City,-37.8112939,144.9600366,50,0,0,0,0,0,0,58.56,22
+Central City|3226,3226,Hardware Lane,Central City,-37.8136603,144.9612418,88,14,1,0,0,1,0,490.56,13
+Central City|689,689,Hardware Street,Central City,-37.8121591,144.9605618,40,6,1,0,0,1,0,101.23,23
+Central City|694,694,Harwood Place,Central City,-37.8109721,144.9717064,24,0,0,0,0,0,0,207.96,20
+Central City|697,697,Hay Place,Central City,-37.8197653,144.9567847,9,0,0,0,0,0,0,36.21,7
+Central City|698,698,Hayward Lane,Central City,-37.8097412,144.9671521,76,0,0,0,0,0,0,173.33,16
+Central City|699,699,Healeys Lane,Central City,-37.8135743,144.9558443,42,0,0,0,0,0,0,0.58,2
+Central City|700,700,Heape Court,Central City,-37.8118553,144.9613451,1,0,0,0,0,0,0,0.0,0
+Central City|701,701,Heffernan Lane,Central City,-37.8116197,144.9666532,38,0,0,0,0,0,0,0.0,0
+Central City|710,710,Highlander Lane,Central City,-37.8196734,144.9580546,24,7,4,0,0,4,0,220.41,26
+Central City|722,722,Hosier Lane,Central City,-37.8163078,144.969051,25,0,0,0,0,0,0,2.54,4
+Central City|727,727,Howey Place,Central City,-37.8151257,144.9654441,40,0,0,0,0,0,0,0.0,0
+Central City|117926,117926,Jane Bell Lane,Central City,-37.8103423,144.9662465,26,0,0,0,0,0,0,0.0,0
+Central City|748,748,Jones Lane,Central City,-37.8098016,144.968607,31,0,0,0,0,0,0,9.71,13
+Central City|749,749,Katherine Place,Central City,-37.8200526,144.9565162,23,7,1,1,1,2,0,42.44,20
+Central City|761,761,King Street,Central City,-37.8163092,144.9556948,312,95,5,10,1,6,1,10134.41,123
+Central City|763,763,Kirks Lane,Central City,-37.81419,144.9611877,32,0,0,0,0,0,0,63.62,20
+Central City|780,780,La Trobe Street,Central City,-37.8102104,144.9617804,490,130,9,5,5,14,6,14596.57,386
+Central City|768,768,Lacey Place,Central City,-37.8111017,144.9687687,11,0,0,0,0,0,0,4.66,4
+Central City|786,786,Leicester Street,Central City,-37.8057178,144.9598674,18,7,2,0,0,2,1,7.88,4
+Central City|808,808,Little Bourke Place,Central City,-37.8101868,144.9716139,24,0,0,0,0,0,0,656.61,15
+Central City|809,809,Little Bourke Street,Central City,-37.8132271,144.9628204,611,41,8,0,0,8,0,3015.77,185
+Central City|812,812,Little Collins Street,Central City,-37.8151645,144.9637981,614,77,10,0,0,10,0,4524.51,196
+Central City|822,822,Little La Trobe Street,Central City,-37.8093996,144.9623511,84,2,2,0,0,2,0,66.79,9
+Central City|825,825,Little Lonsdale Street,Central City,-37.811295,144.9618165,601,63,12,5,5,17,2,3974.45,145
+Central City|833,833,Little Queen Street,Central City,-37.8147287,144.9593718,36,0,0,0,0,0,0,30.48,24
+Central City|799,799,Liverpool Street,Central City,-37.8112163,144.9713891,34,2,1,0,0,1,0,49.73,24
+Central City|803,803,Lonsdale Street,Central City,-37.8118397,144.9625728,874,186,4,0,0,4,0,17200.42,238
+Central City|858,858,MacKenzie Street,Central City,-37.8075512,144.9667529,50,6,3,0,0,3,1,680.96,105
+Central City|866,866,Malthouse Lane,Central City,-37.8154906,144.9714923,11,0,0,0,0,0,0,0.1,1
+Central City|868,868,Manchester Lane,Central City,-37.8162051,144.9659769,44,0,0,0,0,0,0,14.86,9
+Central City|872,872,Manton Lane,Central City,-37.8136347,144.955157,29,0,0,0,0,0,0,0.0,0
+Central City|876,876,Market Lane,Central City,-37.8118442,144.9693007,36,0,0,0,0,0,0,7.41,10
+Central City|1424,1424,Market Street,Central City,-37.8183046,144.9606939,69,31,8,19,6,14,1,2163.8,49
+Central City|859,859,McKillop Street,Central City,-37.815308,144.9617444,31,5,2,0,0,2,0,30.9,14
+Central City|860,860,McLean Alley,Central City,-37.8114256,144.9603497,39,0,0,0,0,0,0,83.07,5
+Central City|889,889,Melbourne Place,Central City,-37.8132546,144.9687231,42,0,0,0,0,0,0,0.0,0
+Central City|892,892,Merlin Alley,Central City,-37.8143441,144.9597687,4,0,0,0,0,0,0,0.0,0
+Central City|893,893,Merriman Lane,Central City,-37.814199,144.9537036,15,0,0,0,0,0,0,43.21,15
+Central City|895,895,Meyers Place,Central City,-37.8121732,144.9722624,34,8,2,0,0,2,0,63.96,25
+Central City|898,898,Mill Place,Central City,-37.8176494,144.9639297,20,0,0,0,0,0,0,71.25,11
+Central City|916,916,Moubray Street,Central City,-37.8480457,144.9823779,76,68,4,0,0,4,1,6530.23,202
+Central City|929,929,Niagara Lane,Central City,-37.8131335,144.9614681,41,0,0,0,0,0,0,13.52,7
+Central City|930,930,Nicholson Place,Central City,-37.8133523,144.9536156,9,0,0,0,0,0,0,0.0,0
+Central City|119550,119550,Norval Place,Central City,-37.821075,144.9560292,3,0,0,0,0,0,0,4.87,8
+Central City|939,939,O'connell Street,Central City,-37.8042214,144.9577046,62,19,3,4,4,7,1,647.75,28
+Central City|944,944,Oliver Lane,Central City,-37.8160824,144.970106,38,0,0,0,0,0,0,10.86,8
+Central City|119497,119497,Olympic Boulevard,Central City,-37.8240398,144.9836405,89,431,49,9,6,55,10,28535.38,947
+Central City|961,961,Park Street,Central City,-37.8127031,144.9551882,39,0,0,0,0,0,0,4.84,2
+Central City|973,973,Peel Street,Central City,-37.8070285,144.9564085,99,38,5,0,0,5,1,675.26,49
+Central City|975,975,Pelham Street,Central City,-37.8018834,144.9581117,19,9,5,0,0,5,2,264.43,16
+Central City|995,995,Presgrave Place,Central City,-37.8149748,144.9655698,20,0,0,0,0,0,0,0.0,0
+Central City|1001,1001,Princes Walk,Central City,-37.8186848,144.9690074,25,27,5,3,3,8,2,677.65,47
+Central City|1003,1003,Punch Lane,Central City,-37.810462,144.9709381,36,6,1,0,0,1,0,203.46,27
+Central City|1004,1004,Punt Road,Central City,-37.8483004,144.9844651,154,343,46,15,13,57,13,16684.2,430
+Central City|117913,117913,QV Square,Central City,-37.810544,144.9655899,19,0,0,0,0,0,0,0.0,0
+Central City|117918,117918,QV Terrace,Central City,-37.8107091,144.9655779,21,0,0,0,0,0,0,6.61,1
+Central City|117920,117920,QV Undercroft,Central City,-37.8105678,144.9656192,18,0,0,0,0,0,0,3.31,5
+Central City|117919,117919,QV Upper Terrace,Central City,-37.8103526,144.9656291,8,0,0,0,0,0,0,0.0,0
+Central City|117917,117917,QV Urban Market,Central City,-37.8105737,144.9657659,67,0,0,0,0,0,0,10.24,2
+Central City|1010,1010,Queen Street,Central City,-37.8127796,144.9597875,466,176,11,1,1,12,2,17546.07,271
+Central City|1008,1008,Queensberry Street,Central City,-37.8040374,144.9584706,36,20,2,0,0,2,1,1517.02,9
+Central City|1018,1018,Rainbow Alley,Central City,-37.8141365,144.9663829,19,0,0,0,0,0,0,5.41,10
+Central City|1019,1019,Ramsay Lane,Central City,-37.8154349,144.9570173,20,1,1,0,0,1,0,41.46,9
+Central City|1021,1021,Rankins Lane,Central City,-37.8138809,144.9621996,20,0,0,0,0,0,0,6.21,2
+Central City|119776,119776,Rebecca Walk,Central City,-37.8214118,144.9566719,42,39,10,7,4,14,4,4566.43,74
+Central City|117924,117924,Red Cape Lane,Central City,-37.8106945,144.9649921,23,0,0,0,0,0,0,0.0,0
+Central City|1029,1029,Ridgway Place,Central City,-37.8130578,144.9724158,28,0,0,0,0,0,0,2858.19,7
+Central City|1287,1287,Roeszler Lane,Central City,-37.8163704,144.960485,9,0,0,0,0,0,0,0.0,0
+Central City|1037,1037,Rose Lane,Central City,-37.8152176,144.9541603,40,0,0,0,0,0,0,152.47,22
+Central City|1607,1607,Royal Arcade,Central City,-37.8146416,144.9640346,46,0,0,0,0,0,0,0.0,0
+Central City|1040,1040,Royal Lane,Central City,-37.813746,144.9669358,19,7,3,0,0,3,0,213.41,12
+Central City|1044,1044,Russell Place,Central City,-37.8136402,144.9673163,38,4,1,0,0,1,0,113.67,15
+Central City|1045,1045,Russell Street,Central City,-37.8117891,144.9676353,388,125,11,0,0,11,3,13218.36,223
+Central City|1046,1046,Rutledge Lane,Central City,-37.8164457,144.968927,15,0,0,0,0,0,0,0.0,0
+Central City|117773,117773,Sandridge Rail Bridge,Central City,-37.8201804,144.9628312,1,0,0,0,0,0,0,0.0,0
+Central City|1065,1065,Scott Alley,Central City,-37.8168418,144.9663641,12,0,0,0,0,0,0,13.58,8
+Central City|1075,1075,Singers Lane,Central City,-37.8111847,144.9567856,6,0,0,0,0,0,0,10.5,19
+Central City|1076,1076,Slater Street,Central City,-37.8388728,144.9774835,21,9,1,0,0,1,0,1666.55,63
+Central City|1080,1080,Sniders Lane,Central City,-37.8113871,144.9639753,5,0,0,0,0,0,0,0.0,0
+Central City|1082,1082,Somerset Place,Central City,-37.8137619,144.9625092,37,2,1,2,2,3,1,40.6,2
+Central City|119057,119057,Southern Cross Lane,Central City,-37.8128229,144.9700665,16,0,0,0,0,0,0,0.0,0
+Central City|1086,1086,Spencer Street,Central City,-37.8171636,144.9534657,153,43,10,3,3,13,3,3093.99,68
+Central City|1088,1088,Spring Street,Central City,-37.8112939,144.9728246,140,46,10,0,0,10,1,3384.29,120
+Central City|1056,1056,St Kilda Road,Central City,-37.8402612,144.9771941,144,1158,130,428,147,273,29,128368.62,1644
+Central City|1093,1093,Staughton Alley,Central City,-37.8170406,144.9640456,27,0,0,0,0,0,0,13.04,13
+Central City|1098,1098,Stewart Street,Central City,-37.8080606,144.9621422,2,3,1,0,0,1,0,44.28,16
+Central City|1109,1109,Sutherland Street,Central City,-37.8111024,144.9608114,37,0,0,0,0,0,0,0.0,0
+Central City|1114,1114,Swanston Street,Central City,-37.8124195,144.965162,477,233,22,99,18,40,13,21550.51,362
+Central City|1115,1115,Tattersalls Lane,Central City,-37.8119014,144.9655744,36,0,0,0,0,0,0,38.42,5
+Central City|1116,1116,Tavistock Place,Central City,-37.8185213,144.961655,38,0,0,0,0,0,0,1.17,3
+Central City|1120,1120,Therry Street,Central City,-37.8071583,144.9597324,127,31,5,0,0,5,2,2844.27,46
+Central City|1124,1124,Timothy Lane,Central City,-37.8121004,144.96101,20,0,0,0,0,0,0,0.0,0
+Central City|1127,1127,Toorak Road,Central City,-37.8371503,144.9768073,12,9,4,0,0,4,2,1383.81,15
+Central City|1152,1152,Victoria Street,Central City,-37.8065164,144.9606164,87,42,10,4,2,12,4,1815.26,82
+Central City|1159,1159,Waratah Place,Central City,-37.8114422,144.9670194,16,0,0,0,0,0,0,0.0,0
+Central City|1160,1160,Warburton Alley,Central City,-37.8132748,144.9616767,20,0,0,0,0,0,0,24.59,3
+Central City|1161,1161,Warburton Lane,Central City,-37.8138608,144.9619396,25,0,0,0,0,0,0,0.0,0
+Central City|120060,120060,Watertank Way,Central City,-37.8153646,144.9533585,17,0,0,0,0,0,0,401.25,60
+Central City|1166,1166,Watson Place,Central City,-37.8157366,144.9680645,25,0,0,0,0,0,0,0.0,0
+Central City|1170,1170,Wellington Parade South,Central City,-37.8159991,144.9747392,32,8,2,0,0,2,0,2109.86,48
+Central City|1176,1176,White Hart Lane,Central City,-37.8129377,144.9620328,1,0,0,0,0,0,0,25.21,10
+Central City|1179,1179,William Street,Central City,-37.8149294,144.957891,338,86,8,0,0,8,1,10117.34,143
+Central City|1180,1180,Wills Street,Central City,-37.810771,144.9572165,14,8,2,0,0,2,0,252.54,25
+Central City|1184,1184,Windsor Place,Central City,-37.8120678,144.9726939,37,2,1,0,0,1,0,55.8,9
+Docklands|371,371,Adderley Street,Docklands,-37.8123435,144.9488614,54,16,4,0,0,4,0,1483.34,40
+Docklands|120172,120172,Adela Lane,Docklands,-37.8211584,144.9422798,13,14,6,8,6,12,2,121.94,32
+Docklands|117870,117870,Aquitania Way,Docklands,-37.8138316,144.9422641,27,22,1,4,2,3,1,1177.5,53
+Docklands|120052,120052,Augusta Avenue,Docklands,-37.8158313,144.9375855,18,15,3,3,3,6,0,226.45,31
+Docklands|117945,117945,Aurora Lane,Docklands,-37.8199366,144.9507485,83,12,4,0,0,4,1,94.07,8
+Docklands|120090,120090,Australian Wharf,Docklands,-37.8214478,144.9416987,23,15,5,8,6,11,2,166.91,34
+Docklands|120036,120036,Barring Mews,Docklands,-37.8230677,144.9386326,6,4,2,10,6,8,3,43.4,9
+Docklands|117957,117957,Batmans Hill Drive,Docklands,-37.8205378,144.9489383,85,100,6,1,1,7,4,2790.31,112
+Docklands|455,455,Bourke Street,Docklands,-37.819259,144.9457241,165,186,15,20,8,23,4,5280.71,207
+Docklands|117958,117958,Bourke Street Extension,Docklands,-37.8202242,144.9408247,1,9,2,0,0,2,1,197.08,14
+Docklands|118681,118681,Brentani Way,Docklands,-37.8213491,144.9506625,8,4,1,0,0,1,0,410.66,35
+Docklands|120089,120089,Buckley Walk,Docklands,-37.8199044,144.9449929,8,28,4,2,2,6,1,623.21,8
+Docklands|120037,120037,Canal Mews,Docklands,-37.8231498,144.9392468,4,4,2,14,5,7,1,25.97,7
+Docklands|117868,117868,Caravel Lane,Docklands,-37.8142465,144.9411587,40,26,2,0,0,2,0,1678.64,57
+Docklands|526,526,Collins Street,Docklands,-37.8205044,144.947391,274,313,29,29,14,43,12,5128.09,278
+Docklands|119552,119552,Commissioners Lane,Docklands,-37.8196537,144.9538279,5,0,0,0,0,0,0,691.14,17
+Docklands|119223,119223,Cumberland Street,Docklands,-37.8196651,144.9425707,11,20,2,0,0,2,0,154.62,18
+Docklands|120095,120095,Digital Drive,Docklands,-37.8138372,144.9462581,24,4,2,0,0,2,0,728.46,25
+Docklands|117768,117768,Docklands Drive,Docklands,-37.8149274,144.9380648,171,868,28,236,52,76,11,3049.48,405
+Docklands|117914,117914,Doepel Way,Docklands,-37.8147866,144.9401062,30,19,4,4,3,7,1,805.33,77
+Docklands|586,586,Dudley Street,Docklands,-37.8118881,144.9458674,32,16,3,0,0,3,1,1136.61,35
+Docklands|119689,119689,Encounter Way,Docklands,-37.820097,144.945709,1,10,1,0,0,1,1,20.55,10
+Docklands|117951,117951,Enterprize Way,Docklands,-37.8191861,144.9443409,18,12,1,0,0,1,0,345.3,7
+Docklands|636,636,Flinders Street,Docklands,-37.8217415,144.953023,118,45,9,3,3,12,2,1787.3,48
+Docklands|640,640,Footscray Road,Docklands,-37.8110715,144.9389656,63,36,7,8,5,12,5,1033.66,28
+Docklands|120034,120034,Foundry Way,Docklands,-37.8228443,144.9379423,12,13,2,13,7,9,0,146.48,15
+Docklands|119690,119690,Geographe Street,Docklands,-37.8202451,144.9454305,31,59,8,191,96,104,5,1115.57,44
+Docklands|118682,118682,Georgiana Street,Docklands,-37.8216593,144.9505302,7,8,1,0,0,1,1,301.53,25
+Docklands|120174,120174,Glenti Place,Docklands,-37.8152748,144.9388814,1,29,7,50,19,26,4,101.63,7
+Docklands|117766,117766,Harbour Esplanade,Docklands,-37.8173911,144.945844,217,532,43,94,43,84,11,7978.59,440
+Docklands|119224,119224,Hubbuck Lane,Docklands,-37.8196218,144.9430504,3,0,0,0,0,0,0,744.73,2
+Docklands|119692,119692,Import Lane,Docklands,-37.8209277,144.9447817,17,54,6,6,4,10,2,400.42,33
+Docklands|120030,120030,Karlsruhe Lane,Docklands,-37.8210835,144.9453848,22,31,2,31,24,26,1,58.22,15
+Docklands|120029,120029,Keera Way,Docklands,-37.8208003,144.9457687,13,9,1,0,0,1,0,115.41,22
+Docklands|780,780,La Trobe Street,Docklands,-37.814014,144.9488725,45,25,4,0,0,4,1,1591.08,119
+Docklands|120054,120054,Leven Avenue,Docklands,-37.8155662,144.9374201,28,15,2,3,3,5,0,349.13,12
+Docklands|119759,119759,Little Docklands Drive,Docklands,-37.8126075,144.9404511,34,19,1,0,0,1,1,399.31,24
+Docklands|1370,1370,Lorimer Street,Docklands,-37.8237268,144.9403725,121,309,34,123,37,70,8,3065.34,428
+Docklands|120059,120059,Marmion Place,Docklands,-37.8136177,144.9425899,11,13,3,2,2,5,1,227.3,18
+Docklands|117915,117915,Mayfield Place,Docklands,-37.819095,144.9505976,8,10,2,0,0,2,1,130.43,2
+Docklands|118680,118680,McCrae Street,Docklands,-37.821924,144.9504977,10,57,8,23,11,19,4,1623.88,41
+Docklands|117952,117952,Merchant Street,Docklands,-37.8203221,144.9439516,71,90,12,0,0,12,2,1319.27,76
+Docklands|120025,120025,Mills Place,Docklands,-37.8231496,144.9399702,2,2,1,4,4,5,1,0.0,0
+Docklands|119691,119691,Navigation Drive,Docklands,-37.820738,144.946201,29,967,38,40,26,63,8,3714.27,105
+Docklands|117864,117864,Newquay Promenade,Docklands,-37.8151016,144.9410742,79,87,18,144,36,53,8,1674.79,135
+Docklands|118696,118696,North Wharf,Docklands,-37.8214282,144.9415128,10,24,3,9,4,7,0,816.03,16
+Docklands|936,936,North Wharf Road,Docklands,-37.8198192,144.9376183,6,5,1,0,0,1,0,26.25,4
+Docklands|118679,118679,Palmyra Way,Docklands,-37.8137223,144.9433521,12,4,1,0,0,1,0,417.82,32
+Docklands|119108,119108,Pearl River Road,Docklands,-37.8130593,144.9366994,148,357,25,103,21,46,9,8290.86,288
+Docklands|119560,119560,Point Park Crescent,Docklands,-37.8234241,144.9414173,7,52,9,24,10,19,4,297.62,30
+Docklands|117866,117866,Rakaia Way,Docklands,-37.8145217,144.9407876,31,25,5,9,2,7,1,694.94,42
+Docklands|120086,120086,Riggers Place,Docklands,-37.8224417,144.9366787,1,7,2,3,3,5,0,1.88,2
+Docklands|117906,117906,River Esplanade,Docklands,-37.8235688,144.9438976,218,150,15,119,42,57,10,3112.0,192
+Docklands|117781,117781,Saint Mangos Lane,Docklands,-37.8142466,144.9414251,28,23,2,9,3,5,1,589.79,43
+Docklands|120039,120039,Saint Mangos Lane North,Docklands,-37.813071,144.9408246,9,11,2,0,0,2,0,147.4,31
+Docklands|119693,119693,Seafarer Lane,Docklands,-37.8211582,144.9432552,23,45,12,1,1,13,2,346.37,41
+Docklands|1072,1072,Siddeley Street,Docklands,-37.8223017,144.9532105,73,52,12,13,10,22,4,3394.68,186
+Docklands|3192,3192,South Wharf,Docklands,-37.8227377,144.9407906,10,49,7,71,31,38,6,265.36,25
+Docklands|120031,120031,South Wharf Drive,Docklands,-37.8223776,144.9371401,89,187,18,272,65,83,11,895.49,213
+Docklands|119773,119773,South Wharf Promenade,Docklands,-37.8238754,144.948356,1,0,0,0,0,0,0,0.0,0
+Docklands|1086,1086,Spencer Street,Docklands,-37.8166328,144.9525954,285,32,6,0,0,6,0,2831.27,102
+Docklands|119757,119757,Star Circus,Docklands,-37.8122075,144.9374666,15,7,2,0,0,2,0,183.8,29
+Docklands|119760,119760,Star Crescent,Docklands,-37.813486,144.9377403,47,0,0,0,0,0,0,113.93,29
+Docklands|120032,120032,Stokehold Mews,Docklands,-37.8227259,144.9372496,5,5,3,36,27,30,4,15.21,13
+Docklands|119761,119761,Studio Lane,Docklands,-37.8133528,144.9381105,30,0,0,0,0,0,0,112.8,17
+Docklands|119762,119762,The Arcade,Docklands,-37.8124866,144.9379831,13,0,0,0,0,0,0,20.42,8
+Docklands|120149,120149,Tom Thumb Lane,Docklands,-37.8208625,144.9413002,26,16,5,5,3,8,3,150.22,39
+Docklands|3095,3095,Victoria Harbour,Docklands,-37.8176065,144.9404181,18,2,1,0,0,1,0,63.19,6
+Docklands|119527,119527,Victoria Harbour Promenade,Docklands,-37.8193091,144.9424305,65,80,6,31,11,17,3,1451.37,129
+Docklands|117946,117946,Village Street,Docklands,-37.8201321,144.9501591,84,57,8,16,2,10,3,351.49,29
+Docklands|119758,119758,Waterfront Way,Docklands,-37.8130072,144.939038,99,45,6,6,4,10,3,718.47,52
+Docklands|120088,120088,Waterside Place,Docklands,-37.8200191,144.9418626,14,8,1,0,0,1,0,225.91,15
+Docklands|117879,117879,Waterview Walk,Docklands,-37.8197057,144.9478042,24,87,7,5,4,11,4,2500.42,70
+Docklands|120051,120051,Wattle Road,Docklands,-37.8157586,144.937129,16,36,4,16,6,10,3,459.07,43
+Docklands|119756,119756,Wharf Street,Docklands,-37.8132104,144.9385262,44,0,0,0,0,0,0,305.64,33
+Docklands|117786,117786,Wurundjeri Way,Docklands,-37.8179537,144.9496384,154,41,7,8,7,14,3,5180.32,283
+East Melbourne|372,372,Agnes Street,East Melbourne,-37.8175086,144.9799923,70,13,3,0,0,3,0,731.51,87
+East Melbourne|356,356,Albert Lane,East Melbourne,-37.8101334,144.9868589,1,0,0,0,0,0,0,93.71,15
+East Melbourne|375,375,Albert Street,East Melbourne,-37.810158,144.981577,403,503,74,66,50,122,21,27825.78,906
+East Melbourne|442,442,Berry Street,East Melbourne,-37.8183708,144.9886622,68,22,4,0,0,4,0,1237.29,122
+East Melbourne|3059,3059,Brahe Place,East Melbourne,-37.8160759,144.9896692,13,0,0,0,0,0,0,62.43,19
+East Melbourne|468,468,Brunton Avenue,East Melbourne,-37.8207688,144.9847138,2,0,0,0,0,0,0,17036.61,190
+East Melbourne|120153,120153,Buchan Lane,East Melbourne,-37.8113684,144.9893391,3,0,0,0,0,0,0,129.82,16
+East Melbourne|1402,1402,Burchett Lane,East Melbourne,-37.8151121,144.989856,32,0,0,0,0,0,0,426.49,36
+East Melbourne|494,494,Cathedral Place,East Melbourne,-37.810882,144.9768678,67,64,8,0,0,8,1,2766.05,102
+East Melbourne|501,501,Charles Street,East Melbourne,-37.8176427,144.9811839,69,15,3,0,0,3,0,1788.84,71
+East Melbourne|515,515,Clarendon Street,East Melbourne,-37.8124146,144.9833314,129,280,68,205,107,174,19,20529.12,444
+East Melbourne|119753,119753,Cliveden Close,East Melbourne,-37.8169768,144.9768299,3,10,4,11,7,11,2,1667.88,31
+East Melbourne|1548,1548,Contractors Lane,East Melbourne,-37.8102771,144.9872357,1,0,0,0,0,0,0,521.07,22
+East Melbourne|556,556,Darling Street,East Melbourne,-37.8128936,144.9897148,42,37,7,6,4,11,3,2469.36,50
+East Melbourne|590,590,Eades Street,East Melbourne,-37.8095301,144.9809771,30,16,1,0,0,1,0,1661.47,43
+East Melbourne|636,636,Flinders Street,East Melbourne,-37.8154351,144.97488,1,25,14,2,2,16,3,365.47,6
+East Melbourne|646,646,Garden Avenue,East Melbourne,-37.8163448,144.988763,14,17,5,0,0,5,0,262.84,45
+East Melbourne|652,652,George Street,East Melbourne,-37.8153932,144.9866203,213,73,8,18,10,18,3,11590.39,442
+East Melbourne|656,656,Gipps Street,East Melbourne,-37.8131119,144.9866368,196,93,5,0,0,5,1,5671.91,288
+East Melbourne|657,657,Gisborne Street,East Melbourne,-37.8096026,144.9756358,39,30,4,3,3,7,2,5460.53,117
+East Melbourne|3250,3250,Green Place,East Melbourne,-37.8101927,144.987858,4,0,0,0,0,0,0,167.83,13
+East Melbourne|677,677,Grey Street,East Melbourne,-37.8119788,144.9867517,156,215,25,31,20,45,4,6400.35,298
+East Melbourne|1418,1418,Hayes Lane,East Melbourne,-37.8139619,144.9901042,25,0,0,0,0,0,0,724.52,40
+East Melbourne|714,714,Hoddle Street,East Melbourne,-37.8134378,144.9905131,109,26,1,0,0,1,0,4324.48,129
+East Melbourne|723,723,Hotham Place,East Melbourne,-37.8136886,144.9847826,7,0,0,0,0,0,0,29.04,19
+East Melbourne|725,725,Hotham Street,East Melbourne,-37.8142521,144.986678,192,169,12,0,0,12,2,5231.66,378
+East Melbourne|743,743,Jolimont Lane,East Melbourne,-37.8176018,144.9794375,60,0,0,0,0,0,0,415.54,101
+East Melbourne|744,744,Jolimont Road,East Melbourne,-37.8174322,144.978859,52,40,6,4,1,7,1,2040.52,81
+East Melbourne|745,745,Jolimont Street,East Melbourne,-37.8184436,144.9802607,55,2,1,0,0,1,0,10929.09,95
+East Melbourne|746,746,Jolimont Terrace,East Melbourne,-37.8177575,144.9818838,44,2,1,0,0,1,0,11475.44,171
+East Melbourne|778,778,Lansdowne Street,East Melbourne,-37.8099684,144.9782639,34,284,71,171,79,148,15,31176.32,340
+East Melbourne|846,846,Macarthur Street,East Melbourne,-37.8120376,144.9747056,2,7,3,0,0,3,0,2277.16,63
+East Melbourne|119754,119754,Magistrates Walk,East Melbourne,-37.81669,144.9766254,10,37,6,23,13,19,2,63.91,26
+East Melbourne|3199,3199,Mena Place,East Melbourne,-37.8162358,144.9874546,7,0,0,0,0,0,0,63.31,14
+East Melbourne|913,913,Morrison Place,East Melbourne,-37.8090728,144.9767727,17,14,2,0,0,2,0,33.43,43
+East Melbourne|931,931,Nicholson Street,East Melbourne,-37.8088108,144.9732193,7,15,10,0,0,10,2,1428.53,48
+East Melbourne|953,953,Palmer Street,East Melbourne,-37.8175623,144.9805843,38,5,1,0,0,1,0,1629.27,36
+East Melbourne|963,963,Parliament Place,East Melbourne,-37.8113191,144.9754863,35,27,5,6,4,9,1,1157.28,42
+East Melbourne|994,994,Powlett Street,East Melbourne,-37.813099,144.9857395,191,156,12,6,2,14,2,7492.18,406
+East Melbourne|1004,1004,Punt Road,East Melbourne,-37.8194588,144.989245,39,75,5,0,0,5,2,17715.51,246
+East Melbourne|1073,1073,Simpson Street,East Melbourne,-37.8136475,144.9883166,164,154,11,28,21,32,3,7306.02,351
+East Melbourne|1088,1088,Spring Street,East Melbourne,-37.8116313,144.9733486,111,123,35,55,33,68,12,7689.73,175
+East Melbourne|1049,1049,St Andrews Place,East Melbourne,-37.8120025,144.9763045,53,105,22,35,24,46,5,8487.09,265
+East Melbourne|1131,1131,Treasury Place,East Melbourne,-37.8129175,144.9763066,4,94,29,159,77,104,19,7182.95,139
+East Melbourne|1132,1132,Trinity Place,East Melbourne,-37.8144864,144.9835187,18,2,2,0,0,2,0,524.96,22
+East Melbourne|1146,1146,Vale Street,East Melbourne,-37.8183229,144.9878012,34,0,0,0,0,0,0,7330.71,181
+East Melbourne|1148,1148,Vale Street South,East Melbourne,-37.81925,144.9884879,24,4,1,1,1,2,1,16696.0,216
+East Melbourne|119766,119766,Verona Lane,East Melbourne,-37.8124711,144.983891,2,0,0,0,0,0,0,198.99,32
+East Melbourne|1151,1151,Victoria Parade,East Melbourne,-37.809126,144.9814725,281,196,19,4,4,23,4,19353.35,574
+East Melbourne|365,365,Webb Lane,East Melbourne,-37.8183456,144.9892349,41,11,1,0,0,1,0,1327.15,58
+East Melbourne|1168,1168,Wellington Crescent,East Melbourne,-37.8170355,144.9779733,55,35,2,9,5,7,2,1777.74,32
+East Melbourne|1169,1169,Wellington Parade,East Melbourne,-37.8161709,144.9845088,200,941,138,652,232,360,27,144522.77,1454
+East Melbourne|1170,1170,Wellington Parade South,East Melbourne,-37.8167292,144.9809731,124,497,60,17,15,75,9,29782.91,205
+Fishermans Bend|1404,1404,Bayside Avenue,Fishermans Bend,-37.8231337,144.9174297,5,0,0,0,0,0,0,1833.25,83
+Fishermans Bend|1379,1379,Boundary Street,Fishermans Bend,-37.8241736,144.9381582,30,24,4,0,0,4,1,1149.0,78
+Fishermans Bend|1383,1383,Central Boulevard,Fishermans Bend,-37.8219427,144.9195323,26,0,0,0,0,0,0,1123.95,77
+Fishermans Bend|1392,1392,Douglas Street,Fishermans Bend,-37.8255701,144.9245122,75,69,10,0,0,10,1,1726.09,97
+Fishermans Bend|117910,117910,Gateway Court,Fishermans Bend,-37.8271123,144.9206008,12,0,0,0,0,0,0,3122.99,85
+Fishermans Bend|1388,1388,Hall Street,Fishermans Bend,-37.8224183,144.9267377,58,14,1,0,0,1,1,1992.09,83
+Fishermans Bend|1372,1372,Hartley Street,Fishermans Bend,-37.8245112,144.9402508,34,43,13,0,0,13,0,786.55,93
+Fishermans Bend|1387,1387,Ingles Street,Fishermans Bend,-37.8237677,144.9348234,79,28,8,0,0,8,3,2112.25,199
+Fishermans Bend|1370,1370,Lorimer Street,Fishermans Bend,-37.8240235,144.9124036,259,743,23,24,5,27,8,27510.95,993
+Fishermans Bend|117800,117800,Network Drive,Fishermans Bend,-37.8302002,144.9019876,18,0,0,0,0,0,0,938.36,55
+Fishermans Bend|119010,119010,Phillip Court,Fishermans Bend,-37.825863,144.9210193,14,0,0,2,2,2,0,881.96,63
+Fishermans Bend|1373,1373,Rogers Street,Fishermans Bend,-37.8242458,144.9368772,22,14,4,0,0,4,1,556.68,48
+Fishermans Bend|117933,117933,Sabre Drive,Fishermans Bend,-37.8272667,144.906543,64,67,4,0,0,4,0,3463.03,241
+Fishermans Bend|1393,1393,Salmon Street,Fishermans Bend,-37.8242668,144.9217025,131,53,8,0,0,8,1,9606.62,240
+Fishermans Bend|117798,117798,Sardine Street,Fishermans Bend,-37.8312872,144.9020367,16,0,0,0,0,0,0,23.2,25
+Fishermans Bend|1385,1385,Todd Road,Fishermans Bend,-37.8246771,144.9112055,49,77,17,0,0,17,4,8659.25,265
+Fishermans Bend|1380,1380,Turner Street,Fishermans Bend,-37.8239327,144.9290259,214,281,27,0,0,27,5,6703.07,412
+Fishermans Bend|120152,120152,Vegemite Way,Fishermans Bend,-37.8274289,144.9239346,1,2,1,0,0,1,0,361.8,14
+Fishermans Bend|1384,1384,Westside Avenue,Fishermans Bend,-37.822471,144.9181011,11,0,0,0,0,0,0,450.01,80
+Fishermans Bend|1389,1389,Wharf Road,Fishermans Bend,-37.8276225,144.9089329,51,334,61,0,0,61,10,8639.43,314
+Fishermans Bend|3252,3252,Wirraway Drive,Fishermans Bend,-37.8257662,144.9097189,64,42,2,0,0,2,1,3196.44,155
+Kensington|374,374,Albermarle Street,Kensington,-37.7957005,144.9333361,47,36,7,5,4,11,1,976.29,38
+Kensington|381,381,Altona Street,Kensington,-37.7976444,144.9261261,119,302,61,79,30,90,18,8213.13,388
+Kensington|3237,3237,Anderson Walk,Kensington,-37.7968154,144.9204728,15,13,4,1,1,5,1,157.23,14
+Kensington|119657,119657,Anthony Street,Kensington,-37.7896521,144.92829,1,8,2,0,0,2,1,279.95,3
+Kensington|395,395,Arden Street,Kensington,-37.7989524,144.9326121,115,131,24,22,18,40,10,3662.71,186
+Kensington|119557,119557,Bakehouse Road,Kensington,-37.7997318,144.9307708,85,0,0,0,0,0,0,692.87,59
+Kensington|3238,3238,Balmer Street,Kensington,-37.7970085,144.9193737,16,6,1,0,0,1,0,434.42,5
+Kensington|411,411,Bangalore Street,Kensington,-37.7938214,144.924916,64,75,15,13,12,27,6,2216.12,298
+Kensington|119632,119632,Barnett Street,Kensington,-37.7924515,144.9322209,97,29,8,0,0,8,0,2539.76,173
+Kensington|418,418,Barrett Street,Kensington,-37.7975011,144.9343765,39,14,1,0,0,1,1,217.14,21
+Kensington|1444,1444,Bateman Road,Kensington,-37.7953411,144.9183464,54,25,2,3,3,5,0,1033.64,44
+Kensington|2045,2045,Baulderstone Walk,Kensington,-37.7954885,144.921272,14,16,4,2,2,6,1,267.39,13
+Kensington|425,425,Bayswater Road,Kensington,-37.7934687,144.9234918,112,62,25,4,4,29,8,7212.62,436
+Kensington|430,430,Bellair Street,Kensington,-37.7937382,144.9301812,175,334,42,58,29,70,12,18183.64,464
+Kensington|432,432,Belmont Road,Kensington,-37.7927442,144.9239317,9,3,2,0,0,2,1,758.8,85
+Kensington|119679,119679,Bendall Street,Kensington,-37.7892139,144.9240859,36,21,5,9,9,14,3,2853.39,28
+Kensington|440,440,Bent Street,Kensington,-37.7958622,144.935113,27,83,27,15,8,35,9,2399.41,40
+Kensington|357,357,Birch Lane,Kensington,-37.7929293,144.9211569,20,0,0,0,0,0,0,59.08,15
+Kensington|119681,119681,Bluestone Street,Kensington,-37.7890548,144.9250108,9,27,6,26,18,24,6,916.86,23
+Kensington|119678,119678,Bradfield Lane,Kensington,-37.7886973,144.9255145,11,5,1,0,0,1,1,524.62,46
+Kensington|120185,120185,Brock Way,Kensington,-37.7886529,144.9300061,1,0,0,0,0,0,0,305.97,5
+Kensington|469,469,Bruce Street,Kensington,-37.7983712,144.9345485,61,28,6,0,0,6,1,1339.23,95
+Kensington|117953,117953,Cairncross Lane,Kensington,-37.7953924,144.9245507,5,11,5,0,0,5,3,362.07,11
+Kensington|1403,1403,Cakebread Mews,Kensington,-37.7928972,144.9190067,41,6,6,0,0,6,2,700.05,38
+Kensington|119673,119673,Calwell Street,Kensington,-37.7885287,144.92692,50,47,7,34,34,41,5,840.56,82
+Kensington|504,504,Chelmsford Street,Kensington,-37.7965694,144.9336423,79,42,24,6,6,30,7,1785.75,107
+Kensington|507,507,Childers Street,Kensington,-37.79948,144.9264876,10,181,26,43,6,31,8,3775.75,98
+Kensington|1296,1296,Chinnock Lane,Kensington,-37.7932186,144.9214237,20,0,0,0,0,0,0,48.77,9
+Kensington|120165,120165,Clare Lane,Kensington,-37.7910489,144.9310631,3,0,0,0,0,0,0,69.83,2
+Kensington|117932,117932,Clifford Terrace,Kensington,-37.7960228,144.926755,68,81,17,37,21,38,9,2141.82,171
+Kensington|117794,117794,Coghlan Way,Kensington,-37.7951974,144.9233407,21,0,0,0,0,0,0,149.75,19
+Kensington|119630,119630,Collett Street,Kensington,-37.7907014,144.9333839,79,66,3,0,0,3,0,2609.73,162
+Kensington|1406,1406,Colonial Place,Kensington,-37.7906924,144.9225226,27,37,9,1,1,10,2,6657.45,37
+Kensington|1408,1408,Coopers Lane,Kensington,-37.7909249,144.9236788,32,65,20,49,35,55,10,488.31,26
+Kensington|2944,2944,Cornish Lane,Kensington,-37.7935645,144.9204234,38,13,8,3,2,10,3,1403.61,23
+Kensington|1297,1297,Crichton Lane,Kensington,-37.7927237,144.9219901,31,0,0,0,0,0,0,645.53,40
+Kensington|1409,1409,Cuffe Walk,Kensington,-37.7906474,144.9230029,19,24,6,0,0,6,2,3.43,11
+Kensington|120145,120145,Danks Lane,Kensington,-37.791797,144.9259348,2,0,0,0,0,0,0,209.61,13
+Kensington|1410,1410,Darcy Lane,Kensington,-37.7906894,144.9237178,10,6,3,1,1,4,2,33.62,12
+Kensington|119641,119641,Davis Street,Kensington,-37.7901523,144.9308417,18,30,13,2,2,15,3,699.33,33
+Kensington|2035,2035,Dennys Lane,Kensington,-37.7953189,144.9215077,27,0,0,0,0,0,0,213.98,16
+Kensington|569,569,Derby Street,Kensington,-37.7969567,144.9280952,93,39,10,0,0,10,1,3932.39,195
+Kensington|119672,119672,Deveney Street,Kensington,-37.7890433,144.9274798,26,12,4,0,0,4,2,629.24,72
+Kensington|3172,3172,Devon Street,Kensington,-37.7960221,144.9235298,18,10,2,0,0,2,1,493.91,6
+Kensington|119662,119662,Drury Street,Kensington,-37.7903045,144.9250621,12,8,1,0,0,1,0,996.14,16
+Kensington|587,587,Durham Street,Kensington,-37.7959833,144.9283217,11,7,1,0,0,1,0,393.53,21
+Kensington|594,594,Eastwood Street,Kensington,-37.7919144,144.9305342,90,145,16,11,6,22,4,10214.73,227
+Kensington|600,600,Elizabeth Street,Kensington,-37.7977963,144.9330039,91,42,4,0,0,4,0,270.87,71
+Kensington|605,605,Epsom Road,Kensington,-37.7918804,144.9254959,95,250,34,27,16,50,9,11425.18,270
+Kensington|119663,119663,Export Lane,Kensington,-37.7899901,144.9251357,32,17,8,19,19,27,6,646.97,63
+Kensington|2038,2038,Fairbairn Drive,Kensington,-37.796445,144.9193379,99,35,2,0,0,2,0,1560.33,97
+Kensington|626,626,Fink Street,Kensington,-37.7974182,144.9337763,26,25,2,0,0,2,1,45.29,16
+Kensington|117792,117792,Fisken Place,Kensington,-37.7955357,144.9242068,15,4,4,14,14,18,2,19.79,9
+Kensington|117892,117892,Fisken Walk,Kensington,-37.7957691,144.9243206,3,0,0,2,2,2,1,30.35,7
+Kensington|1250,1250,Flockhart Street,Kensington,-37.7944514,144.9208975,24,13,3,0,0,3,0,597.64,30
+Kensington|1443,1443,Francis Lane,Kensington,-37.7937574,144.9184937,63,0,0,0,0,0,0,48.31,27
+Kensington|117796,117796,Frearson Walk,Kensington,-37.795007,144.9236488,22,40,10,50,33,43,7,238.65,41
+Kensington|1411,1411,Gardner Lane,Kensington,-37.7920914,144.9224477,24,12,6,7,7,13,2,180.41,44
+Kensington|1412,1412,Gatehouse Drive,Kensington,-37.792587,144.9195342,85,46,7,1,1,8,2,2418.75,86
+Kensington|1413,1413,Gilbertson Walk,Kensington,-37.7911693,144.9220303,47,33,13,0,0,13,3,320.03,35
+Kensington|3233,3233,Goldsbrough Walk,Kensington,-37.797142,144.9191373,26,64,4,17,3,7,0,1247.95,16
+Kensington|119658,119658,Gordon Crescent,Kensington,-37.7909568,144.9269065,24,1,1,0,0,1,0,781.93,82
+Kensington|668,668,Gower Street,Kensington,-37.7953175,144.9285963,69,37,3,21,18,21,2,2430.09,218
+Kensington|1298,1298,Graham Street,Kensington,-37.7929307,144.9215447,30,10,5,0,0,5,1,345.2,26
+Kensington|1414,1414,Greenham Place,Kensington,-37.7918093,144.9209167,28,21,6,0,0,6,2,26.64,8
+Kensington|1415,1415,Gregory Lane,Kensington,-37.7909694,144.9217522,40,10,3,2,2,5,0,398.0,55
+Kensington|1416,1416,Halford Lane,Kensington,-37.7915029,144.9207207,19,2,2,0,0,2,0,19.75,18
+Kensington|686,686,Hampden Road,Kensington,-37.7954941,144.9296524,39,0,0,0,0,0,0,1377.23,93
+Kensington|688,688,Hardiman Street,Kensington,-37.7956673,144.9333676,93,66,7,24,15,22,4,1390.27,118
+Kensington|1417,1417,Hardwick Lane,Kensington,-37.7903803,144.9227577,18,5,2,0,0,2,0,300.18,25
+Kensington|703,703,Henry Street,Kensington,-37.7953009,144.9271698,77,104,18,38,24,42,8,2436.04,272
+Kensington|713,713,Hobsons Road,Kensington,-37.7965133,144.9177106,70,511,43,144,60,101,18,3731.23,441
+Kensington|3235,3235,Hodgson Lane,Kensington,-37.7969655,144.9202593,26,0,0,0,0,0,0,49.74,24
+Kensington|3171,3171,Holgate Lane,Kensington,-37.7957587,144.9238205,19,0,0,0,0,0,0,51.76,9
+Kensington|1419,1419,Holsten Lane North,Kensington,-37.7945385,144.9182745,11,8,6,12,12,18,1,34.07,19
+Kensington|1420,1420,Holsten Lane South,Kensington,-37.7949262,144.9186002,15,14,6,8,8,14,1,823.09,12
+Kensington|119659,119659,Hopetoun Street,Kensington,-37.7918231,144.9268099,29,0,0,0,0,0,0,899.67,97
+Kensington|1421,1421,Hornsby Lane,Kensington,-37.7940187,144.9201516,14,12,8,4,4,12,0,25.4,9
+Kensington|1422,1422,Howlett Street,Kensington,-37.7904782,144.9217917,71,16,3,0,0,3,0,1457.11,122
+Kensington|1423,1423,Hutton Place,Kensington,-37.7922959,144.9211178,4,8,6,3,3,9,3,61.54,6
+Kensington|753,753,Kensington Road,Kensington,-37.7962563,144.9239495,163,394,54,53,20,72,11,16090.98,383
+Kensington|3234,3234,Kirk Street,Kensington,-37.7964184,144.9187851,19,10,3,1,1,4,0,681.86,13
+Kensington|1558,1558,La Nauze Lane,Kensington,-37.7946307,144.9291205,8,0,0,0,0,0,0,138.61,17
+Kensington|119629,119629,Lambeth Street,Kensington,-37.7909721,144.9341722,73,28,4,17,12,16,2,1536.74,192
+Kensington|3175,3175,Lascelles Square,Kensington,-37.7941006,144.9173827,9,6,1,6,4,5,0,1.16,4
+Kensington|3169,3169,Leicester Mews,Kensington,-37.7961415,144.9216881,38,2,1,4,3,4,0,201.08,39
+Kensington|119669,119669,Liddy Street,Kensington,-37.7898044,144.9258687,9,16,7,1,1,8,4,159.8,31
+Kensington|119664,119664,Liddy Walk,Kensington,-37.7900888,144.9254424,5,13,8,1,1,9,3,2925.89,18
+Kensington|3168,3168,Lincoln Mews,Kensington,-37.796492,144.922809,47,3,3,29,21,24,1,137.53,61
+Kensington|120158,120158,Lindsay Lane,Kensington,-37.7938721,144.9283455,16,1,1,0,0,1,0,456.24,29
+Kensington|119683,119683,Little Bendall Street,Kensington,-37.7891327,144.9236625,22,15,5,0,0,5,2,223.31,20
+Kensington|3005,3005,Little Chelmsford Street,Kensington,-37.7960972,144.9333495,87,0,0,0,0,0,0,986.71,69
+Kensington|3004,3004,Little Hardiman Street,Kensington,-37.7952321,144.9332745,118,0,0,0,0,0,0,178.83,49
+Kensington|119645,119645,Little Smith Street,Kensington,-37.7916615,144.9308613,4,0,0,0,0,0,0,66.02,16
+Kensington|800,800,Lloyd Street,Kensington,-37.799811,144.9340563,31,57,12,1,1,13,5,2425.91,74
+Kensington|120182,120182,Lollipop Lane,Kensington,-37.7894216,144.9303796,2,0,0,0,0,0,0,1124.98,14
+Kensington|847,847,Macaulay Road,Kensington,-37.7946218,144.9317597,214,39,8,0,0,8,0,3145.71,97
+Kensington|119675,119675,Maloney Street,Kensington,-37.7888046,144.9280663,24,49,8,1,1,9,1,1854.72,35
+Kensington|119636,119636,Market Street,Kensington,-37.7902628,144.9264241,64,76,21,36,31,52,9,2534.78,166
+Kensington|2044,2044,Matthews Mews,Kensington,-37.7947569,144.9207374,38,12,3,4,1,4,1,557.12,52
+Kensington|117804,117804,Mawbey Street,Kensington,-37.7901572,144.9230895,23,8,4,0,0,4,1,341.7,21
+Kensington|119559,119559,McClure Road,Kensington,-37.7990388,144.9303267,66,0,0,0,0,0,0,734.03,52
+Kensington|119634,119634,McConnell Street,Kensington,-37.7918205,144.9287427,115,47,9,0,0,9,0,3537.04,266
+Kensington|119635,119635,McCracken Street,Kensington,-37.7916567,144.9277649,90,140,18,1,1,19,1,4811.3,286
+Kensington|119674,119674,McIver Place,Kensington,-37.7884529,144.9278304,19,8,1,0,0,1,0,269.55,30
+Kensington|119558,119558,McLennan Drive,Kensington,-37.8002215,144.9310402,37,0,0,0,0,0,0,381.0,28
+Kensington|119655,119655,McMeikan Street,Kensington,-37.7921111,144.9283671,1,5,1,0,0,1,0,370.99,12
+Kensington|1425,1425,Mcallister Mews,Kensington,-37.7930615,144.9199532,71,54,12,7,7,19,3,2363.68,61
+Kensington|2037,2037,Mcnamara Mews,Kensington,-37.7954597,144.9191102,51,4,1,4,1,2,0,156.8,63
+Kensington|1302,1302,Mctaggart Street,Kensington,-37.7925098,144.9222421,33,15,5,0,0,5,1,404.2,50
+Kensington|2036,2036,Mercantile Parade,Kensington,-37.7961536,144.9208978,95,113,13,3,1,14,3,3585.89,114
+Kensington|3174,3174,Merino Mews,Kensington,-37.7937887,144.9178116,32,5,1,5,5,6,2,326.46,42
+Kensington|1450,1450,Moylan Lane,Kensington,-37.7942357,144.9198,14,22,8,11,8,16,4,50.31,5
+Kensington|119640,119640,Mulgrave Street,Kensington,-37.7906512,144.9308221,21,2,2,0,0,2,0,93.7,19
+Kensington|1426,1426,Musgrove Mews,Kensington,-37.7918487,144.9203165,36,3,1,0,0,1,0,725.23,38
+Kensington|1304,1304,Neale Street,Kensington,-37.7931522,144.9209364,31,24,9,0,0,9,1,361.14,35
+Kensington|119687,119687,New Street,Kensington,-37.793087,144.9283216,4,0,0,0,0,0,0,429.68,17
+Kensington|2032,2032,Newman Street,Kensington,-37.7952913,144.9212681,143,73,11,7,7,18,3,4310.93,182
+Kensington|3170,3170,Newton Street,Kensington,-37.7960255,144.9226662,90,49,6,0,0,6,1,692.7,77
+Kensington|3232,3232,Nichols Lane,Kensington,-37.7970037,144.9193658,55,0,0,0,0,0,0,72.38,23
+Kensington|119631,119631,Nottingham Street,Kensington,-37.7892541,144.9328417,22,15,7,0,0,7,0,704.01,64
+Kensington|947,947,Ormond Street,Kensington,-37.7979146,144.9283928,135,164,30,0,0,30,6,10430.74,343
+Kensington|119642,119642,Parsons Street,Kensington,-37.7900897,144.9338686,98,85,20,0,0,20,1,3671.93,113
+Kensington|1428,1428,Peppercorn Walk,Kensington,-37.7922729,144.9226388,12,13,3,6,6,9,3,1095.25,18
+Kensington|119660,119660,Percy Street,Kensington,-37.7913038,144.9260464,15,6,5,0,0,5,1,1087.49,124
+Kensington|119671,119671,Porter Lane,Kensington,-37.7893384,144.927043,1,7,3,0,0,3,1,3014.78,24
+Kensington|119644,119644,Pridham Street,Kensington,-37.7892431,144.9309942,31,18,5,0,0,5,0,873.54,82
+Kensington|119624,119624,Racecourse Road,Kensington,-37.7885131,144.9321581,111,159,48,22,12,60,6,6122.29,113
+Kensington|119633,119633,Rankins Road,Kensington,-37.7912223,144.9315609,154,103,16,30,19,35,6,10990.01,210
+Kensington|3231,3231,Rayner Lane,Kensington,-37.7976101,144.9207019,75,3,2,0,0,2,1,264.77,94
+Kensington|3176,3176,Reynolds Lane,Kensington,-37.7947083,144.9178396,27,3,2,17,17,18,3,202.72,17
+Kensington|119666,119666,Rigby Lane,Kensington,-37.7905509,144.9247364,8,0,0,0,0,0,0,52.8,31
+Kensington|119638,119638,Robertson Street,Kensington,-37.7930807,144.9333521,62,80,16,3,3,19,3,2525.1,108
+Kensington|1305,1305,Rogan Lane,Kensington,-37.7918376,144.9232328,20,13,6,3,3,9,2,838.71,47
+Kensington|117904,117904,Rourke Lane,Kensington,-37.7933365,144.9170185,37,16,7,30,23,30,5,491.02,47
+Kensington|2033,2033,Sambell Street,Kensington,-37.7955385,144.9219495,33,19,2,2,2,4,0,981.92,26
+Kensington|3167,3167,Sambell Walk,Kensington,-37.7959705,144.9212931,21,10,4,1,1,5,0,287.87,15
+Kensington|119643,119643,Scarborough Place,Kensington,-37.7912826,144.9347522,23,9,2,0,0,2,0,274.38,28
+Kensington|119680,119680,Serong Street,Kensington,-37.7885666,144.9252247,10,22,4,0,0,4,1,770.03,43
+Kensington|1306,1306,Sherwin Street,Kensington,-37.7923843,144.9216148,10,11,6,0,0,6,1,248.76,12
+Kensington|3173,3173,Simpson Walk,Kensington,-37.7949937,144.9176332,11,47,12,16,13,25,3,1060.47,29
+Kensington|1433,1433,Sims Square,Kensington,-37.7908061,144.9216755,10,10,1,0,0,1,0,188.11,23
+Kensington|119639,119639,Smith Street,Kensington,-37.7915526,144.9333056,86,99,9,3,3,12,2,1208.55,179
+Kensington|1078,1078,Smithfield Road,Kensington,-37.7915456,144.9193028,125,806,69,120,76,143,28,5971.04,262
+Kensington|1434,1434,Smorgon Square,Kensington,-37.7912522,144.9209859,13,8,2,0,0,2,0,264.34,11
+Kensington|1083,1083,Southey Street,Kensington,-37.7982323,144.9307311,28,17,3,0,0,3,0,500.77,56
+Kensington|1435,1435,Speakmen Street,Kensington,-37.7943112,144.9171436,76,113,32,19,8,40,8,2463.39,71
+Kensington|1438,1438,Stockmans Way,Kensington,-37.7925174,144.9195201,213,220,36,18,10,46,8,7958.11,215
+Kensington|2903,2903,Strettle Street,Kensington,-37.7921368,144.921378,12,10,3,0,0,3,0,400.93,9
+Kensington|119628,119628,Stubbs Street,Kensington,-37.7922395,144.9353999,160,69,7,0,0,7,1,9342.74,224
+Kensington|2034,2034,Tankard Street,Kensington,-37.7963472,144.9201005,48,37,5,9,4,9,0,2094.96,38
+Kensington|3236,3236,Taylor Mews,Kensington,-37.7959831,144.9183531,19,12,4,6,4,8,0,246.99,38
+Kensington|1119,1119,Tennyson Street,Kensington,-37.7986507,144.9289245,121,62,12,39,25,35,5,3107.17,269
+Kensington|120156,120156,Thaw Lane,Kensington,-37.7931194,144.9284557,9,0,0,0,0,0,0,596.26,29
+Kensington|1439,1439,The Crescent,Kensington,-37.7945615,144.9193122,111,112,25,121,53,78,12,4149.32,147
+Kensington|119676,119676,The Lairidge,Kensington,-37.7895419,144.924228,9,43,8,19,14,22,6,2993.29,23
+Kensington|1030,1030,The Ridgeway,Kensington,-37.794434,144.9254875,68,59,11,1,1,12,2,2373.79,237
+Kensington|119637,119637,Thompson Street,Kensington,-37.7923124,144.9345774,15,0,0,0,0,0,0,0.64,2
+Kensington|1440,1440,Vincent Place,Kensington,-37.7925152,144.9207259,5,8,5,11,11,16,5,705.46,13
+Kensington|3166,3166,Wakefield Street,Kensington,-37.7973154,144.9204837,58,47,9,7,5,14,3,940.11,65
+Kensington|1441,1441,Watkins Way,Kensington,-37.7917085,144.9215135,23,43,18,53,40,58,7,162.69,20
+Kensington|119665,119665,Watsons Walk,Kensington,-37.790823,144.9248682,5,0,0,10,10,10,1,517.68,24
+Kensington|119677,119677,Weighbridge Lane,Kensington,-37.7893478,144.9246648,11,2,1,0,0,1,1,460.7,24
+Kensington|1173,1173,Westbourne Road,Kensington,-37.793176,144.9221168,143,76,13,7,5,18,3,6344.55,382
+Kensington|119654,119654,Wight Street,Kensington,-37.7936041,144.9288257,18,14,2,0,0,2,0,790.59,53
+Kensington|1442,1442,Willis Street,Kensington,-37.7934268,144.9184407,54,9,3,0,0,3,0,293.31,56
+Kensington|1186,1186,Wolseley Parade,Kensington,-37.7962558,144.9293383,61,47,1,0,0,1,0,5166.75,170
+Kensington|1310,1310,Woodruff Street,Kensington,-37.7918168,144.9229492,41,54,18,0,0,18,3,3413.14,54
+Kensington|119670,119670,Youlden Street,Kensington,-37.7890596,144.9258658,26,24,5,0,0,5,1,1191.3,79
+Kensington|120170,120170,Younghusband Lane,Kensington,-37.7985422,144.9282015,1,0,0,0,0,0,0,238.84,8
+North and West Melbourne|367,367,Abbotsford Street,North and West Melbourne,-37.8009086,144.9457415,483,194,23,20,19,42,5,14888.51,405
+North and West Melbourne|371,371,Adderley Street,North and West Melbourne,-37.8096946,144.9464096,213,90,15,7,6,21,2,6386.86,145
+North and West Melbourne|119625,119625,Alfred Street,North and West Melbourne,-37.7907047,144.9396663,104,35,4,0,0,4,2,6919.9,234
+North and West Melbourne|385,385,Anderson Street,North and West Melbourne,-37.805039,144.9419888,42,38,11,10,7,18,5,1291.92,27
+North and West Melbourne|3096,3096,Appleton Dock,North and West Melbourne,-37.8167804,144.9219731,12,0,0,0,0,0,0,162.27,20
+North and West Melbourne|392,392,Appleton Dock Road,North and West Melbourne,-37.8126696,144.9253708,63,0,0,0,0,0,0,1712.64,233
+North and West Melbourne|394,394,Arden Lane,North and West Melbourne,-37.8007049,144.9508555,24,0,0,0,0,0,0,184.61,15
+North and West Melbourne|395,395,Arden Street,North and West Melbourne,-37.8003911,144.9446885,303,262,28,62,37,63,10,9703.6,394
+North and West Melbourne|403,403,Atkin Street,North and West Melbourne,-37.8035702,144.9486524,20,0,0,0,0,0,0,42.66,3
+North and West Melbourne|1876,1876,Austin Place,North and West Melbourne,-37.8063079,144.9471057,15,0,0,0,0,0,0,329.8,22
+North and West Melbourne|406,406,Avis Lane,North and West Melbourne,-37.7948887,144.9478284,32,0,0,0,0,0,0,817.77,73
+North and West Melbourne|408,408,Baillie Street,North and West Melbourne,-37.8014269,144.9469368,73,47,5,0,0,5,0,228.99,29
+North and West Melbourne|2919,2919,Bakery Lane,North and West Melbourne,-37.803287,144.949133,12,0,0,0,0,0,0,22.99,5
+North and West Melbourne|2991,2991,Barwise Street,North and West Melbourne,-37.8006889,144.9399914,10,29,4,0,0,4,1,346.55,13
+North and West Melbourne|423,423,Batman Street,North and West Melbourne,-37.8109942,144.9505946,148,24,9,0,0,9,2,2504.05,61
+North and West Melbourne|427,427,Bedford Place,North and West Melbourne,-37.8014026,144.956148,16,0,0,0,0,0,0,179.47,31
+North and West Melbourne|428,428,Bedford Street,North and West Melbourne,-37.8022272,144.9558993,33,49,19,0,0,19,1,964.98,36
+North and West Melbourne|434,434,Bendigo Street,North and West Melbourne,-37.8021804,144.9504916,34,2,1,0,0,1,0,385.68,31
+North and West Melbourne|2931,2931,Bickford Lane,North and West Melbourne,-37.7969641,144.9500398,6,0,0,0,0,0,0,108.77,19
+North and West Melbourne|446,446,Blackwood Street,North and West Melbourne,-37.8012205,144.9552027,54,44,4,0,0,4,2,1226.0,67
+North and West Melbourne|447,447,Blair Place,North and West Melbourne,-37.8048508,144.951539,26,2,1,0,0,1,1,290.62,16
+North and West Melbourne|1446,1446,Boughton Place,North and West Melbourne,-37.8114798,144.9519012,7,0,0,0,0,0,0,126.0,31
+North and West Melbourne|453,453,Boundary Road,North and West Melbourne,-37.7920288,144.9394872,190,120,16,5,2,18,3,11122.17,179
+North and West Melbourne|467,467,Brougham Street,North and West Melbourne,-37.7935937,144.9443346,77,64,3,0,0,3,1,6716.87,204
+North and West Melbourne|117912,117912,Browns Hill Place,North and West Melbourne,-37.8026937,144.9307256,15,0,0,0,0,0,0,697.63,36
+North and West Melbourne|119651,119651,Buncle Street,North and West Melbourne,-37.7941051,144.9404835,56,82,20,19,10,30,5,3547.99,130
+North and West Melbourne|474,474,Byron Street,North and West Melbourne,-37.801817,144.9513588,65,0,0,0,0,0,0,47.18,20
+North and West Melbourne|478,478,Canning Street,North and West Melbourne,-37.7959675,144.9426785,107,94,17,13,8,25,5,12410.32,166
+North and West Melbourne|481,481,Capel Place,North and West Melbourne,-37.8042311,144.9548327,21,0,0,0,0,0,0,8.04,11
+North and West Melbourne|482,482,Capel Street,North and West Melbourne,-37.8053721,144.9552512,197,129,23,137,65,88,6,2273.1,195
+North and West Melbourne|487,487,Carroll Street,North and West Melbourne,-37.7956125,144.9457962,36,7,2,10,7,9,1,941.38,58
+North and West Melbourne|119653,119653,Caytre Crescent,North and West Melbourne,-37.7946104,144.9396431,36,16,3,0,0,3,1,1423.6,43
+North and West Melbourne|500,500,Chapman Street,North and West Melbourne,-37.7964491,144.9486554,111,100,9,0,0,9,1,7384.53,358
+North and West Melbourne|2209,2209,Chetwynd Place,North and West Melbourne,-37.802661,144.9522062,7,0,0,0,0,0,0,170.34,23
+North and West Melbourne|506,506,Chetwynd Street,North and West Melbourne,-37.8043274,144.9524415,205,141,21,0,0,21,4,8362.75,263
+North and West Melbourne|520,520,Cobden Street,North and West Melbourne,-37.80492,144.9573023,52,22,2,0,0,2,2,830.8,38
+North and West Melbourne|532,532,Coode Road,North and West Melbourne,-37.8102198,144.9215219,75,0,0,0,0,0,0,4306.78,264
+North and West Melbourne|540,540,Courtney Place,North and West Melbourne,-37.7996203,144.9518553,15,0,0,0,0,0,0,66.22,30
+North and West Melbourne|541,541,Courtney Street,North and West Melbourne,-37.801157,144.9529552,113,148,26,4,3,29,6,6392.09,221
+North and West Melbourne|1226,1226,Cullens Lane,North and West Melbourne,-37.8017949,144.9491188,11,0,0,0,0,0,0,22.58,13
+North and West Melbourne|2590,2590,Curran Lane,North and West Melbourne,-37.7917434,144.9428097,1,0,0,0,0,0,0,32.39,6
+North and West Melbourne|549,549,Curran Place,North and West Melbourne,-37.7928214,144.9439424,4,0,0,0,0,0,0,664.38,31
+North and West Melbourne|550,550,Curran Street,North and West Melbourne,-37.7923021,144.9434993,62,48,3,0,0,3,2,3945.63,122
+North and West Melbourne|1228,1228,Curzon Place,North and West Melbourne,-37.8038876,144.9484409,13,0,0,0,0,0,0,14.66,15
+North and West Melbourne|552,552,Curzon Street,North and West Melbourne,-37.8022583,144.9482685,174,209,23,14,9,32,6,4825.3,142
+North and West Melbourne|2990,2990,Dangerfield Lane,North and West Melbourne,-37.8024555,144.9490408,9,0,0,0,0,0,0,54.31,5
+North and West Melbourne|564,564,De Feu Street,North and West Melbourne,-37.8016461,144.9431106,10,0,0,0,0,0,0,0.0,0
+North and West Melbourne|1233,1233,De Le More Place,North and West Melbourne,-37.8016969,144.9493719,4,0,0,0,0,0,0,44.39,1
+North and West Melbourne|571,571,Dicks Place,North and West Melbourne,-37.8073785,144.9460695,20,0,0,0,0,0,0,161.42,21
+North and West Melbourne|1333,1333,Dock Link Road,North and West Melbourne,-37.8067889,144.9166721,2,0,0,0,0,0,0,914.89,57
+North and West Melbourne|1236,1236,Donovans Lane,North and West Melbourne,-37.7969979,144.9453834,35,0,0,0,0,0,0,1588.32,43
+North and West Melbourne|1237,1237,Dowling Place,North and West Melbourne,-37.8011241,144.9537937,8,7,3,0,0,3,2,204.56,7
+North and West Melbourne|585,585,Dryburgh Street,North and West Melbourne,-37.7998353,144.9440665,460,319,31,72,33,64,10,12285.05,424
+North and West Melbourne|586,586,Dudley Street,North and West Melbourne,-37.8102059,144.9497573,255,212,51,144,87,138,22,20464.19,404
+North and West Melbourne|588,588,Dynon Road,North and West Melbourne,-37.8027731,144.9246183,459,3417,80,36,21,98,15,41591.96,1181
+North and West Melbourne|589,589,Eades Place,North and West Melbourne,-37.8060365,144.951148,24,23,7,0,0,7,4,536.47,45
+North and West Melbourne|1245,1245,Elm Place,North and West Melbourne,-37.8032979,144.9461279,35,0,0,0,0,0,0,111.39,13
+North and West Melbourne|602,602,Elm Street,North and West Melbourne,-37.8037035,144.9466727,58,53,4,0,0,4,1,1257.38,104
+North and West Melbourne|117770,117770,Enterprize Road,North and West Melbourne,-37.8138115,144.9309089,8,0,0,0,0,0,0,981.85,146
+North and West Melbourne|608,608,Errol Place,North and West Melbourne,-37.8045275,144.9487508,2,0,0,0,0,0,0,2.21,2
+North and West Melbourne|607,607,Errol Street,North and West Melbourne,-37.8015196,144.9498848,259,106,19,7,6,25,8,3409.31,103
+North and West Melbourne|609,609,Erskine Lane,North and West Melbourne,-37.7945588,144.9465449,1,0,0,0,0,0,0,1045.48,18
+North and West Melbourne|610,610,Erskine Place,North and West Melbourne,-37.7943024,144.9436046,9,0,0,0,0,0,0,484.93,50
+North and West Melbourne|611,611,Erskine Street,North and West Melbourne,-37.7947429,144.9441066,85,63,4,0,0,4,1,4506.21,134
+North and West Melbourne|618,618,Falshaws Lane,North and West Melbourne,-37.7998061,144.9495366,11,0,0,0,0,0,0,483.21,16
+North and West Melbourne|3058,3058,Flagstaff Lane,North and West Melbourne,-37.809733,144.9520224,13,0,0,0,0,0,0,75.14,25
+North and West Melbourne|632,632,Flemington Road,North and West Melbourne,-37.7943799,144.9479407,221,177,7,4,2,9,2,20765.31,485
+North and West Melbourne|639,639,Fogarty Street,North and West Melbourne,-37.798655,144.9402878,39,126,19,25,12,31,9,4911.48,40
+North and West Melbourne|640,640,Footscray Road,North and West Melbourne,-37.8086263,144.9258454,386,130,13,15,4,17,5,25090.0,1125
+North and West Melbourne|643,643,Franklin Place,North and West Melbourne,-37.8119226,144.9491808,8,0,0,0,0,0,0,29.39,4
+North and West Melbourne|647,647,Gardiner Street,North and West Melbourne,-37.8045014,144.9530661,25,0,0,0,0,0,0,58.42,18
+North and West Melbourne|119647,119647,George Street,North and West Melbourne,-37.790288,144.9410785,12,2,1,0,0,1,0,634.28,30
+North and West Melbourne|659,659,Glass Street,North and West Melbourne,-37.8020059,144.9490272,27,0,0,0,0,0,0,10.21,10
+North and West Melbourne|669,669,Gracie Street,North and West Melbourne,-37.7972334,144.9385862,86,59,6,5,5,11,2,5438.08,34
+North and West Melbourne|1255,1255,Gracies Lane,North and West Melbourne,-37.8049563,144.9529909,3,0,0,0,0,0,0,106.92,16
+North and West Melbourne|675,675,Green Street,North and West Melbourne,-37.7985394,144.9385947,91,28,1,0,0,1,0,5798.98,30
+North and West Melbourne|684,684,Haines Place,North and West Melbourne,-37.7985314,144.9499718,1,0,0,0,0,0,0,84.03,3
+North and West Melbourne|685,685,Haines Street,North and West Melbourne,-37.798582,144.9462618,128,142,36,26,18,54,7,10521.22,244
+North and West Melbourne|2876,2876,Harbison Lane,North and West Melbourne,-37.8076951,144.9553184,1,0,0,0,0,0,0,13.49,5
+North and West Melbourne|687,687,Harcourt Street,North and West Melbourne,-37.7989824,144.9516835,81,50,9,7,6,15,5,4500.83,105
+North and West Melbourne|690,690,Hardwicke Street,North and West Melbourne,-37.7982654,144.9469131,4,0,0,0,0,0,0,197.13,40
+North and West Melbourne|691,691,Harker Street,North and West Melbourne,-37.7977617,144.9497326,30,30,5,0,0,5,1,2116.85,28
+North and West Melbourne|693,693,Harris Street,North and West Melbourne,-37.7994123,144.9494797,13,14,1,0,0,1,0,5371.2,20
+North and West Melbourne|696,696,Hawke Street,North and West Melbourne,-37.807702,144.9463674,169,108,31,22,13,44,7,1867.67,131
+North and West Melbourne|702,702,Henderson Street,North and West Melbourne,-37.7977427,144.9395085,68,21,2,0,0,2,0,1930.77,27
+North and West Melbourne|707,707,High Street,North and West Melbourne,-37.7996354,144.9539955,20,0,0,0,0,0,0,1.02,4
+North and West Melbourne|724,724,Hotham Place,North and West Melbourne,-37.8006498,144.9530822,13,0,0,0,0,0,0,111.6,13
+North and West Melbourne|726,726,Howard Street,North and West Melbourne,-37.8044737,144.9538368,143,120,20,26,11,31,10,2897.13,184
+North and West Melbourne|737,737,Ireland Street,North and West Melbourne,-37.807137,144.9440987,122,81,7,0,0,7,1,836.3,99
+North and West Melbourne|740,740,Jeffcott Street,North and West Melbourne,-37.8119588,144.9514332,125,26,5,0,0,5,2,2972.21,71
+North and West Melbourne|747,747,Jones Lane,North and West Melbourne,-37.8026767,144.950784,4,0,0,0,0,0,0,91.77,25
+North and West Melbourne|1261,1261,Jones Place,North and West Melbourne,-37.8067751,144.9481846,62,0,0,0,0,0,0,730.55,42
+North and West Melbourne|753,753,Kensington Road,North and West Melbourne,-37.8000885,144.9173397,103,165,23,64,16,37,8,7066.75,164
+North and West Melbourne|761,761,King Street,North and West Melbourne,-37.8081189,144.9511595,205,212,41,51,30,70,15,18109.39,235
+North and West Melbourne|762,762,Kipling Street,North and West Melbourne,-37.7951479,144.9424752,29,4,1,0,0,1,0,637.19,39
+North and West Melbourne|780,780,La Trobe Street,North and West Melbourne,-37.8127983,144.9522341,62,61,19,32,32,51,11,4354.18,76
+North and West Melbourne|772,772,Lancashire Lane,North and West Melbourne,-37.8026101,144.9501566,15,0,0,0,0,0,0,20.38,16
+North and West Melbourne|774,774,Langford Street,North and West Melbourne,-37.7973873,144.9369603,167,26,4,0,0,4,2,2774.52,121
+North and West Melbourne|781,781,Laurens Street,North and West Melbourne,-37.8027309,144.9415214,218,91,12,11,8,20,5,5517.25,101
+North and West Melbourne|2929,2929,Leeming Place,North and West Melbourne,-37.794757,144.9473764,13,0,0,0,0,0,0,113.96,23
+North and West Melbourne|787,787,Lennon Street,North and West Melbourne,-37.8012295,144.9291807,2,0,0,0,0,0,0,488.92,27
+North and West Melbourne|791,791,Leveson Street,North and West Melbourne,-37.8028037,144.9511698,141,90,21,20,13,34,7,4363.41,89
+North and West Melbourne|806,806,Little Baillie Street,North and West Melbourne,-37.8010412,144.9470798,36,11,1,0,0,1,0,245.63,19
+North and West Melbourne|811,811,Little Cobden Street,North and West Melbourne,-37.8045766,144.9568486,36,0,0,0,0,0,0,171.64,35
+North and West Melbourne|813,813,Little Curran Street,North and West Melbourne,-37.7917499,144.9437388,58,0,0,0,0,0,0,1816.27,114
+North and West Melbourne|814,814,Little Curzon Street,North and West Melbourne,-37.8041832,144.9483568,8,0,0,0,0,0,0,161.59,13
+North and West Melbourne|815,815,Little Dryburgh Street North,North and West Melbourne,-37.8018577,144.9443245,7,3,2,0,0,2,0,81.6,11
+North and West Melbourne|816,816,Little Dryburgh Street South,North and West Melbourne,-37.80378,144.9438913,14,3,1,0,0,1,1,177.54,12
+North and West Melbourne|818,818,Little Errol Street,North and West Melbourne,-37.8039151,144.9502255,37,0,0,0,0,0,0,28.96,17
+North and West Melbourne|821,821,Little Howard Street,North and West Melbourne,-37.8044419,144.9544331,7,12,3,0,0,3,0,305.09,5
+North and West Melbourne|824,824,Little Leveson Street,North and West Melbourne,-37.8041197,144.9516855,54,6,1,0,0,1,0,392.11,45
+North and West Melbourne|826,826,Little Lothian Street North,North and West Melbourne,-37.8015979,144.9451865,45,5,2,0,0,2,0,398.93,29
+North and West Melbourne|827,827,Little Lothian Street South,North and West Melbourne,-37.8037844,144.9447688,39,6,3,0,0,3,1,170.58,27
+North and West Melbourne|832,832,Little Provost Street,North and West Melbourne,-37.8023808,144.9474513,14,9,1,0,0,1,0,218.32,9
+North and West Melbourne|800,800,Lloyd Street,North and West Melbourne,-37.8022736,144.9306361,23,253,13,1,1,14,3,2402.77,142
+North and West Melbourne|119646,119646,Lonie Street,North and West Melbourne,-37.7896596,144.9403862,5,0,0,0,0,0,0,225.06,20
+North and West Melbourne|804,804,Lothian Street,North and West Melbourne,-37.8023646,144.9445814,112,105,16,24,19,35,2,1000.29,111
+North and West Melbourne|117909,117909,Loughmore Lane,North and West Melbourne,-37.8015817,144.9509006,10,0,0,0,0,0,0,11.96,9
+North and West Melbourne|857,857,MacKenzie Road,North and West Melbourne,-37.8138452,144.9082154,68,0,0,0,0,0,0,2966.2,155
+North and West Melbourne|847,847,Macaulay Road,North and West Melbourne,-37.7970185,144.9402189,325,256,28,34,29,56,11,19103.43,267
+North and West Melbourne|3011,3011,Madden Lane,North and West Melbourne,-37.8088288,144.9444064,32,13,11,13,8,19,5,407.5,39
+North and West Melbourne|120097,120097,Magnus Lane,North and West Melbourne,-37.8019013,144.9479116,4,0,0,0,0,0,0,0.0,0
+North and West Melbourne|871,871,Mansion House Lane,North and West Melbourne,-37.8082132,144.9506701,30,0,0,0,0,0,0,68.89,13
+North and West Melbourne|119627,119627,Mark Street,North and West Melbourne,-37.7937435,144.9395806,89,52,12,5,5,17,4,5359.5,121
+North and West Melbourne|882,882,Mary Street,North and West Melbourne,-37.7993694,144.9521963,38,0,0,0,0,0,0,147.05,11
+North and West Melbourne|887,887,Mattinglys Lane,North and West Melbourne,-37.8027158,144.9492406,14,0,0,0,0,0,0,3.99,6
+North and West Melbourne|1275,1275,Mawby Lane,North and West Melbourne,-37.8010668,144.9460984,3,0,0,0,0,0,0,1.36,1
+North and West Melbourne|119648,119648,McCabe Place,North and West Melbourne,-37.7903146,144.9421071,10,0,0,0,0,0,0,268.83,20
+North and West Melbourne|117840,117840,Mcdougall Lane,North and West Melbourne,-37.812056,144.9490616,5,0,0,0,0,0,0,33.07,3
+North and West Melbourne|2862,2862,Mckendrick Lane,North and West Melbourne,-37.8091532,144.9485913,26,0,0,0,0,0,0,75.34,3
+North and West Melbourne|890,890,Melrose Street,North and West Melbourne,-37.792963,144.942165,176,123,11,2,1,12,1,8286.69,283
+North and West Melbourne|1279,1279,Miller Place,North and West Melbourne,-37.8062789,144.9465751,8,0,0,0,0,0,0,220.18,19
+North and West Melbourne|899,899,Miller Street,North and West Melbourne,-37.8056088,144.9450512,128,106,20,16,15,35,6,2008.95,137
+North and West Melbourne|901,901,Milton Street,North and West Melbourne,-37.8080214,144.9537923,46,21,3,0,0,3,0,1089.26,25
+North and West Melbourne|905,905,Molesworth Street,North and West Melbourne,-37.797537,144.9480031,84,75,13,0,0,13,1,5471.58,244
+North and West Melbourne|914,914,Moss Place,North and West Melbourne,-37.8048459,144.9532714,6,0,0,0,0,0,0,107.41,27
+North and West Melbourne|1280,1280,Mugg Lane,North and West Melbourne,-37.7944663,144.9443808,8,0,0,0,0,0,0,774.21,37
+North and West Melbourne|119763,119763,Mullaly Close,North and West Melbourne,-37.8110517,144.9295819,13,0,0,0,0,0,0,690.27,58
+North and West Melbourne|920,920,Munster Terrace,North and West Melbourne,-37.802285,144.942603,126,66,7,4,2,9,1,2241.48,104
+North and West Melbourne|922,922,Murphy Street,North and West Melbourne,-37.7978444,144.9513676,16,12,5,1,1,6,2,2034.36,60
+North and West Melbourne|939,939,O'connell Street,North and West Melbourne,-37.8043272,144.9575086,52,16,3,0,0,3,1,278.95,22
+North and West Melbourne|949,949,O'shanassy Street,North and West Melbourne,-37.7999783,144.9474692,138,91,15,7,6,21,5,14833.98,219
+North and West Melbourne|951,951,Oxford Street,North and West Melbourne,-37.8007492,144.9546171,28,0,0,0,0,0,0,220.95,4
+North and West Melbourne|119652,119652,Pampas Street,North and West Melbourne,-37.7944776,144.9409326,21,9,1,0,0,1,0,1240.11,35
+North and West Melbourne|972,972,Peckville Street,North and West Melbourne,-37.7953175,144.9430215,21,4,2,0,0,2,0,95.84,35
+North and West Melbourne|973,973,Peel Street,North and West Melbourne,-37.8048705,144.9560661,186,143,9,0,0,9,3,3107.6,188
+North and West Melbourne|980,980,Phillipps Road,North and West Melbourne,-37.8110286,144.9203702,7,0,0,0,0,0,0,336.74,71
+North and West Melbourne|1429,1429,Phoenix Lane,North and West Melbourne,-37.8122217,144.9534019,4,0,0,0,0,0,0,15.2,9
+North and West Melbourne|119620,119620,Plane Tree Way,North and West Melbourne,-37.7989971,144.9451806,17,18,6,78,37,43,8,6801.42,39
+North and West Melbourne|120078,120078,Prendergast Lane,North and West Melbourne,-37.802993,144.9459229,11,0,0,0,0,0,0,77.87,4
+North and West Melbourne|1000,1000,Princess Street,North and West Melbourne,-37.8049904,144.9568067,20,10,1,0,0,1,1,272.49,9
+North and West Melbourne|117822,117822,Prout Lane,North and West Melbourne,-37.8057668,144.9518302,6,0,0,0,0,0,0,72.9,8
+North and West Melbourne|1002,1002,Provost Street,North and West Melbourne,-37.8019548,144.9468468,67,33,4,114,16,20,4,111.96,30
+North and West Melbourne|1005,1005,Purcell Street,North and West Melbourne,-37.8022171,144.9489329,32,12,3,0,0,3,0,19.45,13
+North and West Melbourne|1007,1007,Queensberry Place,North and West Melbourne,-37.8025715,144.9486807,4,0,0,0,0,0,0,19.26,10
+North and West Melbourne|1008,1008,Queensberry Street,North and West Melbourne,-37.8030233,144.9493676,396,139,11,0,0,11,2,11979.58,227
+North and West Melbourne|119624,119624,Racecourse Road,North and West Melbourne,-37.7891965,144.939933,104,10,2,0,0,2,0,2077.66,93
+North and West Melbourne|1014,1014,Radcliffe Street,North and West Melbourne,-37.8027627,144.9327091,17,0,0,0,0,0,0,2713.17,123
+North and West Melbourne|1015,1015,Raglan Street,North and West Melbourne,-37.8043455,144.9500901,32,0,0,0,0,0,0,8.51,7
+North and West Melbourne|1016,1016,Railway Place,North and West Melbourne,-37.8085395,144.9436526,78,32,15,3,3,18,3,1008.03,179
+North and West Melbourne|1027,1027,Reynolds Street,North and West Melbourne,-37.7971493,144.9376572,48,0,0,0,0,0,0,0.58,7
+North and West Melbourne|1035,1035,Roden Street,North and West Melbourne,-37.8078472,144.9477379,232,147,23,4,3,26,5,6139.22,301
+North and West Melbourne|1038,1038,Rosslyn Street,North and West Melbourne,-37.8091292,144.9496854,285,142,13,11,8,21,9,5486.43,167
+North and West Melbourne|1047,1047,Ryans Lane,North and West Melbourne,-37.8026705,144.9515746,5,0,0,0,0,0,0,172.57,7
+North and West Melbourne|1064,1064,Scotia Street,North and West Melbourne,-37.8014694,144.9490009,29,0,0,0,0,0,0,268.87,15
+North and West Melbourne|1068,1068,Shands Lane,North and West Melbourne,-37.795419,144.9437382,8,0,0,0,0,0,0,398.17,54
+North and West Melbourne|1069,1069,Shiel Street,North and West Melbourne,-37.7969639,144.9429868,87,145,13,0,0,13,2,8798.57,194
+North and West Melbourne|1432,1432,Silk Place,North and West Melbourne,-37.8052151,144.9455288,128,3,1,0,0,1,0,326.78,56
+North and West Melbourne|1074,1074,Sims Street,North and West Melbourne,-37.8031903,144.9102266,135,696,45,35,19,63,16,6394.32,369
+North and West Melbourne|119783,119783,Smyth Mews,North and West Melbourne,-37.7929061,144.9410928,26,15,5,0,0,5,0,97.35,28
+North and West Melbourne|1086,1086,Spencer Street,North and West Melbourne,-37.8088815,144.9482834,358,110,14,0,0,14,2,5531.6,263
+North and West Melbourne|1050,1050,St Andrews Street,North and West Melbourne,-37.8042729,144.9530475,13,0,0,0,0,0,0,2.42,3
+North and West Melbourne|1089,1089,Stanley Street,North and West Melbourne,-37.8088502,144.9480604,219,109,7,22,22,29,4,2308.98,247
+North and West Melbourne|1095,1095,Stawell Street,North and West Melbourne,-37.8032916,144.9428411,62,20,4,0,0,4,0,970.93,45
+North and West Melbourne|117835,117835,Stawell Street,North and West Melbourne,-37.8053786,144.9424785,63,52,8,10,6,14,2,371.6,34
+North and West Melbourne|1288,1288,Stedeford Lane,North and West Melbourne,-37.803794,144.951965,6,0,0,0,0,0,0,41.26,2
+North and West Melbourne|1096,1096,Steel Street,North and West Melbourne,-37.796035,144.937709,64,23,5,0,0,5,1,1099.79,24
+North and West Melbourne|1103,1103,Straker Street,North and West Melbourne,-37.7967583,144.9377088,54,24,2,0,0,2,0,259.27,15
+North and West Melbourne|2965,2965,Strang Lane,North and West Melbourne,-37.8027029,144.949034,5,0,0,0,0,0,0,65.36,6
+North and West Melbourne|119626,119626,Sutton Street,North and West Melbourne,-37.7922524,144.9397818,103,59,18,0,0,18,2,8390.61,159
+North and West Melbourne|118694,118694,Swanson Dock East,North and West Melbourne,-37.8135845,144.9148823,5,0,0,0,0,0,0,15.09,71
+North and West Melbourne|118695,118695,Swanson Dock West,North and West Melbourne,-37.8137999,144.9124065,5,0,0,0,0,0,0,156.59,46
+North and West Melbourne|1117,1117,Temperance Hall Lane,North and West Melbourne,-37.8028657,144.9522065,19,0,0,0,0,0,0,55.82,22
+North and West Melbourne|1129,1129,Trafalgar Place,North and West Melbourne,-37.8048349,144.9501766,28,0,0,0,0,0,0,28.88,10
+North and West Melbourne|1138,1138,Tyrone Street,North and West Melbourne,-37.8009903,144.95427,28,0,0,0,0,0,0,114.05,1
+North and West Melbourne|1143,1143,Union Street,North and West Melbourne,-37.8032262,144.9467518,24,0,0,0,0,0,0,11.46,9
+North and West Melbourne|1147,1147,Vale Street,North and West Melbourne,-37.7999112,144.9536632,29,0,0,0,0,0,0,34.9,5
+North and West Melbourne|1149,1149,Vaughan Terrace,North and West Melbourne,-37.7959676,144.9400863,21,6,2,0,0,2,0,0.0,0
+North and West Melbourne|1150,1150,Victoria Court,North and West Melbourne,-37.8047668,144.95031,1,0,0,0,0,0,0,50.27,3
+North and West Melbourne|3095,3095,Victoria Harbour,North and West Melbourne,-37.8179143,144.9285033,4,0,0,0,0,0,0,605.24,70
+North and West Melbourne|1152,1152,Victoria Street,North and West Melbourne,-37.8052063,144.9500927,375,147,16,10,4,20,5,3091.05,194
+North and West Melbourne|1154,1154,Villiers Street,North and West Melbourne,-37.7996501,144.9529037,62,36,4,0,0,4,3,1237.06,60
+North and West Melbourne|1156,1156,Walsh Street,North and West Melbourne,-37.8082462,144.9533235,66,35,6,0,0,6,1,696.68,62
+North and West Melbourne|1163,1163,Warwick Street,North and West Melbourne,-37.8040106,144.9533788,31,0,0,0,0,0,0,37.91,20
+North and West Melbourne|1309,1309,Weirs Lane,North and West Melbourne,-37.7983159,144.9498807,1,0,0,0,0,0,0,85.46,7
+North and West Melbourne|1179,1179,William Street,North and West Melbourne,-37.8071866,144.9543175,80,119,30,25,13,43,16,9880.25,122
+North and West Melbourne|119781,119781,Wilson Mews,North and West Melbourne,-37.7933716,144.9410109,26,19,2,0,0,2,0,188.76,28
+North and West Melbourne|120186,120186,Wominjeka Walk,North and West Melbourne,-37.8100846,144.9488523,26,6,3,4,4,7,1,0.0,0
+North and West Melbourne|1187,1187,Wood Street,North and West Melbourne,-37.797389,144.9453815,41,22,9,26,16,25,2,920.07,66
+North and West Melbourne|1189,1189,Wreckyn Street,North and West Melbourne,-37.8003996,144.9540973,56,37,5,0,0,5,3,332.61,25
+North and West Melbourne|120135,120135,Wren Lane,North and West Melbourne,-37.8113552,144.9458687,6,0,0,0,0,0,0,0.0,0
+North and West Melbourne|1190,1190,Wylies Lane,North and West Melbourne,-37.8012605,144.9491183,5,0,0,0,0,0,0,58.52,6
+North and West Melbourne|1193,1193,Youngs Lane,North and West Melbourne,-37.7972913,144.9485871,28,0,0,0,0,0,0,805.95,91
+Parkville|119273,119273,Barak Street,Parkville,-37.7777591,144.9410869,8,12,2,0,0,2,0,162.27,13
+Parkville|424,424,Bayles Street,Parkville,-37.7944209,144.9569125,47,46,5,0,0,5,0,143.14,33
+Parkville|436,436,Benjamin Street,Parkville,-37.7961809,144.9554484,33,15,2,0,0,2,0,699.99,58
+Parkville|459,459,Brens Drive,Parkville,-37.7869949,144.9453097,7,3040,74,149,47,117,24,42713.88,1251
+Parkville|120159,120159,Bridleway Walk,Parkville,-37.779621,144.9591543,9,69,12,14,9,20,9,534.59,27
+Parkville|119268,119268,Bunjil Way,Parkville,-37.7800158,144.9405132,20,114,11,32,20,31,9,2576.5,170
+Parkville|117752,117752,Butler Lane,Parkville,-37.7951775,144.9563323,30,1,1,0,0,1,0,431.96,24
+Parkville|119688,119688,Cade Square,Parkville,-37.7778174,144.93967,5,9,1,0,0,1,0,140.43,23
+Parkville|119270,119270,Cade Way,Parkville,-37.7778298,144.9396588,101,195,24,33,20,44,10,5789.68,330
+Parkville|119266,119266,Carrangall Place,Parkville,-37.7796403,144.9410793,17,26,10,16,12,22,4,1009.23,49
+Parkville|510,510,Church Street,Parkville,-37.7879555,144.941655,32,14,3,0,0,3,0,963.96,60
+Parkville|524,524,College Crescent,Parkville,-37.7928373,144.9614199,34,119,16,0,0,16,5,33464.18,812
+Parkville|567,567,Degraves Street,Parkville,-37.7936453,144.9572843,39,27,4,0,0,4,0,487.42,41
+Parkville|601,601,Elliott Avenue,Parkville,-37.7849708,144.9532749,6,1208,36,104,35,71,20,92292.26,1178
+Parkville|117896,117896,Emu Lane,Parkville,-37.7881709,144.9419422,36,0,0,0,0,0,0,377.28,60
+Parkville|629,629,Fitzgibbon Street,Parkville,-37.7952792,144.9568387,92,43,3,0,0,3,0,1521.96,150
+Parkville|632,632,Flemington Road,Parkville,-37.7918277,144.9458679,54,3689,64,345,79,138,24,56946.8,1332
+Parkville|119274,119274,Galada Avenue,Parkville,-37.7802574,144.939949,88,325,38,118,32,70,18,6757.42,167
+Parkville|119263,119263,Garrard Street,Parkville,-37.7792616,144.9416137,28,36,4,2,2,6,3,772.34,49
+Parkville|649,649,Gatehouse Street,Parkville,-37.7944124,144.9540614,178,2733,125,734,179,286,30,36040.89,1031
+Parkville|674,674,Grattan Street,Parkville,-37.7989691,144.9602271,134,54,6,0,0,6,1,47085.18,869
+Parkville|733,733,Ievers Street,Parkville,-37.7816399,144.9584919,52,40,3,0,0,3,1,1185.33,156
+Parkville|120047,120047,Jageurs Lane,Parkville,-37.7957524,144.9573171,39,3,2,0,0,2,1,1205.68,43
+Parkville|119272,119272,Kirrip Crescent,Parkville,-37.7782583,144.939706,7,2,2,0,0,2,0,504.82,21
+Parkville|788,788,Lennon Street,Parkville,-37.7866531,144.9409359,9,126,9,1,1,10,2,743.58,61
+Parkville|789,789,Leonard Street,Parkville,-37.7876172,144.9579493,50,36,4,0,0,4,1,1197.96,68
+Parkville|845,845,Macarthur Road,Parkville,-37.7897009,144.9578806,30,436,45,70,26,71,14,13044.68,234
+Parkville|119267,119267,Manchester Lane,Parkville,-37.77767,144.9391109,21,51,3,17,17,20,1,1870.94,39
+Parkville|870,870,Manningham Street,Parkville,-37.7864383,144.9420344,117,560,67,50,27,94,23,17357.06,639
+Parkville|886,886,Masson Road,Parkville,-37.7974823,144.9628288,1,0,0,0,0,0,0,3093.03,30
+Parkville|897,897,Mile Lane,Parkville,-37.7837176,144.9582208,316,6,4,0,0,4,2,7592.07,475
+Parkville|912,912,Morrah Street,Parkville,-37.7956118,144.9562815,70,59,13,0,0,13,2,3696.96,100
+Parkville|119044,119044,Morrison Close,Parkville,-37.7924974,144.9619438,1,0,0,0,0,0,0,5204.07,117
+Parkville|938,938,Oak Street,Parkville,-37.7806431,144.9421868,191,2365,63,308,90,146,25,37235.68,1268
+Parkville|2907,2907,Old Poplar Road,Parkville,-37.7816536,144.9561189,2,815,48,116,55,101,19,12011.74,365
+Parkville|956,956,Park Drive,Parkville,-37.7950677,144.9550193,165,188,30,0,0,30,5,12589.54,523
+Parkville|962,962,Park Street,Parkville,-37.7769457,144.9500838,131,1747,76,209,68,140,23,46522.11,1035
+Parkville|119271,119271,Parkville Avenue,Parkville,-37.7787777,144.9416541,90,125,9,15,11,20,5,6010.59,275
+Parkville|991,991,Poplar Road,Parkville,-37.7790507,144.9458253,48,3072,91,231,58,143,27,65966.3,1213
+Parkville|1041,1041,Royal Parade,Parkville,-37.7888811,144.9586404,345,370,36,131,107,139,14,79002.48,1141
+Parkville|119265,119265,Sauvage Street,Parkville,-37.7766163,144.94124,22,33,9,0,0,9,3,895.34,58
+Parkville|1084,1084,Southgate Street,Parkville,-37.7888117,144.9427632,17,62,12,35,27,39,8,2239.02,88
+Parkville|1052,1052,St Georges Grove,Parkville,-37.7874123,144.9429112,14,335,18,9,9,27,12,4501.37,169
+Parkville|1101,1101,Story Street,Parkville,-37.7968708,144.9555171,104,88,5,0,0,5,3,6615.41,122
+Parkville|119261,119261,Strickland Road,Parkville,-37.7770496,144.9412731,47,91,20,0,0,20,3,1120.66,144
+Parkville|1114,1114,Swanston Street,Parkville,-37.796626,144.964446,91,34,3,0,0,3,1,25043.66,416
+Parkville|405,405,The Avenue,Parkville,-37.7833803,144.9576592,190,2555,91,300,84,169,27,58646.36,1662
+Parkville|1133,1133,Tullamarine Freeway,Parkville,-37.7822037,144.9390928,2,0,0,0,0,0,0,13.86,33
+Parkville|1157,1157,Walker Street,Parkville,-37.784621,144.9581006,52,45,2,0,0,2,0,1508.57,119
+Parkville|119269,119269,Willam Street,Parkville,-37.7763183,144.939672,25,33,9,9,9,17,7,907.85,117
+Parkville|1183,1183,Wimble Street,Parkville,-37.7949741,144.9558535,32,18,4,0,0,4,0,529.49,42
+Parkville|120146,120146,Yates Lane,Parkville,-37.7861375,144.9415688,7,0,0,0,0,0,0,154.74,19
+South Yarra|369,369,Acland Street,South Yarra,-37.83337,144.9847984,56,6,2,0,0,2,0,1581.4,114
+South Yarra|370,370,Adams Street,South Yarra,-37.8361193,144.9773978,68,33,1,0,0,1,0,4206.96,82
+South Yarra|118777,118777,Airlie Bank Lane,South Yarra,-37.8338816,144.9861832,3,0,0,0,0,0,0,628.54,38
+South Yarra|373,373,Airlie Street,South Yarra,-37.8319888,144.9869548,72,7,1,0,0,1,0,2648.93,175
+South Yarra|376,376,Alexandra Avenue,South Yarra,-37.8294296,144.9863713,23,116,29,54,44,72,14,7179.48,127
+South Yarra|383,383,Anderson Street,South Yarra,-37.8315235,144.9843366,70,27,2,0,0,2,1,3166.92,147
+South Yarra|399,399,Arnold Street,South Yarra,-37.8356565,144.9765885,34,18,1,2,1,2,0,12022.76,29
+South Yarra|466,466,Bromby Street,South Yarra,-37.8351034,144.9771038,32,18,1,0,0,1,0,336.18,43
+South Yarra|120171,120171,Bunny Lane,South Yarra,-37.8443752,144.9848024,1,0,0,0,0,0,0,2.43,6
+South Yarra|517,517,Clowes Street,South Yarra,-37.8307166,144.9860693,101,50,11,68,34,45,8,4206.38,138
+South Yarra|529,529,Commercial Road,South Yarra,-37.8451711,144.9825691,42,355,46,51,25,71,9,10336.13,232
+South Yarra|562,562,Day Street,South Yarra,-37.8346688,144.9801434,27,0,0,0,0,0,0,316.07,20
+South Yarra|572,572,Domain Road,South Yarra,-37.8343041,144.9835026,113,71,6,0,0,6,2,7052.9,226
+South Yarra|574,574,Domain Street,South Yarra,-37.8357265,144.9785075,122,65,4,0,0,4,1,4433.41,200
+South Yarra|619,619,Fairlie Court,South Yarra,-37.8326809,144.9846666,21,19,1,0,0,1,0,2775.5,69
+South Yarra|720,720,Hope Street,South Yarra,-37.8355661,144.9794593,147,10,1,0,0,1,0,2332.54,265
+South Yarra|767,767,Kurneh Place,South Yarra,-37.8339647,144.984549,42,1,1,0,0,1,1,1245.33,57
+South Yarra|790,790,Leopold Street,South Yarra,-37.8360579,144.982976,125,0,0,0,0,0,0,3317.28,270
+South Yarra|829,829,Little Park Street,South Yarra,-37.8364885,144.9811459,55,0,0,0,0,0,0,985.09,41
+South Yarra|879,879,Marne Street,South Yarra,-37.8360533,144.9839927,68,76,13,0,0,13,2,7998.05,249
+South Yarra|884,884,Mason Street,South Yarra,-37.8364252,144.9809422,85,16,1,0,0,1,0,2616.31,137
+South Yarra|900,900,Millswyn Street,South Yarra,-37.8357128,144.9803391,137,67,5,0,0,5,0,5684.25,182
+South Yarra|906,906,Mona Place,South Yarra,-37.8370176,144.9861031,34,16,4,0,0,4,1,4883.83,90
+South Yarra|958,958,Park Lane,South Yarra,-37.8445447,144.9846915,30,11,4,0,0,4,1,1007.27,37
+South Yarra|959,959,Park Place,South Yarra,-37.8398986,144.9854924,43,104,17,14,13,30,7,2149.93,146
+South Yarra|960,960,Park Street,South Yarra,-37.8359788,144.982157,128,44,2,0,0,2,0,2866.66,211
+South Yarra|965,965,Pasley Street,South Yarra,-37.8428745,144.984485,98,334,55,6,4,59,8,39182.28,248
+South Yarra|966,966,Pasley Street North,South Yarra,-37.841414,144.9853112,32,19,3,10,8,11,4,193.55,29
+South Yarra|967,967,Pasley Street South,South Yarra,-37.8429887,144.9849829,30,21,4,0,0,4,1,960.3,39
+South Yarra|1004,1004,Punt Road,South Yarra,-37.838699,144.986339,250,47,7,0,0,7,0,9758.38,316
+South Yarra|1020,1020,Randall Place,South Yarra,-37.8356218,144.9816238,37,15,2,0,0,2,0,488.3,44
+South Yarra|1076,1076,Slater Street,South Yarra,-37.8388469,144.9781456,1,176,33,90,57,90,13,15073.29,129
+South Yarra|1057,1057,St Leonards Court,South Yarra,-37.8295477,144.9853769,28,20,6,0,0,6,3,4571.96,81
+South Yarra|1058,1058,St Martins Lane,South Yarra,-37.8353801,144.9813922,54,0,0,0,0,0,0,317.18,25
+South Yarra|1437,1437,St Martins Place,South Yarra,-37.8350889,144.9813956,46,0,0,0,0,0,0,2747.34,36
+South Yarra|1032,1032,The Righi,South Yarra,-37.8329864,144.986925,32,8,3,0,0,3,0,1604.73,41
+South Yarra|1126,1126,Tivoli Place,South Yarra,-37.8358512,144.9863251,31,16,2,0,0,2,0,3819.02,69
+South Yarra|1127,1127,Toorak Road,South Yarra,-37.837724,144.9818029,172,698,64,52,27,90,18,77163.39,500
+South Yarra|1155,1155,Walsh Street,South Yarra,-37.834134,144.9855533,327,57,10,0,0,10,1,13668.68,528
+South Yarra|1185,1185,Witchwood Close,South Yarra,-37.833578,144.9867909,16,27,5,0,0,5,2,1830.86,54
+Southbank|120184,120184,Bale Circuit,Southbank,-37.8261155,144.9632033,6,0,0,0,0,0,0,211.53,19
+Southbank|1449,1449,Ballantyne Street,Southbank,-37.8285253,144.9581375,3,0,0,0,0,0,0,0.0,0
+Southbank|1347,1347,Balston Street,Southbank,-37.8259147,144.9620906,48,71,13,11,7,20,0,1285.33,80
+Southbank|1362,1362,Catherine Street,Southbank,-37.8270039,144.9598881,19,12,1,0,0,1,0,150.0,27
+Southbank|1345,1345,City Road,Southbank,-37.8244865,144.9621037,324,124,17,13,7,24,5,8772.8,312
+Southbank|1366,1366,Clarendon Street,Southbank,-37.8262302,144.9574953,110,7,4,0,0,4,1,779.42,63
+Southbank|1363,1363,Clarke Street,Southbank,-37.8269385,144.9592034,42,18,2,0,0,2,0,262.12,41
+Southbank|1386,1386,Cook Street,Southbank,-37.8218364,144.9642468,19,16,4,22,16,20,6,1243.5,25
+Southbank|1360,1360,Coventry Street,Southbank,-37.8294954,144.9682383,130,66,5,2,1,6,3,8558.91,308
+Southbank|1355,1355,Dodds Street,Southbank,-37.8271945,144.9676347,132,124,15,4,4,19,4,6833.75,285
+Southbank|360,360,Dorcas Street,Southbank,-37.8305721,144.9684823,50,39,11,7,3,14,0,1585.06,103
+Southbank|3187,3187,Evan Walker Bridge,Southbank,-37.8198723,144.9649805,1,6,1,0,0,1,0,0.6,1
+Southbank|1341,1341,Fanning Street,Southbank,-37.8223637,144.9668123,8,5,2,0,0,2,0,114.73,22
+Southbank|1340,1340,Fawkner Street,Southbank,-37.8231415,144.9647334,101,5,3,0,0,3,0,288.28,88
+Southbank|117888,117888,Freshwater Place,Southbank,-37.8220518,144.962315,13,7,1,0,0,1,0,1594.84,99
+Southbank|1351,1351,Grant Street,Southbank,-37.825679,144.9684065,81,85,15,57,24,39,4,4413.27,135
+Southbank|1365,1365,Haig Street,Southbank,-37.8271318,144.9570506,61,27,1,0,0,1,0,4040.05,106
+Southbank|1361,1361,Hancock Street,Southbank,-37.827679,144.9594267,52,15,2,0,0,2,0,104.89,27
+Southbank|120183,120183,Hoff Boulevard,Southbank,-37.8255343,144.9638685,28,1,1,0,0,1,0,852.7,116
+Southbank|1348,1348,Kavanagh Street,Southbank,-37.8244912,144.9639591,133,111,18,37,23,41,4,10924.29,250
+Southbank|1359,1359,Kings Way,Southbank,-37.827205,144.9616603,123,58,19,45,30,49,9,4454.6,148
+Southbank|1452,1452,Meaden Street,Southbank,-37.8276339,144.9541715,2,69,12,0,0,12,4,698.5,32
+Southbank|1354,1354,Miles Street,Southbank,-37.8285118,144.9669774,56,59,14,12,10,24,5,2656.3,188
+Southbank|1350,1350,Moore Street,Southbank,-37.8250335,144.9655584,92,68,14,4,4,17,2,2445.63,234
+Southbank|1399,1399,Moray Street,Southbank,-37.8271781,144.9606959,56,36,14,24,17,31,8,738.74,29
+Southbank|1374,1374,Munro Street,Southbank,-37.8271387,144.9499067,1,0,0,0,0,0,0,0.0,0
+Southbank|1368,1368,Normanby Road,Southbank,-37.8265958,144.9549213,73,174,17,7,3,20,3,3667.43,144
+Southbank|1346,1346,Power Street,Southbank,-37.8237793,144.9622923,82,32,7,0,0,7,1,1817.13,131
+Southbank|1009,1009,Queens Bridge Street,Southbank,-37.8235321,144.960763,112,48,5,1,1,6,1,4498.28,171
+Southbank|117960,117960,Queensbridge Square,Southbank,-37.8214926,144.9619802,6,12,1,2,2,3,1,227.39,3
+Southbank|1339,1339,Riverside Quay,Southbank,-37.8212792,144.964288,12,77,12,52,13,25,5,2764.73,153
+Southbank|1343,1343,Southbank Boulevard,Southbank,-37.8227704,144.9653172,125,439,30,247,94,123,13,3939.02,181
+Southbank|117877,117877,Southbank Promenade,Southbank,-37.8202553,144.9642297,2,24,4,3,3,7,1,3014.56,3
+Southbank|1465,1465,Southgate Avenue,Southbank,-37.8207857,144.9662353,15,44,7,8,6,13,2,4848.53,170
+Southbank|1056,1056,St Kilda Road,Southbank,-37.8235559,144.9696759,165,114,10,0,0,10,1,17061.12,337
+Southbank|364,364,Sturt Street,Southbank,-37.8259408,144.9666372,213,77,8,7,3,11,5,12437.04,367
+Southbank|1353,1353,Wadey Street,Southbank,-37.8260402,144.9701028,13,16,1,0,0,1,0,2505.15,53
+Southbank|1398,1398,Walker Street,Southbank,-37.8242941,144.9594238,14,0,0,0,0,0,0,230.82,5
+Southbank|1356,1356,Wells Place,Southbank,-37.829692,144.9698299,40,1,1,0,0,1,1,451.5,96
+Southbank|1352,1352,Wells Street,Southbank,-37.8275335,144.9688521,133,104,14,0,0,14,3,7696.86,289
+Southbank|1344,1344,Whiteman Street,Southbank,-37.8241007,144.9583249,145,134,11,7,7,18,4,10807.31,425

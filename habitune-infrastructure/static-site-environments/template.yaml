@@ -1,0 +1,226 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Reusable private S3 and optional CloudFront environment for Habitune
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    AllowedPattern: "^[a-z0-9][a-z0-9-]*$"
+    Description: Environment or iteration name, for example dev or iteration1
+  BucketName:
+    Type: String
+    AllowedPattern: "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
+    Description: Globally unique S3 bucket name for this environment
+  CreateDistribution:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+    Description: Set false for live/archive buckets that should not create a distribution
+  AlternateDomainName:
+    Type: String
+    Default: ""
+    Description: DNS alias such as dev.habitune.tech; required when CreateDistribution is true
+  CertificateArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws[a-zA-Z-]*:acm:us-east-1:[0-9]{12}:certificate/.+$"
+    Description: Existing us-east-1 ACM certificate ARN covering the alternate domain
+  ExistingDistributionId:
+    Type: String
+    Default: ""
+    Description: Existing distribution allowed to read this bucket, used for habitune-live
+  CloudFrontPriceClass:
+    Type: String
+    Default: PriceClass_100
+    AllowedValues: [PriceClass_100, PriceClass_200, PriceClass_All]
+
+Conditions:
+  ShouldCreateDistribution: !Equals [!Ref CreateDistribution, "true"]
+  HasExistingDistribution: !Not [!Equals [!Ref ExistingDistributionId, ""]]
+  HasCloudFrontReader: !Or
+    - !Condition ShouldCreateDistribution
+    - !Condition HasExistingDistribution
+
+Rules:
+  DistributionConfigurationIsComplete:
+    RuleCondition: !Equals [!Ref CreateDistribution, "true"]
+    Assertions:
+      - Assert: !Not [!Equals [!Ref AlternateDomainName, ""]]
+        AssertDescription: AlternateDomainName is required when creating a distribution
+      - Assert: !Not [!Equals [!Ref CertificateArn, ""]]
+        AssertDescription: CertificateArn is required when creating a distribution
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Ref BucketName
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Project
+          Value: habitune
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Condition: ShouldCreateDistribution
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "habitune-${EnvironmentName}-oac"
+        Description: !Sub "Private S3 access for Habitune ${EnvironmentName}"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  StaticCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Condition: ShouldCreateDistribution
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub "habitune-${EnvironmentName}-static-cache"
+        Comment: !Sub "Static asset cache for Habitune ${EnvironmentName}"
+        DefaultTTL: 86400
+        MaxTTL: 31536000
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  SecurityHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Condition: ShouldCreateDistribution
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "habitune-${EnvironmentName}-security-headers"
+        SecurityHeadersConfig:
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: strict-origin-when-cross-origin
+            Override: true
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: true
+            Preload: false
+            Override: true
+          XSSProtection:
+            Protection: true
+            ModeBlock: true
+            Override: true
+
+  SiteDistribution:
+    Type: AWS::CloudFront::Distribution
+    Condition: ShouldCreateDistribution
+    Metadata:
+      cfn-lint:
+        config:
+          # CertificateArn may be empty only when this conditional resource is not created.
+          ignore_checks: [W1030]
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref AlternateDomainName
+        Comment: !Sub "Habitune ${EnvironmentName}"
+        DefaultCacheBehavior:
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD]
+          CachePolicyId: !Ref StaticCachePolicy
+          Compress: true
+          ResponseHeadersPolicyId: !Ref SecurityHeadersPolicy
+          TargetOriginId: !Sub "habitune-${EnvironmentName}-origin"
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        Origins:
+          - DomainName: !GetAtt SiteBucket.RegionalDomainName
+            Id: !Sub "habitune-${EnvironmentName}-origin"
+            OriginAccessControlId: !Ref OriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        PriceClass: !Ref CloudFrontPriceClass
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          MinimumProtocolVersion: TLSv1.2_2021
+          SslSupportMethod: sni-only
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+      Tags:
+        - Key: Project
+          Value: habitune
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: HasCloudFrontReader
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowOnlyConfiguredCloudFrontDistribution
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${SiteBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !If
+                  - ShouldCreateDistribution
+                  - !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${SiteDistribution}"
+                  - !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${ExistingDistributionId}"
+
+Outputs:
+  Environment:
+    Value: !Ref EnvironmentName
+  BucketName:
+    Description: S3 deployment target
+    Value: !Ref SiteBucket
+  CloudFrontDistributionId:
+    Condition: ShouldCreateDistribution
+    Description: Distribution ID used for invalidations
+    Value: !Ref SiteDistribution
+  CloudFrontDomainName:
+    Condition: ShouldCreateDistribution
+    Description: IMPORTANT - copy this value into the get.tech CNAME record
+    Value: !GetAtt SiteDistribution.DomainName
+  ManualDnsRecord:
+    Condition: ShouldCreateDistribution
+    Description: DNS is manual and is not managed by this stack
+    Value: !Sub "Create CNAME ${AlternateDomainName} -> ${SiteDistribution.DomainName} at get.tech"

@@ -1,0 +1,469 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Parameterized network and PostgreSQL infrastructure for Habitune
+
+Parameters:
+  # Values that change between environments are supplied at deployment time.
+  Stage:
+    Type: String
+    AllowedPattern: "^[a-z0-9-]+$"
+  ProjectName:
+    Type: String
+    Default: habitune-backend
+    AllowedPattern: "^[a-z][a-z0-9-]+$"
+  VpcCidr:
+    Type: String
+  AppSubnetOneCidr:
+    Type: String
+  AppSubnetTwoCidr:
+    Type: String
+  DatabaseSubnetOneCidr:
+    Type: String
+  DatabaseSubnetTwoCidr:
+    Type: String
+  DatabaseAccessSubnetCidr:
+    Type: String
+  DatabaseAccessInstanceType:
+    Type: String
+  DatabaseAccessAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+  DBPort:
+    Type: Number
+    MinValue: 1150
+    MaxValue: 65535
+  DBName:
+    Type: String
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  DBUser:
+    Type: String
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+  DBInstanceClass:
+    Type: String
+  DBAllocatedStorage:
+    Type: Number
+    MinValue: 20
+  DBStorageType:
+    Type: String
+  DBBackupRetentionDays:
+    Type: Number
+    MinValue: 0
+    MaxValue: 35
+  DBMultiAZ:
+    Type: String
+    AllowedValues: ["true", "false"]
+  DBDeletionProtection:
+    Type: String
+    AllowedValues: ["true", "false"]
+  DBAutoMinorVersionUpgrade:
+    Type: String
+    AllowedValues: ["true", "false"]
+
+Conditions:
+  # Convert string parameters from samconfig.toml into CloudFormation booleans.
+  UseMultiAZ: !Equals [!Ref DBMultiAZ, "true"]
+  UseDeletionProtection: !Equals [!Ref DBDeletionProtection, "true"]
+  UseAutoMinorVersionUpgrade: !Equals [!Ref DBAutoMinorVersionUpgrade, "true"]
+
+Resources:
+  # One isolated network contains the Lambda functions, database, and admin host.
+  HabituneVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-vpc-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  AppSubnetOne:
+    # Lambda functions run in private application subnets with no public IP.
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref AppSubnetOneCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app-one-${Stage}"
+
+  AppSubnetTwo:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref AppSubnetTwoCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app-two-${Stage}"
+
+  DatabaseSubnetOne:
+    # RDS uses private database subnets and cannot be reached from the internet.
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref DatabaseSubnetOneCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-one-${Stage}"
+
+  DatabaseSubnetTwo:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref DatabaseSubnetTwoCidr
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-two-${Stage}"
+
+  DatabaseAccessSubnet:
+    # Only the SSM-managed admin host uses this public routing subnet.
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref HabituneVpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref DatabaseAccessSubnetCidr
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+
+  AppRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref HabituneVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-app-routes-${Stage}"
+
+  DatabaseRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref HabituneVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-routes-${Stage}"
+
+  DatabaseAccessInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+
+  DatabaseAccessInternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref DatabaseAccessInternetGateway
+      VpcId: !Ref HabituneVpc
+
+  DatabaseAccessRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref HabituneVpc
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-routes-${Stage}"
+
+  DatabaseAccessInternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: DatabaseAccessInternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref DatabaseAccessRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref DatabaseAccessInternetGateway
+
+  AppSubnetOneRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref AppRouteTable
+      SubnetId: !Ref AppSubnetOne
+
+  AppSubnetTwoRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref AppRouteTable
+      SubnetId: !Ref AppSubnetTwo
+
+  DatabaseSubnetOneRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseRouteTable
+      SubnetId: !Ref DatabaseSubnetOne
+
+  DatabaseSubnetTwoRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseRouteTable
+      SubnetId: !Ref DatabaseSubnetTwo
+
+  DatabaseAccessSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref DatabaseAccessRouteTable
+      SubnetId: !Ref DatabaseAccessSubnet
+
+  LambdaSecurityGroup:
+    # Start with no default outbound access; explicit rules below allow only DB and Secrets Manager traffic.
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-lambda-${Stage}"
+      GroupDescription: !Sub "Security group for ${ProjectName} database Lambdas in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-lambda-${Stage}"
+
+  DatabaseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-database-${Stage}"
+      GroupDescription: !Sub "Security group for ${ProjectName} PostgreSQL in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-${Stage}"
+
+  SecretsEndpointSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
+      GroupDescription: !Sub "Security group for ${ProjectName} Secrets Manager endpoint in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
+
+  DatabaseAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${ProjectName}-database-access-${Stage}"
+      GroupDescription: !Sub "Outbound-only Session Manager database access for ${ProjectName} in ${Stage}"
+      VpcId: !Ref HabituneVpc
+      SecurityGroupEgress: []
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+
+  LambdaToDatabaseEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref LambdaSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      DestinationSecurityGroupId: !Ref DatabaseSecurityGroup
+
+  DatabaseFromLambdaIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DatabaseSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      SourceSecurityGroupId: !Ref LambdaSecurityGroup
+
+  DatabaseAccessToDatabaseEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref DatabaseAccessSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      DestinationSecurityGroupId: !Ref DatabaseSecurityGroup
+
+  DatabaseFromAccessHostIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref DatabaseSecurityGroup
+      IpProtocol: tcp
+      FromPort: !Ref DBPort
+      ToPort: !Ref DBPort
+      SourceSecurityGroupId: !Ref DatabaseAccessSecurityGroup
+
+  DatabaseAccessToHttpsEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref DatabaseAccessSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 0.0.0.0/0
+
+  LambdaToSecretsEndpointEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref LambdaSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      DestinationSecurityGroupId: !Ref SecretsEndpointSecurityGroup
+
+  SecretsEndpointFromLambdaIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref SecretsEndpointSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      SourceSecurityGroupId: !Ref LambdaSecurityGroup
+
+  SecretsManagerEndpoint:
+    # Lets private Lambdas retrieve credentials without using the public internet.
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcEndpointType: Interface
+      VpcId: !Ref HabituneVpc
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.secretsmanager"
+      PrivateDnsEnabled: true
+      SubnetIds:
+        - !Ref AppSubnetOne
+      SecurityGroupIds:
+        - !Ref SecretsEndpointSecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-secrets-endpoint-${Stage}"
+
+  DatabaseSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub "${ProjectName}-database-${Stage}"
+      DBSubnetGroupDescription: !Sub "Private subnet group for ${ProjectName} PostgreSQL in ${Stage}"
+      SubnetIds:
+        - !Ref DatabaseSubnetOne
+        - !Ref DatabaseSubnetTwo
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-${Stage}"
+
+  DatabaseAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${ProjectName}-database-access-${Stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  DatabaseAccessInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${ProjectName}-database-access-${Stage}"
+      Roles:
+        - !Ref DatabaseAccessRole
+
+  DatabaseAccessInstance:
+    # Temporary database administration path: AWS Systems Manager replaces inbound SSH.
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref DatabaseAccessAmiId
+      InstanceType: !Ref DatabaseAccessInstanceType
+      IamInstanceProfile: !Ref DatabaseAccessInstanceProfile
+      SubnetId: !Ref DatabaseAccessSubnet
+      SecurityGroupIds:
+        - !Ref DatabaseAccessSecurityGroup
+      MetadataOptions:
+        HttpEndpoint: enabled
+        HttpTokens: required
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-database-access-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  PostgreSQLDatabase:
+    # PostgreSQL credentials are generated and stored by RDS in Secrets Manager.
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBInstanceIdentifier: !Sub "${ProjectName}-postgres-${Stage}"
+      Engine: postgres
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      StorageType: !Ref DBStorageType
+      StorageEncrypted: true
+      DBName: !Ref DBName
+      MasterUsername: !Ref DBUser
+      ManageMasterUserPassword: true
+      Port: !Ref DBPort
+      DBSubnetGroupName: !Ref DatabaseSubnetGroup
+      VPCSecurityGroups:
+        - !Ref DatabaseSecurityGroup
+      PubliclyAccessible: false
+      BackupRetentionPeriod: !Ref DBBackupRetentionDays
+      MultiAZ: !If [UseMultiAZ, true, false]
+      DeletionProtection: !If [UseDeletionProtection, true, false]
+      AutoMinorVersionUpgrade: !If [UseAutoMinorVersionUpgrade, true, false]
+      CopyTagsToSnapshot: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-postgres-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+Outputs:
+  # Export shared values so the separate backend stack can import them safely.
+  VpcId:
+    Value: !Ref HabituneVpc
+  AppSubnetOneId:
+    Value: !Ref AppSubnetOne
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-app-subnet-one-id"
+  AppSubnetTwoId:
+    Value: !Ref AppSubnetTwo
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-app-subnet-two-id"
+  LambdaSecurityGroupId:
+    Value: !Ref LambdaSecurityGroup
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-lambda-security-group-id"
+  DatabaseEndpoint:
+    Value: !GetAtt PostgreSQLDatabase.Endpoint.Address
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-endpoint"
+  DatabasePort:
+    Value: !GetAtt PostgreSQLDatabase.Endpoint.Port
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-port"
+  DatabaseName:
+    Value: !Ref DBName
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-name"
+  DatabaseSecretArn:
+    Value: !GetAtt PostgreSQLDatabase.MasterUserSecret.SecretArn
+    Export:
+      Name: !Sub "${ProjectName}-${Stage}-database-secret-arn"
+  DatabaseAccessInstanceId:
+    Description: SSM managed instance used for database port forwarding
+    Value: !Ref DatabaseAccessInstance
+  DatabaseAccessSecurityGroupId:
+    Value: !Ref DatabaseAccessSecurityGroup

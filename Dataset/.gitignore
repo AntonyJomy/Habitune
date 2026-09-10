@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+cache/
+tmp/
+
+# The seven source exports are local inputs. tree-canopies-2019.csv alone is
+# about 290 MB and exceeds GitHub's normal file limit. Commit the compact,
+# documented files in processed/ instead.
+raw/*.csv

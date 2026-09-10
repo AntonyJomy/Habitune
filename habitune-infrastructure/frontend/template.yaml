@@ -1,0 +1,248 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Stage-aware static frontend hosting for Habitune
+
+Parameters:
+  # Stage and cost settings are supplied when the stack is deployed.
+  Stage:
+    Type: String
+    AllowedPattern: "^[a-z0-9-]+$"
+  ProjectName:
+    Type: String
+    Default: habitune
+    AllowedPattern: "^[a-z][a-z0-9-]+$"
+  CloudFrontPriceClass:
+    Type: String
+    AllowedValues:
+      - PriceClass_100
+      - PriceClass_200
+      - PriceClass_All
+  DistributionOriginBucketName:
+    Type: String
+    Default: ""
+    Description: Optional existing bucket used by the primary distribution instead of FrontendBucket
+  DevelopmentDistributionId:
+    Type: String
+    Default: ""
+    Description: Optional CloudFront distribution ID allowed to read the retained development bucket
+  AlternateDomainName:
+    Type: String
+    Default: ""
+    Description: Optional custom hostname served by the primary distribution
+  CertificateArn:
+    Type: String
+    Default: ""
+    Description: ACM certificate ARN in us-east-1 for AlternateDomainName
+
+Conditions:
+  UseExternalDistributionOrigin: !Not [!Equals [!Ref DistributionOriginBucketName, ""]]
+  HasDevelopmentDistribution: !Not [!Equals [!Ref DevelopmentDistributionId, ""]]
+  HasCustomDomain: !And
+    - !Not [!Equals [!Ref AlternateDomainName, ""]]
+    - !Not [!Equals [!Ref CertificateArn, ""]]
+
+Resources:
+  FrontendUserPool:
+    # Cognito stores preview users; only administrators can create accounts.
+    Type: AWS::Cognito::UserPool
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      UserPoolName: !Sub "${ProjectName}-frontend-users-${Stage}"
+      UsernameConfiguration:
+        CaseSensitive: false
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+      MfaConfiguration: "OFF"
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 1
+      UserPoolTags:
+        Name: !Sub "${ProjectName}-frontend-users-${Stage}"
+        Project: !Ref ProjectName
+        Stage: !Ref Stage
+
+  FrontendUserPoolClient:
+    # Browser applications cannot safely store a client secret, so this client has none.
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub "${ProjectName}-frontend-client-${Stage}"
+      UserPoolId: !Ref FrontendUserPool
+      GenerateSecret: false
+      EnableTokenRevocation: true
+      PreventUserExistenceErrors: ENABLED
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      AccessTokenValidity: 1
+      IdTokenValidity: 1
+      RefreshTokenValidity: 1
+      TokenValidityUnits:
+        AccessToken: hours
+        IdToken: hours
+        RefreshToken: days
+
+  FrontendBucket:
+    # Stores the compiled React files privately; users never access S3 directly.
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${ProjectName}-frontend-${Stage}-${AWS::AccountId}"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-frontend-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  FrontendOriginAccessControl:
+    # CloudFront signs requests to the private S3 origin with AWS Signature V4.
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${ProjectName}-frontend-oac-${Stage}"
+        Description: !Sub "Private S3 access for ${ProjectName} frontend in ${Stage}"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  FrontendCachePolicy:
+    # Cache static files at edge locations and enable compressed responses.
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub "${ProjectName}-frontend-cache-${Stage}"
+        Comment: !Sub "Static asset caching for ${ProjectName} frontend in ${Stage}"
+        DefaultTTL: 86400
+        MaxTTL: 31536000
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  FrontendDistribution:
+    # Public HTTPS delivery layer in front of the private S3 bucket.
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases: !If
+          - HasCustomDomain
+          - [!Ref AlternateDomainName]
+          - !Ref AWS::NoValue
+        Comment: !Sub "${ProjectName}-frontend-${Stage}"
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          CachePolicyId: !Ref FrontendCachePolicy
+          Compress: true
+          TargetOriginId: !Sub "${ProjectName}-frontend-origin-${Stage}"
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        Origins:
+          - DomainName: !If
+              - UseExternalDistributionOrigin
+              - !Sub "${DistributionOriginBucketName}.s3.${AWS::Region}.${AWS::URLSuffix}"
+              - !GetAtt FrontendBucket.RegionalDomainName
+            Id: !Sub "${ProjectName}-frontend-origin-${Stage}"
+            OriginAccessControlId: !Ref FrontendOriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        PriceClass: !Ref CloudFrontPriceClass
+        ViewerCertificate: !If
+          - HasCustomDomain
+          - AcmCertificateArn: !Ref CertificateArn
+            MinimumProtocolVersion: TLSv1.2_2021
+            SslSupportMethod: sni-only
+          - CloudFrontDefaultCertificate: true
+        CustomErrorResponses:
+          # Return index.html for client-side routes in this single-page application.
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-frontend-${Stage}"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Stage
+          Value: !Ref Stage
+
+  FrontendBucketPolicy:
+    # After cutover, the retained original bucket is the development origin.
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontReadOnly
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${FrontendBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !If
+                  - HasDevelopmentDistribution
+                  - !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${DevelopmentDistributionId}"
+                  - !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FrontendDistribution}"
+
+Outputs:
+  # These values configure the frontend build and support CloudFront invalidations.
+  CognitoUserPoolId:
+    Description: Cognito user pool used for frontend authentication
+    Value: !Ref FrontendUserPool
+  CognitoUserPoolClientId:
+    Description: Public Cognito app client identifier used by the frontend
+    Value: !Ref FrontendUserPoolClient
+  FrontendBucketName:
+    Description: Private S3 bucket that stores the compiled frontend
+    Value: !Ref FrontendBucket
+  FrontendDistributionId:
+    Description: CloudFront distribution ID used for cache invalidations
+    Value: !Ref FrontendDistribution
+  FrontendDomainName:
+    Description: CloudFront domain serving the frontend
+    Value: !GetAtt FrontendDistribution.DomainName
+  DistributionOriginBucket:
+    Description: Bucket currently configured as the primary CloudFront origin
+    Value: !If [UseExternalDistributionOrigin, !Ref DistributionOriginBucketName, !Ref FrontendBucket]
+  FrontendUrl:
+    Description: HTTPS URL for the deployed frontend
+    Value: !Sub "https://${FrontendDistribution.DomainName}"

@@ -1,0 +1,2 @@
+// @ts-nocheck
+export default function InsightCard({ number, title, description, cta, later, icon: Icon }) { return <article className="insight-card"><div className="insight-top"><span>0{number}</span>{later && <small>Coming later</small>}</div>{Icon && <span className="feature-icon"><Icon size={25} strokeWidth={1.8} aria-hidden="true" /></span>}<h3>{title}</h3><p>{description}</p><button type="button" disabled={later} aria-label={`${title}${later ? ', coming later' : ''}`}>{cta} {!later && <span>→</span>}</button></article> }

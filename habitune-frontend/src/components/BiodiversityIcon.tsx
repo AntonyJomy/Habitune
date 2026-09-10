@@ -1,0 +1,26 @@
+// @ts-nocheck
+import { getBiodiversityCategory } from '../config/biodiversityCategories'
+
+const common = { fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round' }
+
+export default function BiodiversityIcon({ type, size = 28, variant = 'default', className = '' }) {
+  const icons = {
+    tree: <><path d="M32 50V31" {...common}/><path d="M22 52h20" {...common}/><path d="M32 10c-8 0-13 6-12 13-6 2-8 9-4 14 4 5 11 4 16 1 5 3 13 4 17-2 3-5 1-11-5-13 0-7-5-13-12-13Z" fill="#76b95b" stroke="#34764a" strokeWidth="2.4"/><circle cx="25" cy="24" r="3" fill="#a8d477"/><circle cx="40" cy="30" r="3" fill="#5ca65a"/></>,
+    flora: <><path d="M31 53c0-14 1-22 7-30" {...common}/><path d="M31 42c-7-1-12-5-14-11 8-1 14 2 17 8" fill="#86bd58" stroke="#387a4d" strokeWidth="2.2"/><path d="M36 30c2-7 7-11 14-11 0 8-4 13-12 15" fill="#a5cf69" stroke="#387a4d" strokeWidth="2.2"/><circle cx="40" cy="17" r="5" fill="#f5a5a0"/><circle cx="47" cy="13" r="5" fill="#f3c36c"/><circle cx="47" cy="21" r="5" fill="#ef8f95"/><circle cx="43" cy="17" r="3" fill="#9d6339"/></>,
+    pollinator: <><ellipse cx="32" cy="34" rx="8" ry="13" fill="#f0ad32" stroke="#6f5529" strokeWidth="2.2"/><path d="M25 29h14M24 36h16M28 43h8" stroke="#6f5529" strokeWidth="3"/><ellipse cx="22" cy="28" rx="9" ry="7" fill="#d9edf2" stroke="#5d8895" strokeWidth="2" transform="rotate(-24 22 28)"/><ellipse cx="42" cy="28" rx="9" ry="7" fill="#d9edf2" stroke="#5d8895" strokeWidth="2" transform="rotate(24 42 28)"/><path d="M28 21c-3-5-7-5-9-2M36 21c3-5 7-5 9-2" {...common}/><circle cx="29" cy="25" r="1.5" fill="#3e4138"/><circle cx="35" cy="25" r="1.5" fill="#3e4138"/></>,
+    bird: <><path d="M15 38c9-1 13-9 17-19 10 3 17 11 16 20-1 9-9 14-19 12-8-2-13-6-14-13Z" fill="#5796c5" stroke="#315f82" strokeWidth="2.3"/><path d="M20 41c9 1 16-3 20-10-1 11-7 17-16 18" fill="#7bb7d6"/><path d="m47 30 9 4-9 4" fill="#efb64b" stroke="#9a702a" strokeWidth="2"/><circle cx="42" cy="27" r="2" fill="#273c48"/><path d="M27 50v5M36 50v5" {...common}/></>,
+    wildlife: <><circle cx="21" cy="23" r="6" fill="#a786bd"/><circle cx="43" cy="23" r="6" fill="#a786bd"/><circle cx="16" cy="35" r="5" fill="#b99bca"/><circle cx="48" cy="35" r="5" fill="#b99bca"/><path d="M32 29c-9 0-15 10-14 17 2 9 11 6 14 3 3 3 12 6 14-3 1-7-5-17-14-17Z" fill="#8d6aa6" stroke="#684b7d" strokeWidth="2"/></>,
+    habitat: <><path d="M10 49h44" {...common}/><path d="M15 48 25 25l10 23M29 48l11-32 14 32" fill="#71ae75" stroke="#347052" strokeWidth="2.2"/><path d="M18 48 31 32l12 16" fill="#9acb7f" stroke="#4b845b" strokeWidth="2"/><path d="M9 51c11-4 35-4 46 0" stroke="#38816f" strokeWidth="3" fill="none"/></>,
+    canopy: <><path d="M12 42c2-9 8-14 16-12 2-10 15-13 21-5 9 0 12 12 5 17-10 7-34 7-42 0Z" fill="#99cd85" stroke="#538e62" strokeWidth="2.2"/><path d="M32 45v10M24 55h16" {...common}/><circle cx="25" cy="36" r="3" fill="#c2e1a5"/><circle cx="42" cy="34" r="3" fill="#72b56c"/></>,
+    lorikeet: <><path d="M16 42c8-3 10-13 13-27 12 1 20 10 19 21-1 11-9 18-21 16-8-1-12-5-11-10Z" fill="#3f9c67" stroke="#27694a" strokeWidth="2"/><path d="M30 16c8 0 14 5 16 11l-12 5-8-6Z" fill="#477fc0"/><path d="M24 29c8 2 13 8 16 18-8 7-19 5-23-3Z" fill="#e65c55"/><path d="m45 27 10 4-9 5" fill="#efb138"/><circle cx="40" cy="23" r="2" fill="#172d25"/><path d="M27 51v5M36 50v6" {...common}/></>,
+    bee: <><ellipse cx="32" cy="35" rx="10" ry="15" fill="#eeac32" stroke="#5c4c32" strokeWidth="2"/><path d="M23 30h18M22 38h20M27 46h10" stroke="#4e493a" strokeWidth="4"/><ellipse cx="20" cy="27" rx="10" ry="7" fill="#cce9ef" stroke="#6d9eaa" strokeWidth="2" transform="rotate(-25 20 27)"/><ellipse cx="44" cy="27" rx="10" ry="7" fill="#cce9ef" stroke="#6d9eaa" strokeWidth="2" transform="rotate(25 44 27)"/><path d="M27 21c-4-6-8-6-11-2M37 21c4-6 8-6 11-2" {...common}/></>,
+    correa: <><path d="M31 55c0-15 2-28 9-39M31 42c-8 0-14-4-17-11 10-2 16 2 19 8M36 31c2-8 8-13 16-13 0 9-5 15-15 17" {...common}/><path d="M37 14c7-3 13 1 13 7 0 7-5 12-11 15-5-6-8-17-2-22Z" fill="#e97973" stroke="#a84548" strokeWidth="2"/><path d="M41 19c2 6 2 10-1 15" stroke="#f6c087" strokeWidth="2"/></>,
+    daisy: <><path d="M32 55V31M31 44c-8 0-13-4-15-10 8-1 13 2 16 7" {...common}/><g fill="#8f72c4" stroke="#66519a" strokeWidth="1.5"><ellipse cx="32" cy="16" rx="5" ry="10"/><ellipse cx="32" cy="36" rx="5" ry="10"/><ellipse cx="22" cy="26" rx="10" ry="5"/><ellipse cx="42" cy="26" rx="10" ry="5"/><ellipse cx="25" cy="19" rx="5" ry="9" transform="rotate(-45 25 19)"/><ellipse cx="39" cy="33" rx="5" ry="9" transform="rotate(-45 39 33)"/><ellipse cx="39" cy="19" rx="5" ry="9" transform="rotate(45 39 19)"/><ellipse cx="25" cy="33" rx="5" ry="9" transform="rotate(45 25 33)"/></g><circle cx="32" cy="26" r="7" fill="#f1bd3f" stroke="#9a7625" strokeWidth="2"/></>,
+  }
+  const category = biodiversityCategoriesSafe(type)
+  return <svg className={`biodiversity-icon biodiversity-icon--${variant} ${className}`} style={category ? { color: category.color } : undefined} width={size} height={size} viewBox="0 0 64 64" role="img" aria-label={`${type} icon`}>{icons[type] || icons.wildlife}</svg>
+}
+
+function biodiversityCategoriesSafe(type) {
+  return ['tree', 'flora', 'pollinator', 'bird', 'wildlife', 'canopy', 'habitat'].includes(type) ? getBiodiversityCategory(type) : null
+}
