@@ -103,7 +103,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: [cloudformation:CreateStack, cloudformation:CreateChangeSet, cloudformation:DeleteChangeSet, cloudformation:DescribeChangeSet, cloudformation:ExecuteChangeSet, cloudformation:DescribeStacks, cloudformation:DescribeStackEvents, cloudformation:DescribeStackResource, cloudformation:ListStackResources, cloudformation:GetTemplateSummary]
-                Resource: !Sub "arn:${AWS::Partition}:cloudformation:*:${AWS::AccountId}:stack/habitune-static-iteration*/*"
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:cloudformation:*:${AWS::AccountId}:stack/habitune-static-iteration*/*"
+                  # SAM expands this AWS-managed transform while creating the change set.
+                  - !Sub "arn:${AWS::Partition}:cloudformation:*:aws:transform/Serverless-2016-10-31"
               - Effect: Allow
                 Action: [s3:GetBucketLocation, s3:GetBucketVersioning, s3:ListBucket]
                 Resource:
