@@ -2,8 +2,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import { getLocationSuggestions, resolveLocation, searchLocationSuggestions } from '../services/locationSearchApi'
+import type { SearchLocation } from '../utils/connectivityQuery'
 
-export default function LocationSearch({ onChoose, suburbs = [] }) {
+type LocationSearchProps = {
+  onChoose: (suburb: string, location: SearchLocation) => void
+  suburbs?: Array<{ id: string; name: string; label?: string }>
+}
+
+export default function LocationSearch({ onChoose, suburbs = [] }: LocationSearchProps) {
   const [query, setQuery] = useState('')
   const [error, setError] = useState('')
   const [focused, setFocused] = useState(false)

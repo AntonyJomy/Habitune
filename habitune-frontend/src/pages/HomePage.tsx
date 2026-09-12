@@ -1,126 +1,129 @@
-// @ts-nocheck
-import { useEffect, useState } from 'react'
-import { LoaderCircle } from 'lucide-react'
-import LocationSearch from '../components/LocationSearch'
-import LoadingFacts from '../components/LoadingFacts'
-import SuburbOverviewMap from '../components/SuburbOverviewMap'
-import SelectedAreaPanel from '../components/SelectedAreaPanel'
-import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
-import { normalizeSuburbName, resolveOverviewSuburbName } from '../data/suburbBiodiversityData'
+import { useState } from 'react'
+import { Brain, MoonStar, ThermometerSun } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/Navbar'
+import ecosystemMap from '../assets/home/urban-ecosystem-map.png'
+import urbanPollinationBeeVideo from '../assets/home/urban-pollination-bee.mp4'
+import balconyBeeVideo from '../assets/Honeybee_on_balcony_flowers_202609072354.mp4'
+import bigPicture1 from '../assets/Big picture 1.png'
+import bigPicture2 from '../assets/Big picture 2.png'
+import bigPicture3 from '../assets/Big picture 3.png'
+import bigPicture4 from '../assets/Big picture 4.png'
+import '../landing.css'
 
-export default function HomePage({ selectedSuburb, searchedLocation, onSelectArea }) {
-  const [suburbs, setSuburbs] = useState([])
-  const [overviewStatus, setOverviewStatus] = useState('loading')
-  const [selectedSummary, setSelectedSummary] = useState(null)
-  const [detailStatus, setDetailStatus] = useState('idle')
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false)
+type HomePageProps = { onExploreArea: () => void }
+type CardItem = {
+  title: string
+  description: React.ReactNode
+  icon?: React.ReactNode
+  image?: string
+  imageAlt?: string
+}
+type VideoBlockProps = { src: string; poster?: string; label: string }
 
-  useEffect(() => {
-    let active = true
-    getSuburbOverview()
-      .then((result) => {
-        if (!active) return
-        const polygons = Array.isArray(result?.polygons) ? result.polygons : []
-        setSuburbs(polygons)
-        setOverviewStatus(polygons.length > 0 ? 'success' : 'empty')
-      })
-      .catch(() => active && setOverviewStatus('error'))
-    return () => { active = false }
-  }, [])
+function StatHighlight({ value }: { value: string }) {
+  return <span className="stat-highlight">{value}</span>
+}
 
-  const selectedArea = suburbs.find((suburb) => normalizeSuburbName(suburb.name) === normalizeSuburbName(resolveOverviewSuburbName(selectedSuburb || '')))
+function VideoBlock({ src, poster, label }: VideoBlockProps) {
+  const [showFallback, setShowFallback] = useState(!src)
 
-  useEffect(() => {
-    let active = true
-    if (!selectedArea?.id) {
-      setSelectedSummary(null)
-      setDetailStatus('idle')
-      return () => { active = false }
-    }
-    setSelectedSummary(null)
-    setDetailStatus('loading')
-    getPrecinctOverview(selectedArea.id)
-      .then((summary) => {
-        if (!active) return
-        setSelectedSummary(summary)
-        setDetailStatus(summary ? 'success' : 'empty')
-      })
-      .catch(() => active && setDetailStatus('error'))
-    return () => { active = false }
-  }, [selectedArea?.id])
+  return <div className={`video-block${showFallback ? ' is-placeholder' : ''}`}>
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      poster={poster}
+      aria-label={label}
+      src={src || undefined}
+      onError={() => setShowFallback(true)}
+      onLoadedData={() => setShowFallback(false)}
+      onCanPlay={(event) => {
+        event.currentTarget.play().catch(() => setShowFallback(true))
+      }}
+    />
+    {showFallback && <span aria-hidden="true">Video unavailable</span>}
+  </div>
+}
 
-  const selectSearchResult = (suburb, location) => {
-    const resolvedName = resolveOverviewSuburbName(suburb)
-    const matchingArea = suburbs.find((area) => normalizeSuburbName(area.name) === normalizeSuburbName(resolvedName))
-    onSelectArea(matchingArea?.name || resolvedName, location)
-  }
+const steps: CardItem[] = [
+  { title: 'You choose the right plant for your balcony', description: <>Only <StatHighlight value="4 in 10" /> garden flowers actually feed pollinators</>, image: bigPicture1, imageAlt: 'A person placing a flowering native plant on a city balcony' },
+  { title: 'Your balcony becomes a part of a corridor', description: <>Insects become <StatHighlight value="3.4x" /> more likely to visit once gardens connect</>, image: bigPicture2, imageAlt: 'A green corridor connecting planted balconies across apartment buildings' },
+  { title: 'Pollinators visit your balcony to travel the corridor', description: <>One planting project saw <StatHighlight value="7.3x" /> more insect species in 3 years</>, image: bigPicture3, imageAlt: 'Bees and a butterfly travelling between flowering balconies' },
+  { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, image: bigPicture4, imageAlt: 'A thriving balcony garden filled with flowering plants and visiting wildlife' },
+]
 
-  return (
-    <main className={`biodiversity-overview${isPanelCollapsed ? ' is-panel-collapsed' : ''}`} id="area-selection">
-      <aside className="overview-map" aria-label="Select a Melbourne precinct on the map">
-        <SuburbOverviewMap suburbs={suburbs} selectedSuburb={selectedSuburb} searchedLocation={searchedLocation} onSelect={onSelectArea} />
-      </aside>
+const benefits: CardItem[] = [
+  { title: 'Cooler days', description: <>Tree cover offsets up to <StatHighlight value="49%" /> of local heat island warming</>, icon: <ThermometerSun aria-hidden="true" /> },
+  { title: 'Calmer mind', description: <>Regular gardening is linked to <StatHighlight value="28%" /> lower dementia risk</>, icon: <Brain aria-hidden="true" /> },
+  { title: 'Better sleep', description: <>Greener streets promote better sleep</>, icon: <MoonStar aria-hidden="true" /> },
+]
 
-      <section className="overview-panel" id="biodiversity-overlay-panel" aria-label="Biodiversity search and selected-area details">
-        <div className="overview-mode-row">
-          <div className="overview-toggle" aria-label="Overview mode">
-            <button className="active" type="button">Precinct view</button>
-            <button type="button" disabled title="Corridor overview data is not yet available">Corridor view</button>
-          </div>
-          <p className="corridor-unavailable" role="status">Corridor view coming later.</p>
+const contributions = [
+  { title: 'Know your ecosystem.', description: 'View pollination corridors, green canopy and info on local species in and around your area of residence.', available: true },
+  { title: 'Find the right plants.', description: 'Find the plant species that is compatible and promotes your local biodiversity.', available: false },
+  { title: 'Plant inside and outdoors.', description: 'We will help you plant outside in your locality by verifying council guidelines.', available: false },
+]
+
+function ProgressCard({ item, className = '' }: { item: CardItem; className?: string }) {
+  return <article className={`progress-card ${className}`}>
+    <div className="card-illustration">
+      {item.image ? <img src={item.image} alt={item.imageAlt ?? ''} /> : item.icon}
+    </div>
+    <h3>{item.title}</h3><div className="card-fact">{item.description}</div>
+  </article>
+}
+
+export default function HomePage(_props: HomePageProps) {
+  const navigate = useNavigate()
+  const startFreshMapExploration = () => navigate('/biodiversity')
+
+  return <div className="landing-page">
+    <Navbar
+      page="landing"
+      hideNavigation
+      onExploreArea={startFreshMapExploration}
+      onNavigate={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    />
+    <main>
+      <section className="landing-container landing-hero" id="top">
+        <div className="hero-copy">
+          <h1>Your balcony can help the local biodiversity thrive.</h1>
+          <p>Our local biodiversity elevates our quality of life. We want to help you contribute to it, the right way.</p>
+          <a className="outline-pill hero-cta" href="#big-picture">See how <span aria-hidden="true">→</span></a>
         </div>
-
-        <div className="overview-intro">
-          <h1>Explore local biodiversity</h1>
-          <p>Choose an area to see its biodiversity indicators before opening the detailed ecosystem map.</p>
-        </div>
-
-        <LocationSearch onChoose={selectSearchResult} suburbs={suburbs} />
-
-        <div className="overview-selection-region">
-          {overviewStatus === 'loading' && (
-            <div className="overview-empty overview-loading" role="status">
-              <span className="overview-loading-spinner" aria-hidden="true"><LoaderCircle size={17} /></span>
-              <div>
-                <p className="overview-loading-label">Loading Melbourne biodiversity data…</p>
-                <LoadingFacts />
-              </div>
-            </div>
-          )}
-          {overviewStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Biodiversity data is temporarily unavailable. Please try again later.</p></div>}
-          {overviewStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No precinct biodiversity data is currently available.</p></div>}
-          {overviewStatus === 'success' && !selectedArea && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>Click an area on the map to explore its biodiversity data.</p></div>}
-          {selectedArea && <div className="overview-active-selection"><span aria-hidden="true" /><strong>1 Active Precinct selected</strong><a href="#selected-area-details">View details ↓</a></div>}
-        </div>
-
-        {selectedArea && (
-          <section className="overview-selected-details" id="selected-area-details">
-            {detailStatus === 'loading' && (
-              <div className="overview-empty overview-loading" role="status">
-                <span className="overview-loading-spinner" aria-hidden="true"><LoaderCircle size={17} /></span>
-                <div>
-                  <p className="overview-loading-label">Loading {selectedArea.name} biodiversity data…</p>
-                  <LoadingFacts />
-                </div>
-              </div>
-            )}
-            {detailStatus === 'error' && <div className="overview-empty" role="alert"><span aria-hidden="true">⌖</span><p>Unable to load biodiversity details for {selectedArea.name}.</p></div>}
-            {detailStatus === 'empty' && <div className="overview-empty"><span aria-hidden="true">⌖</span><p>No biodiversity details are available for {selectedArea.name}.</p></div>}
-            {selectedSummary && <SelectedAreaPanel name={selectedArea.name} summary={selectedSummary} />}
-          </section>
-        )}
+        <div className="hero-media"><img src={ecosystemMap} alt="An illustrated map showing connected urban gardens and pollinators" /></div>
       </section>
 
-      <button
-        className="overview-panel-collapse"
-        type="button"
-        aria-expanded={!isPanelCollapsed}
-        aria-controls="biodiversity-overlay-panel"
-        onClick={() => setIsPanelCollapsed((current) => !current)}
-      >
-        <span aria-hidden="true">{isPanelCollapsed ? '→' : '←'}</span>
-        {isPanelCollapsed ? 'Show panel' : 'Collapse panel'}
-      </button>
+      <section className="landing-section landing-container" id="big-picture">
+        <div className="section-heading"><h2>See how you fit in the big picture</h2><p>Every balcony plays a part. Here&apos;s how yours can too.</p></div>
+        <div className="steps-grid">{steps.map((step, index) => <div className="step-slot" key={step.title}>
+          <ProgressCard item={step} />{index < steps.length - 1 && <span className="step-arrow" aria-hidden="true">→</span>}
+        </div>)}</div>
+      </section>
+
+      <section className="landing-section landing-container benefits-section" id="benefits">
+        <div className="benefits-content">
+          <div className="section-heading"><h2>How your green balcony helps you</h2></div>
+          <div className="benefits-frame"><div className="benefits-grid">{benefits.map((benefit) => <ProgressCard item={benefit} className="benefit-card" key={benefit.title} />)}</div></div>
+        </div>
+        <VideoBlock src={balconyBeeVideo} label="Honeybee visiting flowers on a balcony" />
+      </section>
+
+      <section className="landing-section landing-container contribution-section" id="contribute">
+        <div className="section-heading"><h2>How you can contribute</h2></div>
+        <div className="contribution-grid">{contributions.map((item) => <article className="contribution-card" key={item.title}>
+          <h3>{item.title}</h3><p>{item.description}</p>
+          <button className={`contribution-button${item.available ? '' : ' is-disabled'}`} type="button" disabled={!item.available} onClick={item.available ? startFreshMapExploration : undefined}>{item.available ? 'Explore my area' : 'coming soon'}</button>
+        </article>)}</div>
+      </section>
+
+      <section className="landing-section landing-container vision-section">
+        <div className="vision-media"><video autoPlay muted loop playsInline preload="auto" aria-label="A bee travelling through an urban pollination landscape"><source src={urbanPollinationBeeVideo} type="video/mp4" /></video></div>
+        <div className="vision-copy"><h2>The key vision of the Urban Forest Strategy and Nature in the City Strategy isn&apos;t just more green cover, it&apos;s creating urban green space that helps promote local biodiversity.</h2></div>
+      </section>
     </main>
-  )
+  </div>
 }

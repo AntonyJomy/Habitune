@@ -47,3 +47,51 @@ CREATE TABLE IF NOT EXISTS precinct_biodiversity_metric (
         CHECK (biodiversity_score_0_100 BETWEEN 0 AND 100),
     biodiversity_score_version TEXT NOT NULL CHECK (btrim(biodiversity_score_version) <> '')
 );
+
+-- One evidence row per globally stable Dataset street key (suburb|source street id).
+-- These are observations/aggregates only; no habitat or connectivity class is stored.
+CREATE TABLE IF NOT EXISTS street_ecosystem_evidence (
+    street_key TEXT PRIMARY KEY,
+    source_street_id TEXT NOT NULL CHECK (btrim(source_street_id) <> ''),
+    precinct_id TEXT NOT NULL REFERENCES precinct (precinct_id),
+    street_name TEXT NOT NULL CHECK (btrim(street_name) <> ''),
+    centroid geometry(Point, 4326) NULL,
+    address_count INTEGER NULL CHECK (address_count >= 0),
+    planted_tree_count INTEGER NULL CHECK (planted_tree_count >= 0),
+    planted_tree_species_count INTEGER NULL CHECK (planted_tree_species_count >= 0),
+    garden_plant_row_count INTEGER NULL CHECK (garden_plant_row_count >= 0),
+    garden_plant_species_count INTEGER NULL CHECK (garden_plant_species_count >= 0),
+    plant_species_count INTEGER NULL CHECK (plant_species_count >= 0),
+    pollinator_flowering_plant_species_count INTEGER NULL
+        CHECK (pollinator_flowering_plant_species_count >= 0),
+    nearby_canopy_area_m2 DOUBLE PRECISION NULL CHECK (nearby_canopy_area_m2 >= 0),
+    nearby_canopy_polygon_count INTEGER NULL CHECK (nearby_canopy_polygon_count >= 0),
+    source_file TEXT NOT NULL,
+    source_schema_version TEXT NOT NULL,
+    assignment_method TEXT NOT NULL,
+    maximum_assignment_distance_m DOUBLE PRECISION NULL
+        CHECK (maximum_assignment_distance_m >= 0),
+    canopy_metric_note TEXT NULL
+);
+
+CREATE INDEX IF NOT EXISTS street_ecosystem_precinct_idx
+    ON street_ecosystem_evidence (precinct_id);
+CREATE INDEX IF NOT EXISTS street_ecosystem_centroid_gix
+    ON street_ecosystem_evidence USING GIST (centroid);
+
+-- Address points provide deterministic coordinate-to-street resolution within a precinct.
+CREATE TABLE IF NOT EXISTS address_street_lookup (
+    address TEXT NOT NULL,
+    search_key TEXT NOT NULL,
+    precinct_id TEXT NOT NULL REFERENCES precinct (precinct_id),
+    street_key TEXT NOT NULL REFERENCES street_ecosystem_evidence (street_key),
+    location geometry(Point, 4326) NOT NULL,
+    source_file TEXT NOT NULL,
+    source_schema_version TEXT NOT NULL,
+    PRIMARY KEY (search_key, street_key, location)
+);
+
+CREATE INDEX IF NOT EXISTS address_street_lookup_precinct_idx
+    ON address_street_lookup (precinct_id);
+CREATE INDEX IF NOT EXISTS address_street_lookup_location_gix
+    ON address_street_lookup USING GIST (location);

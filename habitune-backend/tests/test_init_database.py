@@ -17,15 +17,18 @@ def test_invocation_guard_prevents_initialization():
 
 
 def test_success_executes_schema_ingestion_verification_and_commit():
-    rows = [{"metric": {"precinct_id": "carlton"}, "geometry": {}}]
+    rows = [{"metric": {"precinct_id": "carlton", "suburb": "Carlton"}, "geometry": {}}]
+    street_dataset = {"streets": [], "addresses": [], "metadata": {}}
     connection = MagicMock()
     schema_cursor = connection.cursor.return_value.__enter__.return_value
 
     with (
         patch.object(handler, "load_and_validate", return_value=rows),
+        patch.object(handler, "load_street_rows", return_value=street_dataset),
         patch.object(handler, "_read_schema", return_value="CREATE TABLE safe_test ();"),
         patch.object(handler, "get_connection", return_value=connection),
         patch.object(handler, "import_rows_with_connection") as ingest,
+        patch.object(handler, "import_street_rows_with_connection") as ingest_streets,
         patch.object(
             handler,
             "_verify",
@@ -36,6 +39,8 @@ def test_success_executes_schema_ingestion_verification_and_commit():
                 "geometry_errors": 0,
                 "score_errors": 0,
                 "corridor_errors": 0,
+                "street_count": 973,
+                "address_count": 61413,
             },
         ) as verify,
     ):
@@ -46,6 +51,7 @@ def test_success_executes_schema_ingestion_verification_and_commit():
     assert response["status"] == "initialized"
     schema_cursor.execute.assert_called_once_with("CREATE TABLE safe_test ();")
     ingest.assert_called_once_with(rows, connection)
+    ingest_streets.assert_called_once_with(street_dataset, {"Carlton": "carlton"}, connection)
     verify.assert_called_once_with(connection)
     connection.commit.assert_called_once_with()
     connection.rollback.assert_not_called()
@@ -55,7 +61,7 @@ def test_success_executes_schema_ingestion_verification_and_commit():
 def test_verification_checks_expected_state():
     connection = MagicMock()
     cursor = connection.cursor.return_value.__enter__.return_value
-    cursor.fetchone.return_value = (10, 10, 0, 0, 0, 0)
+    cursor.fetchone.return_value = (10, 10, 0, 0, 0, 0, 973, 61413)
 
     result = handler._verify(connection)
 
@@ -75,7 +81,7 @@ def test_initialization_rolls_back_on_ingestion_error():
         ),
     ):
         with pytest.raises(RuntimeError, match="ingestion failed"):
-            handler.initialize_database([], "CREATE TABLE safe_test ();")
+            handler.initialize_database([], {}, "CREATE TABLE safe_test ();")
 
     connection.commit.assert_not_called()
     connection.rollback.assert_called_once_with()
@@ -103,6 +109,7 @@ def test_secret_details_are_not_returned_or_logged(caplog):
     secret_value = "never-log-this-password"
     with (
         patch.object(handler, "load_and_validate", return_value=[]),
+        patch.object(handler, "load_street_rows", return_value={}),
         patch.object(handler, "_read_schema", return_value="SELECT 1;"),
         patch.object(
             handler,

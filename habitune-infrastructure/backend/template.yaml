@@ -74,7 +74,11 @@ Resources:
                 Action:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-precinct-*-${Stage}:*"
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-precinct-*-${Stage}:*"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-location-context-${Stage}:*"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-street-ecosystem-${Stage}:*"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-connectivity-${Stage}:*"
         - PolicyName: !Sub "${ProjectName}-precinct-vpc-${Stage}"
           PolicyDocument:
             Version: "2012-10-17"
@@ -298,6 +302,117 @@ Resources:
             Path: /precincts/geojson
             Method: GET
 
+  GetLocationContextFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-location-context-${Stage}"
+      Handler: functions.get_location_context.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetLocationContext:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /location-context
+            Method: GET
+
+  GetStreetEcosystemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-street-ecosystem-${Stage}"
+      Handler: functions.get_street_ecosystem.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetStreetEcosystem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /streets/{street_id}/ecosystem
+            Method: GET
+
+  GetConnectivityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-connectivity-${Stage}"
+      Handler: functions.get_connectivity.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetConnectivity:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /connectivity
+            Method: GET
+
   HealthCheckFunction:
     # Lightweight endpoint used to confirm that deployment and routing work.
     Type: AWS::Serverless::Function
@@ -333,6 +448,21 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-precinct-geojson-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetLocationContextLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-location-context-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetStreetEcosystemLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-street-ecosystem-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetConnectivityLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-connectivity-${Stage}"
       RetentionInDays: !Ref LogRetentionDays
   InitDatabaseLogGroup:
     Type: AWS::Logs::LogGroup

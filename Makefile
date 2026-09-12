@@ -9,4 +9,6 @@ build-InitDatabaseFunction:
 	mkdir -p "$(ARTIFACTS_DIR)/Dataset/processed"
 	cp Dataset/processed/map_view1.json "$(ARTIFACTS_DIR)/Dataset/processed/"
 	cp Dataset/processed/map_view1_suburbs.geojson "$(ARTIFACTS_DIR)/Dataset/processed/"
+	cp Dataset/processed/address_lookup.csv "$(ARTIFACTS_DIR)/Dataset/processed/"
+	cp Dataset/processed/street_level.json "$(ARTIFACTS_DIR)/Dataset/processed/"
 	python3 -m pip install -r habitune-backend/requirements.txt -t "$(ARTIFACTS_DIR)" --platform manylinux2014_x86_64 --implementation cp --python-version 3.12 --only-binary=:all:

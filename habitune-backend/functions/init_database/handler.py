@@ -11,6 +11,11 @@ from ingestion.ingest_precinct_overview import (
     import_rows_with_connection,
     load_and_validate,
 )
+from ingestion.ingest_street_ecosystem import (
+    StreetContractError,
+    import_rows_with_connection as import_street_rows_with_connection,
+    load_and_validate as load_street_rows,
+)
 from shared.db import get_connection
 
 
@@ -23,6 +28,8 @@ PACKAGE_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = PACKAGE_ROOT / "database" / "schema.sql"
 METRICS_PATH = PACKAGE_ROOT / "Dataset" / "processed" / "map_view1.json"
 GEOJSON_PATH = PACKAGE_ROOT / "Dataset" / "processed" / "map_view1_suburbs.geojson"
+ADDRESS_PATH = PACKAGE_ROOT / "Dataset" / "processed" / "address_lookup.csv"
+STREET_PATH = PACKAGE_ROOT / "Dataset" / "processed" / "street_level.json"
 
 VERIFY_INITIALIZED_STATE = """
 SELECT
@@ -55,7 +62,9 @@ SELECT
         FROM precinct_biodiversity_metric
         WHERE pollination_corridor_count IS NOT NULL
            OR pollination_corridor_status <> 'not_available_until_iteration_2_review'
-    ) AS corridor_errors
+    ) AS corridor_errors,
+    (SELECT count(*) FROM street_ecosystem_evidence) AS street_count,
+    (SELECT count(*) FROM address_street_lookup) AS address_count
 """
 
 
@@ -82,6 +91,8 @@ def _verify(connection) -> dict[str, int]:
         "geometry_errors",
         "score_errors",
         "corridor_errors",
+        "street_count",
+        "address_count",
     )
     result = dict(zip(names, values, strict=True))
     expected = {
@@ -91,19 +102,25 @@ def _verify(connection) -> dict[str, int]:
         "geometry_errors": 0,
         "score_errors": 0,
         "corridor_errors": 0,
+        "street_count": 973,
+        "address_count": 61413,
     }
     if result != expected:
         raise InitializationError("Database verification did not match the expected state")
     return result
 
 
-def initialize_database(rows: list[dict[str, Any]], schema_sql: str) -> dict[str, int]:
+def initialize_database(rows: list[dict[str, Any]], street_dataset: dict[str, Any], schema_sql: str) -> dict[str, int]:
     """Execute schema, ingestion and verification as one transaction."""
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute(schema_sql)
         import_rows_with_connection(rows, connection)
+        precinct_ids_by_name = {
+            joined["metric"]["suburb"]: joined["metric"]["precinct_id"] for joined in rows
+        }
+        import_street_rows_with_connection(street_dataset, precinct_ids_by_name, connection)
         result = _verify(connection)
         # Commit only after schema creation, import, and validation all succeed.
         connection.commit()
@@ -128,10 +145,11 @@ def lambda_handler(event, context):
     try:
         # Contract validation intentionally precedes Secrets Manager and database access.
         rows = load_and_validate(METRICS_PATH, GEOJSON_PATH)
+        street_dataset = load_street_rows(ADDRESS_PATH, STREET_PATH)
         schema_sql = _read_schema()
-        result = initialize_database(rows, schema_sql)
+        result = initialize_database(rows, street_dataset, schema_sql)
         return {"status": "initialized", **result}
-    except ContractError:
+    except (ContractError, StreetContractError):
         logger.error("Database initialization refused because Dataset validation failed")
         return {"status": "failed", "message": "Dataset validation failed"}
     except Exception:
