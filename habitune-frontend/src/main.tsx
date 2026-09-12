@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import '@aws-amplify/ui-react/styles.css'
 import 'leaflet/dist/leaflet.css'
 import './auth'
@@ -17,7 +18,9 @@ if (window.location.pathname === '/biodiversity' || window.location.pathname.sta
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
     <AuthGate>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </AuthGate>
   </StrictMode>,
 )
