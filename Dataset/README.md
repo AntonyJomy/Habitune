@@ -77,6 +77,28 @@ on the lifetime of the saved ALA `qid` from the supplied link.
 - `processed/relevant_birds.csv` - diet fields, habitat-function tags and counts
 - `processed/data_quality_report.json` - accepted/rejected counts and limitations
 
+## City vegetation export for later database ingestion
+
+The standalone exporter downloads the complete current City of Melbourne Urban
+Forest Tree and Garden Bed CSV exports, then spatially restricts them to the
+reviewed ten-precinct geometry in `processed/suburb_boundaries.geojson`:
+
+```bash
+python3 scripts/export_city_vegetation.py --root . --refresh
+```
+
+Downloaded source snapshots are cached under the ignored
+`cache/city_of_melbourne/` directory. Omit `--refresh` to rebuild deterministically
+from those snapshots. The script writes:
+
+- `processed/city_urban_forest_trees.csv` / `.json` - one tree per `com_id`
+- `processed/city_garden_bed_assets.csv` / `.json` - one spatial row per garden asset
+- `processed/city_garden_bed_inventory.csv` / `.json` - preserved plant inventory rows, with coordinates inherited from their garden asset
+- `processed/city_vegetation_export_report.json` - source, rejection and deduplication counts
+
+These files are staging artifacts for future RDS ingestion; this command does
+not connect to or modify a database.
+
 Detailed rules are in [filtering_methodology.md](docs/filtering_methodology.md),
 field definitions in [data_dictionary.md](docs/data_dictionary.md), and the
 backend response shape in [map_view1_contract.md](docs/map_view1_contract.md).

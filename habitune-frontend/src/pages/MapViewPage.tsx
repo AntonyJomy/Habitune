@@ -11,9 +11,12 @@ import SuburbOverviewMap from '../components/SuburbOverviewMap'
 import SelectedAreaPanel from '../components/SelectedAreaPanel'
 import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
 import { getConnectivity, getLocationContext } from '../services/iteration2Api'
+import { getUrbanForestTrees, type UrbanForestTree } from '../services/cityTreesApi'
+import { getGardenBeds, type GardenBedRecord } from '../services/gardenBedsApi'
 import { normalizeSuburbName, resolveOverviewSuburbName, type SuburbBiodiversitySummary } from '../data/suburbBiodiversityData'
 import type { ConnectivityData, DataAvailability, SpeciesGroup } from '../types/iteration2'
 import { readSpeciesGroup, setSearchLocation, validSpeciesGroups, type SearchLocation } from '../utils/connectivityQuery'
+import type { ViewportBounds } from '../utils/projectAreaGeometry'
 
 type OverviewArea = {
   id: string
@@ -34,6 +37,8 @@ type OverviewStatus = 'loading' | 'success' | 'empty' | 'error'
 type DetailStatus = 'idle' | 'loading' | 'success' | 'empty' | 'error'
 
 const emptyConnectivityData = (): ConnectivityData => ({ context: null, supportRecords: [], connectivity: [], connectivityStatus: 'not_modelled' })
+const minimumEvidenceZoom = 17
+type EvidenceViewport = { bounds: ViewportBounds; zoom: number; key: string }
 
 export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSelectArea, onResolvePrecinct }: MapViewPageProps) {
   const navigate = useNavigate()
@@ -49,6 +54,9 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
   const [connectivityStatus, setConnectivityStatus] = useState<DataAvailability>('idle')
   const [connectivityData, setConnectivityData] = useState<ConnectivityData>(emptyConnectivityData)
   const [searchSelectionError, setSearchSelectionError] = useState<string | null>(null)
+  const [urbanForestTrees, setUrbanForestTrees] = useState<UrbanForestTree[]>([])
+  const [gardenBeds, setGardenBeds] = useState<GardenBedRecord[]>([])
+  const [evidenceViewport, setEvidenceViewport] = useState<EvidenceViewport | null>(null)
   const hadCorridorSearch = useRef(false)
   const selectedStreetId = searchParams.get('streetId')
   const selectedStreet = connectivityData.supportRecords.find((street) => street.streetId === selectedStreetId)
@@ -126,6 +134,44 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
       setSearchSelectionError(`The resolved location belongs to ${resolvedName}, but that precinct is not available on the current map.`)
     }
   }
+
+  useEffect(() => {
+    if (viewMode !== 'connectivity' || !evidenceViewport || evidenceViewport.zoom < minimumEvidenceZoom) {
+      setUrbanForestTrees([])
+      return undefined
+    }
+    const controller = new AbortController()
+    getUrbanForestTrees(evidenceViewport.bounds, controller.signal)
+      .then((trees) => {
+        if (!controller.signal.aborted) {
+          setUrbanForestTrees(trees)
+          if (import.meta.env.DEV) console.info(`Loaded ${trees.length} project-area Urban Forest tree records`)
+        }
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted && error?.name !== 'AbortError') setUrbanForestTrees([])
+      })
+    return () => controller.abort()
+  }, [evidenceViewport?.key, viewMode])
+
+  useEffect(() => {
+    if (viewMode !== 'connectivity' || !evidenceViewport || evidenceViewport.zoom < minimumEvidenceZoom) {
+      setGardenBeds([])
+      return undefined
+    }
+    const controller = new AbortController()
+    getGardenBeds(evidenceViewport.bounds, controller.signal)
+      .then((records) => {
+        if (!controller.signal.aborted) {
+          setGardenBeds(records)
+          if (import.meta.env.DEV) console.info(`Loaded ${records.length} project-area Garden Bed records`)
+        }
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted && error?.name !== 'AbortError') setGardenBeds([])
+      })
+    return () => controller.abort()
+  }, [evidenceViewport?.key, viewMode])
 
   useEffect(() => {
     if (viewMode !== 'connectivity' || (!selectedPrecinctId && !searchedLocation)) {
@@ -207,7 +253,10 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
           : <ConnectivityOverviewMap
               searchedLocation={searchedLocation}
               supportPoints={connectivityData.supportRecords}
+              urbanForestTrees={urbanForestTrees}
+              gardenBeds={gardenBeds}
               selectedStreetId={selectedStreet?.streetId || null}
+              onViewportChange={setEvidenceViewport}
               onSelectStreet={(streetId) => {
                 const next = new URLSearchParams(searchParams)
                 next.set('streetId', streetId)
