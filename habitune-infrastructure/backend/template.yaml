@@ -79,6 +79,7 @@ Resources:
                   - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-location-context-${Stage}:*"
                   - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-street-ecosystem-${Stage}:*"
                   - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-connectivity-${Stage}:*"
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${ProjectName}-vegetation-*-${Stage}:*"
         - PolicyName: !Sub "${ProjectName}-precinct-vpc-${Stage}"
           PolicyDocument:
             Version: "2012-10-17"
@@ -159,8 +160,8 @@ Resources:
       Description: Guarded one-time initializer for the private Habitune database
       Handler: functions.init_database.handler.lambda_handler
       Role: !GetAtt InitDatabaseExecutionRole.Arn
-      MemorySize: 256
-      Timeout: 120
+      MemorySize: 512
+      Timeout: 300
       Environment:
         # Import connection metadata instead of duplicating or hardcoding it.
         Variables:
@@ -413,6 +414,80 @@ Resources:
             Path: /connectivity
             Method: GET
 
+  GetTreesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-vegetation-trees-${Stage}"
+      Handler: functions.get_trees.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetTrees:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /vegetation/trees
+            Method: GET
+
+  GetGardenBedsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${ProjectName}-vegetation-beds-${Stage}"
+      Handler: functions.get_garden_beds.handler.lambda_handler
+      Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-endpoint"
+          DB_PORT:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-port"
+          DB_NAME:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-name"
+          DB_SECRET_ARN:
+            Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-database-secret-arn"
+      VpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-lambda-security-group-id"
+        SubnetIds:
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-one-id"
+          - Fn::ImportValue:
+              Fn::Sub: "${ProjectName}-${Stage}-app-subnet-two-id"
+      Events:
+        GetGardenBeds:
+          Type: Api
+          Properties:
+            RestApiId: !Ref HabituneApi
+            Path: /vegetation/beds
+            Method: GET
+
   HealthCheckFunction:
     # Lightweight endpoint used to confirm that deployment and routing work.
     Type: AWS::Serverless::Function
@@ -463,6 +538,16 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${ProjectName}-connectivity-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetTreesLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-vegetation-trees-${Stage}"
+      RetentionInDays: !Ref LogRetentionDays
+  GetGardenBedsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${ProjectName}-vegetation-beds-${Stage}"
       RetentionInDays: !Ref LogRetentionDays
   InitDatabaseLogGroup:
     Type: AWS::Logs::LogGroup

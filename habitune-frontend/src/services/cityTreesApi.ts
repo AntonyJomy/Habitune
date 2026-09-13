@@ -1,63 +1,62 @@
-import { findProjectPrecinct, type ViewportBounds } from '../utils/projectAreaGeometry'
+import type { ViewportBounds } from '../utils/projectAreaGeometry'
 
-const urbanForestTreesUrl = 'https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/trees-with-species-and-dimensions-urban-forest/records'
-const pageSize = 100
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 
 export interface UrbanForestTree {
   com_id: string; common_name: string | null; scientific_name: string | null
   genus: string | null; family: string | null; precinct: string | null
   projectPrecinct: string | null; latitude: number | null; longitude: number | null
 }
-type TreeApiRecord = Omit<UrbanForestTree, 'projectPrecinct'>
-interface UrbanForestTreesResponse { total_count?: number; results?: TreeApiRecord[] }
+interface TreeFeature {
+  id?: string | number | null
+  geometry?: { type?: string; coordinates?: unknown[] } | null
+  properties?: { tree_id?: string | null; common_name?: string | null; scientific_name?: string | null; genus?: string | null; family?: string | null; precinct_id?: string | null } | null
+}
+interface TreeFeatureCollection { type?: string; features?: TreeFeature[] }
 
 export class CityTreesApiError extends Error {
   status: number
   constructor(status: number) {
-    super(`City of Melbourne trees request failed with HTTP ${status}`)
+    super(`Habitune vegetation trees request failed with HTTP ${status}`)
     this.name = 'CityTreesApiError'; this.status = status
   }
 }
 
-export function buildTreeViewportFilter(bounds: ViewportBounds) {
-  return `latitude >= ${bounds.south} and latitude <= ${bounds.north} and longitude >= ${bounds.west} and longitude <= ${bounds.east}`
+export function buildVegetationViewportParams(bounds: ViewportBounds) {
+  return new URLSearchParams({ west: String(bounds.west), east: String(bounds.east), south: String(bounds.south), north: String(bounds.north) })
 }
 
-async function fetchPage(where: string, offset: number, signal?: AbortSignal): Promise<UrbanForestTreesResponse> {
-  const params = new URLSearchParams({
-    select: 'com_id,common_name,scientific_name,genus,family,precinct,latitude,longitude',
-    where, limit: String(pageSize), offset: String(offset),
-  })
-  const response = await fetch(`${urbanForestTreesUrl}?${params}`, { headers: { Accept: 'application/json' }, signal })
-  if (!response.ok) throw new CityTreesApiError(response.status)
-  return response.json() as Promise<UrbanForestTreesResponse>
-}
-
-export function hasValidTreeCoordinates(tree: UrbanForestTree | TreeApiRecord): boolean {
+export function hasValidTreeCoordinates(tree: Pick<UrbanForestTree, 'latitude' | 'longitude'>): boolean {
   return Number.isFinite(tree.latitude) && Number.isFinite(tree.longitude)
     && tree.latitude! >= -90 && tree.latitude! <= 90
     && tree.longitude! >= -180 && tree.longitude! <= 180
 }
 
-export async function getUrbanForestTrees(bounds: ViewportBounds, signal?: AbortSignal): Promise<UrbanForestTree[]> {
-  const where = buildTreeViewportFilter(bounds)
-  const first = await fetchPage(where, 0, signal)
-  if (!Array.isArray(first.results)) return []
-  const total = Number.isFinite(first.total_count) ? first.total_count! : first.results.length
-  if (total > 10_000) throw new Error(`Tree viewport contains ${total} records; zoom further in to avoid API truncation`)
-  const records = [...first.results]
-  for (let offset = pageSize; offset < total; offset += pageSize) {
-    const page = await fetchPage(where, offset, signal)
-    if (!Array.isArray(page.results)) throw new Error('Malformed City of Melbourne tree page')
-    records.push(...page.results)
-  }
-  if (records.length < total) throw new Error(`Tree pagination ended early (${records.length}/${total})`)
+function coordinate(value: unknown): number | null {
+  if (value == null || value === '') return null
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : null
+}
 
-  const unique = new Map<string, UrbanForestTree>()
-  records.forEach((tree) => {
-    if (!hasValidTreeCoordinates(tree)) return
-    const projectPrecinct = findProjectPrecinct(tree.longitude!, tree.latitude!)
-    if (projectPrecinct) unique.set(tree.com_id, { ...tree, projectPrecinct })
-  })
-  return Array.from(unique.values())
+export function mapTreeFeature(feature: TreeFeature): UrbanForestTree | null {
+  const coordinates = feature.geometry?.type === 'Point' ? feature.geometry.coordinates : null
+  const longitude = coordinate(coordinates?.[0]), latitude = coordinate(coordinates?.[1])
+  const properties = feature.properties || {}, treeId = properties.tree_id ?? feature.id
+  if (treeId == null) return null
+  const tree: UrbanForestTree = {
+    com_id: String(treeId), common_name: properties.common_name ?? null,
+    scientific_name: properties.scientific_name ?? null, genus: properties.genus ?? null,
+    family: properties.family ?? null, precinct: properties.precinct_id ?? null,
+    projectPrecinct: properties.precinct_id ?? null, latitude, longitude,
+  }
+  return hasValidTreeCoordinates(tree) ? tree : null
+}
+
+export async function getUrbanForestTrees(bounds: ViewportBounds, signal?: AbortSignal): Promise<UrbanForestTree[]> {
+  if (!apiBaseUrl) throw new Error('VITE_API_BASE_URL is not configured')
+  const response = await fetch(`${apiBaseUrl}/vegetation/trees?${buildVegetationViewportParams(bounds)}`, { headers: { Accept: 'application/json' }, signal })
+  if (!response.ok) throw new CityTreesApiError(response.status)
+  const body = await response.json() as TreeFeatureCollection
+  if (body.type !== 'FeatureCollection' || !Array.isArray(body.features)) return []
+  return body.features.flatMap((feature) => { const tree = mapTreeFeature(feature); return tree ? [tree] : [] })
 }
