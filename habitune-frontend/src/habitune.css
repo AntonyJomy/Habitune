@@ -9,6 +9,7 @@ button { cursor: pointer; }
 .brand { display: flex; align-items: center; gap: 10px; border: 0; background: transparent; color: #123c2b; font: 800 22px Manrope; }
 .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px 11px 11px 2px; background: #1e6848; color: #fff; font-size: 18px; }
 .brand-dot { flex:0 0 auto; width:12px; height:12px; border-radius:50%; background:#64a166; }
+.brand-logo { width:26px; height:26px; flex:0 0 auto; object-fit:contain; }
 nav { display: flex; gap: 8px; }
 nav button { border: 0; background: transparent; color: #5c6d65; padding: 10px 14px; border-radius: 10px; font-weight: 600; }
 nav button:hover, nav button.active { background: #e7eee3; color: #174b35; }
