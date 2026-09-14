@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import L, { type LatLngBounds } from 'leaflet'
 import { SVGOverlay, useMapEvents } from 'react-leaflet'
 import { buildNatureKitHabitatExportUrl } from '../services/natureKitApi'
@@ -25,10 +25,11 @@ function buildClipPath(bounds: LatLngBounds, crs: L.CRS) {
 
 export default function NatureKitHabitatOverlay() {
   const [request, setRequest] = useState<OverlayRequest | null>(null)
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const map = useMapEvents({
-    moveend: () => refresh(),
-    zoomend: () => refresh(),
-    resize: () => refresh(),
+    moveend: () => scheduleRefresh(),
+    zoomend: () => scheduleRefresh(),
+    resize: () => scheduleRefresh(),
   })
 
   const refresh = useCallback(() => {
@@ -50,7 +51,15 @@ export default function NatureKitHabitatOverlay() {
     setRequest((current) => current?.url === url ? current : { bounds, url, clipPath })
   }, [map])
 
-  useEffect(() => refresh(), [refresh])
+  const scheduleRefresh = useCallback(() => {
+    if (refreshTimer.current) clearTimeout(refreshTimer.current)
+    refreshTimer.current = setTimeout(refresh, 250)
+  }, [refresh])
+
+  useEffect(() => {
+    refresh()
+    return () => { if (refreshTimer.current) clearTimeout(refreshTimer.current) }
+  }, [refresh])
 
   if (!request) return null
   return <SVGOverlay

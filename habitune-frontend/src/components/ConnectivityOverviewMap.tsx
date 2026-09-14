@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react'
-import { canvas, divIcon } from 'leaflet'
+import { memo, useEffect, useMemo, useRef } from 'react'
+import L, { canvas } from 'leaflet'
 import { Circle, CircleMarker, MapContainer, Marker, Pane, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import { hasValidTreeCoordinates, type UrbanForestTree } from '../services/cityTreesApi'
 import { getGardenBedRadiusMetres, hasValidGardenBedCoordinates, type GardenBedRecord } from '../services/gardenBedsApi'
@@ -21,27 +21,100 @@ type ConnectivityOverviewMapProps = {
   onViewportChange: (viewport: { bounds: ViewportBounds; zoom: number; key: string }) => void
 }
 
-const treeIcon = divIcon({
-  className: 'urban-tree-div-icon',
-  html: '<svg viewBox="0 0 32 40" aria-hidden="true"><circle cx="16" cy="12" r="10"/><circle cx="9" cy="18" r="7"/><circle cx="23" cy="18" r="7"/><path d="M13 19h6v17h-6z"/></svg>',
-  iconSize: [16, 20],
-  iconAnchor: [8, 18],
-  popupAnchor: [0, -18],
-})
+const locationEvidenceZoom = 18
 
-function UrbanForestTreeLayer({ trees }: { trees: UrbanForestTree[] }) {
-  return <>{trees.filter(hasValidTreeCoordinates).map((tree) => <Marker
-    key={`urban-tree-${tree.com_id}`}
-    icon={treeIcon}
-    position={[tree.latitude!, tree.longitude!]}
-  >
-    <Popup>
-      <strong>{tree.common_name || 'Urban forest tree'}</strong><br />
-      {tree.scientific_name || 'Scientific name unavailable'}<br />
-      {tree.projectPrecinct || tree.precinct || 'Precinct unavailable'}
-    </Popup>
-  </Marker>)}</>
-}
+const UrbanForestTreeLayer = memo(function UrbanForestTreeLayer({ trees }: { trees: UrbanForestTree[] }) {
+  const validTrees = useMemo(() => trees.filter(hasValidTreeCoordinates), [trees])
+  const map = useMap()
+
+  useEffect(() => {
+    const pane = map.getPane('urban-forest-trees')
+    if (!pane) return undefined
+
+    const iconCanvas = L.DomUtil.create('canvas', 'urban-tree-canvas-layer', pane)
+    iconCanvas.style.pointerEvents = 'none'
+    const hitPoints: Array<{ point: L.Point; tree: UrbanForestTree }> = []
+
+    const drawTree = (context: CanvasRenderingContext2D, x: number, y: number) => {
+      context.save()
+      context.translate(x, y)
+      context.fillStyle = '#754C29'
+      context.fillRect(-1.5, -1, 3, 8)
+      context.fillStyle = '#236B45'
+      context.beginPath()
+      context.arc(0, -7, 5.5, 0, Math.PI * 2)
+      context.arc(-4, -3, 4.5, 0, Math.PI * 2)
+      context.arc(4, -3, 4.5, 0, Math.PI * 2)
+      context.fill()
+      context.restore()
+    }
+
+    const redraw = () => {
+      const size = map.getSize()
+      const ratio = window.devicePixelRatio || 1
+      const topLeft = map.containerPointToLayerPoint([0, 0])
+      L.DomUtil.setPosition(iconCanvas, topLeft)
+      iconCanvas.style.width = `${size.x}px`
+      iconCanvas.style.height = `${size.y}px`
+      iconCanvas.width = Math.round(size.x * ratio)
+      iconCanvas.height = Math.round(size.y * ratio)
+      const context = iconCanvas.getContext('2d')
+      if (!context) return
+      context.setTransform(ratio, 0, 0, ratio, 0, 0)
+      context.clearRect(0, 0, size.x, size.y)
+      hitPoints.length = 0
+      validTrees.forEach((tree) => {
+        const point = map.latLngToContainerPoint([tree.latitude!, tree.longitude!])
+        if (point.x < -12 || point.y < -16 || point.x > size.x + 12 || point.y > size.y + 16) return
+        drawTree(context, point.x, point.y)
+        hitPoints.push({ point, tree })
+      })
+    }
+
+    const openTreePopup = (event: MouseEvent) => {
+      const mapBounds = map.getContainer().getBoundingClientRect()
+      const point = L.point(event.clientX - mapBounds.left, event.clientY - mapBounds.top)
+      let nearest: { point: L.Point; tree: UrbanForestTree } | undefined
+      // Keep the painted icon compact while providing a comfortable click target.
+      let nearestDistance = 15
+      hitPoints.forEach((candidate) => {
+        const distance = point.distanceTo(candidate.point)
+        if (distance < nearestDistance) {
+          nearest = candidate
+          nearestDistance = distance
+        }
+      })
+      if (!nearest) return
+      const popupContent = document.createElement('div')
+      const title = document.createElement('strong')
+      title.textContent = nearest.tree.common_name || 'Urban forest tree'
+      popupContent.append(title, document.createElement('br'))
+      popupContent.append(nearest.tree.scientific_name || 'Scientific name unavailable', document.createElement('br'))
+      popupContent.append(nearest.tree.projectPrecinct || nearest.tree.precinct || 'Precinct unavailable')
+      const selectedTree = nearest.tree
+      // Leaflet also handles the originating map click and may close an open
+      // popup. Open this popup on the next task so it wins after that handling.
+      window.setTimeout(() => {
+        L.popup()
+          .setLatLng([selectedTree.latitude!, selectedTree.longitude!])
+          .setContent(popupContent)
+          .openOn(map)
+      }, 0)
+    }
+
+    map.on('moveend zoomend resize viewreset', redraw)
+    // Capture clicks before overlapping Leaflet vector layers consume them.
+    map.getContainer().addEventListener('click', openTreePopup, true)
+    redraw()
+    return () => {
+      map.off('moveend zoomend resize viewreset', redraw)
+      map.getContainer().removeEventListener('click', openTreePopup, true)
+      iconCanvas.remove()
+    }
+  }, [map, validTrees])
+
+  return null
+})
 
 function ViewportDataListener({ onChange }: { onChange: ConnectivityOverviewMapProps['onViewportChange'] }) {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -71,10 +144,12 @@ function ViewportDataListener({ onChange }: { onChange: ConnectivityOverviewMapP
 function ConnectivityFocus({ searchedLocation, selectedStreet }: { searchedLocation?: SearchLocation | null; selectedStreet?: StreetPollinatorSupport | null }) {
   const map = useMap()
   useEffect(() => {
-    if (selectedStreet?.centroid) {
-      map.flyTo([selectedStreet.centroid.latitude, selectedStreet.centroid.longitude], 17, { duration: 0.7 })
-    } else if (Number.isFinite(searchedLocation?.lat) && Number.isFinite(searchedLocation?.lng)) {
-      map.flyTo([searchedLocation!.lat, searchedLocation!.lng], 17, { duration: 0.7 })
+    // Keep the location chosen by the user at the centre. The API also returns
+    // the nearest supported street, but its centroid may be some distance away.
+    if (Number.isFinite(searchedLocation?.lat) && Number.isFinite(searchedLocation?.lng)) {
+      map.flyTo([searchedLocation!.lat, searchedLocation!.lng], locationEvidenceZoom, { duration: 0.7 })
+    } else if (selectedStreet?.centroid) {
+      map.flyTo([selectedStreet.centroid.latitude, selectedStreet.centroid.longitude], locationEvidenceZoom, { duration: 0.7 })
     }
   }, [map, searchedLocation?.lat, searchedLocation?.lng, selectedStreet?.streetId])
   return null
