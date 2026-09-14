@@ -309,6 +309,9 @@ Resources:
       FunctionName: !Sub "${ProjectName}-location-context-${Stage}"
       Handler: functions.get_location_context.handler.lambda_handler
       Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      # The spatial address lookup currently takes about 14 seconds in dev.
+      # Keep this explicit so a SAM deployment does not restore the 10-second default.
+      Timeout: 30
       Environment:
         Variables:
           DB_HOST:
@@ -383,6 +386,8 @@ Resources:
       FunctionName: !Sub "${ProjectName}-connectivity-${Stage}"
       Handler: functions.get_connectivity.handler.lambda_handler
       Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      # This route resolves the location context before returning connectivity evidence.
+      Timeout: 30
       Environment:
         Variables:
           DB_HOST:
