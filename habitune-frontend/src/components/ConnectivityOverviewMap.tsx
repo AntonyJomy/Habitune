@@ -7,6 +7,7 @@ import type { StreetPollinatorSupport } from '../types/iteration2'
 import NatureKitHabitatOverlay from './NatureKitHabitatOverlay'
 import NatureKitHabitatIdentify from './NatureKitHabitatIdentify'
 import NatureKitHabitatLegend from './NatureKitHabitatLegend'
+import MapIconLegend from './MapIconLegend'
 import { viewportKey, type ViewportBounds } from '../utils/projectAreaGeometry'
 
 type SearchLocation = { label: string; lat: number; lng: number }
@@ -22,6 +23,13 @@ type ConnectivityOverviewMapProps = {
 }
 
 const locationEvidenceZoom = 18
+const searchedLocationIcon = L.divIcon({
+  className: 'searched-location-div-icon',
+  html: '<svg viewBox="0 0 32 42" aria-hidden="true"><path d="M16 40C12 34 4 25 4 16a12 12 0 1 1 24 0c0 9-8 18-12 24Z" fill="#17633f" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="5" fill="#fff"/></svg>',
+  iconSize: [32, 42],
+  iconAnchor: [16, 40],
+  popupAnchor: [0, -38],
+})
 
 const UrbanForestTreeLayer = memo(function UrbanForestTreeLayer({ trees }: { trees: UrbanForestTree[] }) {
   const validTrees = useMemo(() => trees.filter(hasValidTreeCoordinates), [trees])
@@ -172,7 +180,7 @@ export default function ConnectivityOverviewMap({
       <TileLayer className="corridor-basemap" maxNativeZoom={19} maxZoom={22} attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Pane name="naturekit-habitat" style={{ zIndex: 350 }}><NatureKitHabitatOverlay /></Pane>
       <NatureKitHabitatIdentify />
-      {searchedLocation && <Marker position={[searchedLocation.lat, searchedLocation.lng]}><Popup><strong>Selected location</strong><br />{searchedLocation.label}</Popup></Marker>}
+      {searchedLocation && <Marker position={[searchedLocation.lat, searchedLocation.lng]} icon={searchedLocationIcon}><Popup><strong>Selected location</strong><br />{searchedLocation.label}</Popup></Marker>}
       <Pane name="urban-forest-trees" style={{ zIndex: 620 }}>
         <UrbanForestTreeLayer trees={urbanForestTrees} />
       </Pane>
@@ -210,10 +218,11 @@ export default function ConnectivityOverviewMap({
       ><Popup><strong>{point.streetName}</strong><br />Street centroid · select to view recorded vegetation evidence</Popup></CircleMarker>] : [])}
     </MapContainer>
     <NatureKitHabitatLegend />
-    {supportPoints.length > 0 && <div className="connectivity-legend" aria-label="Street evidence marker legend">
-      <strong>Street vegetation evidence</strong>
-      <span><i style={{ background: '#4F8062' }} /> Street centroid</span>
-      <small>Uniform markers · no connectivity score or corridor geometry</small>
-    </div>}
+    <MapIconLegend
+      showSearchedLocation={Boolean(searchedLocation)}
+      showTrees={urbanForestTrees.length > 0}
+      showGardenBeds={gardenBeds.length > 0}
+      showStreetEvidence={supportPoints.length > 0}
+    />
   </div>
 }
