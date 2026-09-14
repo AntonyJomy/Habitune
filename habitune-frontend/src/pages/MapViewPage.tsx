@@ -10,7 +10,7 @@ import SpeciesPerspectiveSelector from '../components/SpeciesPerspectiveSelector
 import SuburbOverviewMap from '../components/SuburbOverviewMap'
 import SelectedAreaPanel from '../components/SelectedAreaPanel'
 import { getPrecinctOverview, getSuburbOverview } from '../services/ecosystemApi'
-import { getConnectivity, getLocationContext } from '../services/iteration2Api'
+import { getConnectivity } from '../services/iteration2Api'
 import { getUrbanForestTrees, type UrbanForestTree } from '../services/cityTreesApi'
 import { getGardenBeds, type GardenBedRecord } from '../services/gardenBedsApi'
 import { normalizeSuburbName, resolveOverviewSuburbName, type SuburbBiodiversitySummary } from '../data/suburbBiodiversityData'
@@ -185,18 +185,26 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
     const longitude = hasLocation ? searchedLocation!.lng : null
     setConnectivityStatus('loading')
     const loadConnectivity = async () => {
-      const locationResponse = hasLocation
-        ? await getLocationContext(latitude!, longitude!, controller.signal)
-        : { data: null, meta: { status: 'not_available' } }
-      const context = locationResponse.data ? { ...locationResponse.data, label: locationResponse.data.label || searchedLocation!.label } : null
-      const resolvedPrecinctId = context?.precinctId || selectedPrecinctId
-      if (!resolvedPrecinctId) {
+      if (!hasLocation && !selectedPrecinctId) {
         setConnectivityData(emptyConnectivityData())
         setConnectivityStatus('unavailable')
         return
       }
-      const connectivityResponse = await getConnectivity(null, null, speciesGroup, resolvedPrecinctId, controller.signal)
+      // A coordinate-based connectivity request already resolves and returns its
+      // location context. Avoid calling /location-context first, which previously
+      // doubled the corridor-view loading time in the deployed VPC environment.
+      const connectivityResponse = await getConnectivity(
+        latitude,
+        longitude,
+        speciesGroup,
+        hasLocation ? null : selectedPrecinctId,
+        controller.signal,
+      )
       if (controller.signal.aborted) return
+      const returnedContext = connectivityResponse.data.context
+      const context = returnedContext
+        ? { ...returnedContext, label: returnedContext.label || searchedLocation?.label || null }
+        : null
       const data = { ...connectivityResponse.data, context }
       setConnectivityData(data)
       setConnectivityStatus(data.supportRecords.length > 0 ? 'available' : 'empty')
