@@ -19,16 +19,21 @@ def test_invocation_guard_prevents_initialization():
 def test_success_executes_schema_ingestion_verification_and_commit():
     rows = [{"metric": {"precinct_id": "carlton", "suburb": "Carlton"}, "geometry": {}}]
     street_dataset = {"streets": [], "addresses": [], "metadata": {}}
+    vegetation_dataset = {"trees": [], "beds": [], "inventory": []}
     connection = MagicMock()
     schema_cursor = connection.cursor.return_value.__enter__.return_value
 
     with (
         patch.object(handler, "load_and_validate", return_value=rows),
         patch.object(handler, "load_street_rows", return_value=street_dataset),
+        patch.object(handler, "load_vegetation_rows", return_value=vegetation_dataset),
         patch.object(handler, "_read_schema", return_value="CREATE TABLE safe_test ();"),
         patch.object(handler, "get_connection", return_value=connection),
+        patch.object(handler, "run_pending_migrations", return_value=["001_add_vegetation_tables.sql"]) as migrate,
         patch.object(handler, "import_rows_with_connection") as ingest,
         patch.object(handler, "import_street_rows_with_connection") as ingest_streets,
+        patch.object(handler, "import_vegetation_rows_with_connection") as ingest_vegetation,
+        patch.object(handler, "_vegetation_counts", return_value=(0, 0, 0)),
         patch.object(
             handler,
             "_verify",
@@ -41,6 +46,10 @@ def test_success_executes_schema_ingestion_verification_and_commit():
                 "corridor_errors": 0,
                 "street_count": 973,
                 "address_count": 61413,
+                "tree_count": 77913,
+                "garden_bed_count": 3951,
+                "garden_bed_inventory_count": 17412,
+                "migration_count": 1,
             },
         ) as verify,
     ):
@@ -49,9 +58,13 @@ def test_success_executes_schema_ingestion_verification_and_commit():
         )
 
     assert response["status"] == "initialized"
+    assert response["migrations_applied"] == ["001_add_vegetation_tables.sql"]
+    assert response["vegetation_ingestion_status"] == "ingested"
+    migrate.assert_called_once_with(connection)
     schema_cursor.execute.assert_called_once_with("CREATE TABLE safe_test ();")
     ingest.assert_called_once_with(rows, connection)
     ingest_streets.assert_called_once_with(street_dataset, {"Carlton": "carlton"}, connection)
+    ingest_vegetation.assert_called_once_with(vegetation_dataset, connection)
     verify.assert_called_once_with(connection)
     connection.commit.assert_called_once_with()
     connection.rollback.assert_not_called()
@@ -61,7 +74,7 @@ def test_success_executes_schema_ingestion_verification_and_commit():
 def test_verification_checks_expected_state():
     connection = MagicMock()
     cursor = connection.cursor.return_value.__enter__.return_value
-    cursor.fetchone.return_value = (10, 10, 0, 0, 0, 0, 973, 61413)
+    cursor.fetchone.return_value = (10, 10, 0, 0, 0, 0, 973, 61413, 77913, 3951, 17412, 1)
 
     result = handler._verify(connection)
 
@@ -70,10 +83,30 @@ def test_verification_checks_expected_state():
     assert result["metric_count"] == 10
 
 
+def test_current_vegetation_counts_skip_reingestion():
+    rows = [{"metric": {"precinct_id": "carlton", "suburb": "Carlton"}, "geometry": {}}]
+    connection = MagicMock()
+    with (
+        patch.object(handler, "get_connection", return_value=connection),
+        patch.object(handler, "run_pending_migrations", return_value=[]),
+        patch.object(handler, "import_rows_with_connection"),
+        patch.object(handler, "import_street_rows_with_connection"),
+        patch.object(handler, "import_vegetation_rows_with_connection") as ingest_vegetation,
+        patch.object(handler, "_vegetation_counts", return_value=(77913, 3951, 17412)),
+        patch.object(handler, "_verify", return_value={"migration_count": 1}),
+    ):
+        result = handler.initialize_database(rows, {}, {}, "SELECT 1;")
+
+    assert result["vegetation_ingestion_status"] == "already_current"
+    ingest_vegetation.assert_not_called()
+    connection.commit.assert_called_once_with()
+
+
 def test_initialization_rolls_back_on_ingestion_error():
     connection = MagicMock()
     with (
         patch.object(handler, "get_connection", return_value=connection),
+        patch.object(handler, "run_pending_migrations", return_value=[]),
         patch.object(
             handler,
             "import_rows_with_connection",
@@ -81,7 +114,7 @@ def test_initialization_rolls_back_on_ingestion_error():
         ),
     ):
         with pytest.raises(RuntimeError, match="ingestion failed"):
-            handler.initialize_database([], {}, "CREATE TABLE safe_test ();")
+            handler.initialize_database([], {}, {}, "CREATE TABLE safe_test ();")
 
     connection.commit.assert_not_called()
     connection.rollback.assert_called_once_with()
@@ -110,6 +143,7 @@ def test_secret_details_are_not_returned_or_logged(caplog):
     with (
         patch.object(handler, "load_and_validate", return_value=[]),
         patch.object(handler, "load_street_rows", return_value={}),
+        patch.object(handler, "load_vegetation_rows", return_value={}),
         patch.object(handler, "_read_schema", return_value="SELECT 1;"),
         patch.object(
             handler,

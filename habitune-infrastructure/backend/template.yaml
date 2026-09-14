@@ -160,7 +160,7 @@ Resources:
       Description: Guarded one-time initializer for the private Habitune database
       Handler: functions.init_database.handler.lambda_handler
       Role: !GetAtt InitDatabaseExecutionRole.Arn
-      MemorySize: 512
+      MemorySize: 1024
       Timeout: 300
       Environment:
         # Import connection metadata instead of duplicating or hardcoding it.
@@ -420,6 +420,8 @@ Resources:
       FunctionName: !Sub "${ProjectName}-vegetation-trees-${Stage}"
       Handler: functions.get_trees.handler.lambda_handler
       Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      MemorySize: 256
+      Timeout: 30
       Environment:
         Variables:
           DB_HOST:
@@ -457,6 +459,8 @@ Resources:
       FunctionName: !Sub "${ProjectName}-vegetation-beds-${Stage}"
       Handler: functions.get_garden_beds.handler.lambda_handler
       Role: !GetAtt PrecinctFunctionExecutionRole.Arn
+      MemorySize: 256
+      Timeout: 30
       Environment:
         Variables:
           DB_HOST:
