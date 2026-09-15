@@ -41,6 +41,7 @@ LIMIT 1
 
 
 def get_location_context(latitude, longitude):
+    """Resolve a coordinate using PostGIS precinct and nearest-address queries."""
     connection = get_connection()
     try:
         connection.set_session(readonly=True, autocommit=True)

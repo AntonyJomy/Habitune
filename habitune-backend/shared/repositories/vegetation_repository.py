@@ -51,6 +51,7 @@ LIMIT %s
 
 
 def _list(sql, bounds):
+    # PostGIS limits the query to the visible map bounding box before returning rows.
     connection = get_connection()
     try:
         connection.set_session(readonly=True, autocommit=True)

@@ -32,6 +32,7 @@ ORDER BY street_name, street_key
 
 
 def list_street_support(precinct_id):
+    """Read the stored vegetation aggregates for streets in one precinct."""
     connection = get_connection()
     try:
         connection.set_session(readonly=True, autocommit=True)

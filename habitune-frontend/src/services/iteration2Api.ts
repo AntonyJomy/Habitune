@@ -20,6 +20,7 @@ export class ApiRequestError extends Error {
 
 async function requestJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   if (!apiBaseUrl) throw new Error('VITE_API_BASE_URL is not configured')
+  // Send RDS-backed requests through API Gateway; the browser never contacts RDS.
   const response = await fetch(`${apiBaseUrl}${path}`, {
     headers: { Accept: 'application/json' },
     signal,
@@ -44,6 +45,7 @@ export async function getConnectivity(
   precinctId?: string | null,
   signal?: AbortSignal,
 ): Promise<ApiEnvelope<ConnectivityData>> {
+  // Coordinates let the backend resolve both the precinct and nearest supported street.
   const params = new URLSearchParams({ species_group: speciesGroup })
   if (latitude != null && longitude != null) {
     params.set('lat', String(latitude))
