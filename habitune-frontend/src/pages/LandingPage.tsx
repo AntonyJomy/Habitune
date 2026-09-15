@@ -25,6 +25,7 @@ function StatHighlight({ value }: { value: string }) {
 }
 
 function VideoBlock({ src, poster, label }: VideoBlockProps) {
+  // Keep the layout stable and show a readable fallback if ambient playback fails.
   const [showFallback, setShowFallback] = useState(!src)
 
   return <div className={`video-block${showFallback ? ' is-placeholder' : ''}`}>
@@ -54,6 +55,7 @@ const steps: CardItem[] = [
   { title: 'The balcony garden thrives', description: <>More pollinator visits mean stronger, longer flowering plants</>, image: bigPicture4, imageAlt: 'A thriving balcony garden filled with flowering plants and visiting wildlife' },
 ]
 
+// Page content lives in data arrays so repeated cards keep the same structure and styling.
 const benefits: CardItem[] = [
   { title: 'Cooler days', description: <>Tree cover offsets up to <StatHighlight value="49%" /> of local heat island warming</>, icon: <ThermometerSun aria-hidden="true" /> },
   { title: 'Calmer mind', description: <>Regular gardening is linked to <StatHighlight value="28%" /> lower dementia risk</>, icon: <Brain aria-hidden="true" /> },
@@ -77,6 +79,7 @@ function ProgressCard({ item, className = '' }: { item: CardItem; className?: st
 
 export default function LandingPage({ onExploreArea }: LandingPageProps) {
   return <div className="landing-page">
+    {/* The parent owns navigation, allowing this presentational page to be reused. */}
     <Navbar
       page="landing"
       hideNavigation
@@ -84,6 +87,7 @@ export default function LandingPage({ onExploreArea }: LandingPageProps) {
       onNavigate={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
     />
     <main>
+      {/* Introduces the product and leads users into the biodiversity journey. */}
       <section className="landing-container landing-hero" id="top">
         <div className="hero-copy">
           <h1>Your balcony can help the local biodiversity thrive.</h1>
@@ -93,6 +97,7 @@ export default function LandingPage({ onExploreArea }: LandingPageProps) {
         <div className="hero-media"><img src={ecosystemMap} alt="An illustrated map showing connected urban gardens and pollinators" /></div>
       </section>
 
+      {/* Four consistent cards explain the balcony-to-corridor progression. */}
       <section className="landing-section landing-container" id="big-picture">
         <div className="section-heading"><h2>See how you fit in the big picture</h2><p>Every balcony plays a part. Here&apos;s how yours can too.</p></div>
         <div className="steps-grid">{steps.map((step, index) => <div className="step-slot" key={step.title}>
@@ -100,6 +105,7 @@ export default function LandingPage({ onExploreArea }: LandingPageProps) {
         </div>)}</div>
       </section>
 
+      {/* Benefits and the ambient video share one responsive section layout. */}
       <section className="landing-section landing-container benefits-section" id="benefits">
         <div className="benefits-content">
           <div className="section-heading"><h2>How your green balcony helps you</h2></div>
@@ -108,6 +114,7 @@ export default function LandingPage({ onExploreArea }: LandingPageProps) {
         <VideoBlock src={balconyBeeVideo} label="Honeybee visiting flowers on a balcony" />
       </section>
 
+      {/* Only implemented features are interactive; future actions remain disabled. */}
       <section className="landing-section landing-container contribution-section" id="contribute">
         <div className="section-heading"><h2>How you can contribute</h2></div>
         <div className="contribution-grid">{contributions.map((item) => <article className="contribution-card" key={item.title}>

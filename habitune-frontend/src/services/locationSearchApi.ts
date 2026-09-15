@@ -56,6 +56,7 @@ export async function searchLocationSuggestions(query, precincts = [], signal) {
     viewbox: '144.80,-37.70,145.10,-38.00',
     bounded: '1',
   })
+  // Location suggestions come directly from OpenStreetMap, not Habitune's RDS.
   const response = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, { signal })
   if (!response.ok) throw new Error('Location suggestions request failed')
   const results = await response.json()
@@ -64,6 +65,7 @@ export async function searchLocationSuggestions(query, precincts = [], signal) {
   const suggestions = results.flatMap((result) => {
     const lat = Number(result.lat)
     const lng = Number(result.lon)
+    // Do not offer remote results outside the precinct polygons supported by Habitune.
     const suburb = findSupportedSuburb(lat, lng, result.display_name || '', precincts)
     if (!suburb || !Number.isFinite(lat) || !Number.isFinite(lng)) return []
     const parts = String(result.display_name || query).split(',').map((part) => part.trim()).filter(Boolean)

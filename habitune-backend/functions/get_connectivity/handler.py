@@ -20,6 +20,7 @@ def _coordinate(parameters, name, minimum, maximum):
 def lambda_handler(event, context):
     """Handle GET /connectivity?precinct_id=&lat=&lng=&species_group=."""
     del context
+    # API Gateway supplies query parameters here; validate them before any DB call.
     parameters = (event or {}).get("queryStringParameters") or {}
     try:
         has_latitude = parameters.get("lat") not in (None, "")
@@ -32,6 +33,7 @@ def lambda_handler(event, context):
         if latitude is None and precinct_id is None:
             raise ValueError("precinct_id or lat/lng is required")
         species_group = str(parameters.get("species_group") or "").strip()
+        # The service coordinates location resolution and street-evidence retrieval.
         return success(list_connectivity(latitude, longitude, species_group, precinct_id))
     except ValueError as exc:
         return client_error(str(exc), code="invalid_connectivity_request")

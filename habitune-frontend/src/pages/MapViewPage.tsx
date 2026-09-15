@@ -113,6 +113,7 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
 
   const selectSearchResult = (suburb: string, location: SearchLocation) => {
     if (viewMode === 'connectivity') {
+      // Keep the chosen coordinates in the URL so refresh and sharing preserve the map state.
       const next = new URLSearchParams(searchParams)
       next.set('view', 'connectivity')
       next.delete('streetId')
@@ -136,6 +137,7 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
   }
 
   useEffect(() => {
+    // Trees are requested only for the settled, sufficiently zoomed-in viewport.
     if (viewMode !== 'connectivity' || !evidenceViewport || evidenceViewport.zoom < minimumEvidenceZoom) {
       setUrbanForestTrees([])
       return undefined
@@ -155,6 +157,7 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
   }, [evidenceViewport?.key, viewMode])
 
   useEffect(() => {
+    // Garden beds use the same viewport boundary and cancellation behaviour as trees.
     if (viewMode !== 'connectivity' || !evidenceViewport || evidenceViewport.zoom < minimumEvidenceZoom) {
       setGardenBeds([])
       return undefined
@@ -174,6 +177,7 @@ export default function MapViewPage({ selectedPrecinctId, searchedLocation, onSe
   }, [evidenceViewport?.key, viewMode])
 
   useEffect(() => {
+    // Load location context and precinct street evidence with one connectivity request.
     if (viewMode !== 'connectivity' || (!selectedPrecinctId && !searchedLocation)) {
       setConnectivityData(emptyConnectivityData())
       setConnectivityStatus('idle')

@@ -32,6 +32,7 @@ export default function LocationSearch({ onChoose, suburbs = [] }: LocationSearc
     setSearching(false)
     if (term.length < 3) return undefined
 
+    // Wait until the user pauses typing, and cancel stale OpenStreetMap searches.
     const controller = new AbortController()
     const timer = window.setTimeout(() => {
       setSearching(true)
@@ -55,6 +56,7 @@ export default function LocationSearch({ onChoose, suburbs = [] }: LocationSearc
     setError('')
     setQuery(area.primary)
     setFocused(false)
+    // Pass the selected coordinates to MapViewPage, which starts the corridor flow.
     onChoose(area.suburb, area.searchedLocation)
   }
 

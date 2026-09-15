@@ -72,8 +72,10 @@ def list_connectivity(latitude, longitude, species_group, precinct_id=None):
         raise ValueError("species_group must be native_bee, butterfly or small_bird")
     context = None
     if latitude is not None and longitude is not None:
+        # Resolve the searched point to its containing precinct and nearest supported street.
         context = location_context_repository.get_location_context(latitude, longitude)
     resolved_precinct_id = context.get("precinctId") if context else str(precinct_id or "").strip()
+    # Return recorded street evidence only; no corridor is inferred in this iteration.
     records = connectivity_repository.list_street_support(resolved_precinct_id) if resolved_precinct_id else []
     support_records = []
     for record in records:
